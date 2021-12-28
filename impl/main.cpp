@@ -120,13 +120,23 @@ auto alcCallImpl(const char* filename, const std::uint_fast32_t line, alcFunctio
 int main()
 {
 
-    std::string fileName = "test.ogg";
+    //    std::string fileName = "test.ogg";
+    //
+    //    int chan { 0 };
+    //    int samplerate { 0 };
+    //    short* output;
+    //    int samples = stb_vorbis_decode_filename(fileName.c_str(), &chan, &samplerate, &output);
+    //
+    //    std::cout << samples << " " << samplerate << std::endl;
 
-    int chan { 0 };
-    int samplerate { 0 };
-    short* output;
-    int samples = stb_vorbis_decode_filename(fileName.c_str(), &chan, &samplerate, &output);
+    ALCdevice* openALDevice = alcOpenDevice(nullptr);
+    if (!openALDevice) {
+        throw std::exception { "could not open audio device" };
+    }
 
-    std::cout << samples << " " << samplerate << std::endl;
+    auto closed = static_cast<bool>(alcCloseDevice(openALDevice));
+
+    std::cout << "closed: " << std::boolalpha << static_cast<bool>(closed) << std::endl;
+
     return 0;
 }
