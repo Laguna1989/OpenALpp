@@ -119,23 +119,66 @@ auto alcCallImpl(const char* filename, const std::uint_fast32_t line, alcFunctio
 
 int main()
 {
-
-    //    std::string fileName = "test.ogg";
-    //
-    //    int chan { 0 };
-    //    int samplerate { 0 };
-    //    short* output;
-    //    int samples = stb_vorbis_decode_filename(fileName.c_str(), &chan, &samplerate, &output);
-    //
-    //    std::cout << samples << " " << samplerate << std::endl;
-
     ALCdevice* openALDevice = alcOpenDevice(nullptr);
     if (!openALDevice) {
         throw std::exception { "could not open audio device" };
     }
 
-    auto closed = static_cast<bool>(alcCloseDevice(openALDevice));
+    ALCcontext* openALContext { nullptr };
+    if (!alcCall(alcCreateContext, openALContext, openALDevice, openALDevice, nullptr)
+        || !openALContext) {
+        std::cerr << "ERROR: Could not create audio context" << std::endl;
+        /* probably exit program */
+    }
 
+    ALCboolean contextMadeCurrent = false;
+    if (!alcCall(alcMakeContextCurrent, contextMadeCurrent, openALDevice, openALContext)
+        || contextMadeCurrent != ALC_TRUE) {
+        std::cerr << "ERROR: Could not make audio context current" << std::endl;
+        /* probably exit or give up on having sound */
+    }
+
+    // Load ogg:
+    std::string fileName = "test.ogg";
+
+    int chan { 0 };
+    int sampleRate { 0 };
+    short* output;
+    int numberOfSamples = stb_vorbis_decode_filename(fileName.c_str(), &chan, &sampleRate, &output);
+    std::cout << numberOfSamples << " " << sampleRate << std::endl;
+
+    ALuint buffer;
+    alCall(alGenBuffers, 1, &buffer);
+    ALenum format = AL_FORMAT_MONO16;
+
+    std::size_t duration = numberOfSamples / sampleRate;
+
+    alCall(alBufferData, buffer, format, output, numberOfSamples, sampleRate);
+
+    // Create source
+    ALuint source;
+    alCall(alGenSources, 1, &source);
+    alCall(alSourcef, source, AL_PITCH, 1);
+    alCall(alSourcef, source, AL_GAIN, 1.0f);
+    alCall(alSource3f, source, AL_POSITION, 0, 0, 0);
+    alCall(alSource3f, source, AL_VELOCITY, 0, 0, 0);
+    alCall(alSourcei, source, AL_LOOPING, AL_FALSE);
+    alCall(alSourcei, source, AL_BUFFER, buffer);
+
+    alCall(alSourcePlay, source);
+
+    ALint state = AL_PLAYING;
+
+    while(state == AL_PLAYING)
+    {
+        alCall(alGetSourcei, source, AL_SOURCE_STATE, &state);
+    }
+
+    // Cleanup:
+    alcCall(alcMakeContextCurrent, contextMadeCurrent, openALDevice, nullptr);
+    alcCall(alcDestroyContext, openALDevice, openALContext);
+
+    auto closed = static_cast<bool>(alcCloseDevice(openALDevice));
     std::cout << "closed: " << std::boolalpha << static_cast<bool>(closed) << std::endl;
 
     return 0;
