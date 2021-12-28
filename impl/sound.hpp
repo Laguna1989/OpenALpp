@@ -2,7 +2,9 @@
 #define OPENALTRYOUT_SOUND_HPP
 
 #include "al.hpp"
+#include <memory>
 #include <string>
+#include <vector>
 
 class Sound {
 public:
@@ -11,9 +13,9 @@ public:
     void play();
 
 private:
-    ALuint buffer { 0 };
-    short* output { nullptr };
-    ALuint source { 0 };
+    ALuint m_bufferId { 0 };
+    std::vector<short> m_buffer;
+    ALuint m_sourceId { 0 };
 };
 
 #endif // OPENALTRYOUT_SOUND_HPP

@@ -1,5 +1,6 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
+#include <thread>
 
 int main()
 {
@@ -10,6 +11,8 @@ int main()
 
     Sound snd2 { "test2.ogg" };
     snd2.play();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
     return 0;
 }
