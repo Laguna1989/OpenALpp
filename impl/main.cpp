@@ -1,10 +1,11 @@
 #include "sound_context.hpp"
+#include "sound.hpp"
 
 int main()
 {
     SoundContext ctx;
-    ctx.play();
-    ctx.play();
-    ctx.play();
+
+    Sound snd{"test.ogg"};
+    snd.play();
     return 0;
 }
