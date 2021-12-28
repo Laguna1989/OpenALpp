@@ -10,6 +10,8 @@ Sound::Sound(const std::string& fileName)
     int numberOfSamples
         = stb_vorbis_decode_filename(fileName.c_str(), &chan, &sampleRate, &rawData);
 
+    std::cout << "numberOfSamples " << numberOfSamples << std::endl;
+
     m_buffer.resize(numberOfSamples);
     memcpy(m_buffer.data(), rawData, numberOfSamples);
     free(rawData);

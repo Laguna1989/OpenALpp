@@ -3,7 +3,7 @@
 
 #include "alc.hpp"
 #include <cstdint>
-#include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -13,11 +13,8 @@ public:
     ~SoundContext();
 
 private:
-    // TODO make smart pointer
-    // TODO naming scheme
-    ALCdevice* openALDevice { nullptr };
-    ALCcontext* openALContext { nullptr };
-    ALCboolean contextMadeCurrent { false };
+    ALCdevice* m_device { nullptr };
+    ALCcontext* m_context { nullptr };
 };
 
 #endif // OPENALTRYOUT_SOUND_CONTEXT_HPP

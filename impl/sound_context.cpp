@@ -3,29 +3,26 @@
 
 SoundContext::SoundContext()
 {
-    openALDevice = alcOpenDevice(nullptr);
-    if (!openALDevice) {
+    m_device = alcOpenDevice(nullptr);
+    if (!m_device) {
         throw std::exception { "could not open audio device" };
     }
 
-    if (!alcCall(alcCreateContext, openALContext, openALDevice, openALDevice, nullptr)
-        || !openALContext) {
-        std::cerr << "ERROR: Could not create audio context" << std::endl;
-        /* probably exit program */
+    if (!alcCall(alcCreateContext, m_context, m_device, m_device, nullptr) || !m_context) {
+        throw std::exception { "Could not create audio context" };
     }
 
-    if (!alcCall(alcMakeContextCurrent, contextMadeCurrent, openALDevice, openALContext)
+    ALCboolean contextMadeCurrent { false };
+    if (!alcCall(alcMakeContextCurrent, contextMadeCurrent, m_device, m_context)
         || contextMadeCurrent != ALC_TRUE) {
-        std::cerr << "ERROR: Could not make audio context current" << std::endl;
-        /* probably exit or give up on having sound */
+        throw std::exception { "Could not make audio context current" };
     }
-
-    // Load ogg:
 }
 
 SoundContext::~SoundContext()
 {
-    alcCall(alcMakeContextCurrent, contextMadeCurrent, openALDevice, nullptr);
-    alcCall(alcDestroyContext, openALDevice, openALContext);
-    alcCloseDevice(openALDevice);
+    ALCboolean contextMadeCurrent { true };
+    alcCall(alcMakeContextCurrent, contextMadeCurrent, m_device, nullptr);
+    alcCall(alcDestroyContext, m_device, m_context);
+    alcCloseDevice(m_device);
 }
