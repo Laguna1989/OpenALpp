@@ -39,6 +39,12 @@ Sound::Sound(const std::string& fileName)
     }
 }
 
+Sound::~Sound()
+{
+    alDeleteSources(1, &m_sourceId);
+    alDeleteBuffers(1, &m_bufferId);
+}
+
 void Sound::play()
 {
     alSourcePlay(m_sourceId);

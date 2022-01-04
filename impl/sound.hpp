@@ -9,7 +9,7 @@
 class Sound {
 public:
     explicit Sound(const std::string& fileName);
-    ~Sound() = default;
+    ~Sound();
     void play();
     bool isPlaying() const;
 
