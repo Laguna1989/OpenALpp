@@ -42,11 +42,16 @@ Sound::Sound(const std::string& fileName)
 void Sound::play()
 {
     alSourcePlay(m_sourceId);
-
-    ALint state = AL_PLAYING;
-
-    while (state == AL_PLAYING) {
-        alGetSourcei(m_sourceId, AL_SOURCE_STATE, &state);
+    auto const errorIfAny = alGetError();
+    if (errorIfAny != AL_NO_ERROR) {
+        auto const errorMessage = "Could not play sound, error code: " + std::to_string(errorIfAny);
+        throw std::exception { errorMessage.c_str() };
     }
-    alSourceStop(m_sourceId);
+}
+
+bool Sound::isPlaying() const
+{
+    ALint state = AL_PLAYING;
+    alGetSourcei(m_sourceId, AL_SOURCE_STATE, &state);
+    return (state == AL_PLAYING);
 }

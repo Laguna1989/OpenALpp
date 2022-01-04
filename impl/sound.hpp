@@ -11,6 +11,7 @@ public:
     explicit Sound(const std::string& fileName);
     ~Sound() = default;
     void play();
+    bool isPlaying() const;
 
 private:
     ALuint m_bufferId { 0 };

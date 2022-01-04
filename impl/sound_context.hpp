@@ -15,6 +15,7 @@ public:
 private:
     ALCdevice* m_device { nullptr };
     ALCcontext* m_context { nullptr };
+    static int numberOfInitializations;
 };
 
 #endif // OPENALTRYOUT_SOUND_CONTEXT_HPP

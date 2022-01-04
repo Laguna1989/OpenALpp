@@ -2,6 +2,11 @@
 
 SoundContext::SoundContext()
 {
+    numberOfInitializations++;
+    if (numberOfInitializations != 1) {
+        throw std::exception { "" };
+    }
+
     m_device = alcOpenDevice(nullptr);
     if (!m_device) {
         throw std::exception { "could not open audio device" };
@@ -23,4 +28,8 @@ SoundContext::~SoundContext()
     alcMakeContextCurrent(nullptr);
     alcDestroyContext(m_context);
     alcCloseDevice(m_device);
+
+    numberOfInitializations--;
 }
+
+int SoundContext::numberOfInitializations { 0 };
