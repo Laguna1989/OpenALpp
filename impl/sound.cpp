@@ -24,12 +24,19 @@ Sound::Sound(const std::string& fileName)
 
     // Create source
     alGenSources(1, &m_sourceId);
-    alSourcef(m_sourceId, AL_PITCH, 1.0);
+    alSourcef(m_sourceId, AL_PITCH, 1.0f);
     alSourcef(m_sourceId, AL_GAIN, 1.0f);
-    alSource3f(m_sourceId, AL_POSITION, 0, 0, 0);
-    alSource3f(m_sourceId, AL_VELOCITY, 0, 0, 0);
+    alSource3f(m_sourceId, AL_POSITION, 0.0f, 0.0f, 0.0f);
+    alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
     alSourcei(m_sourceId, AL_BUFFER, m_bufferId);
+
+    auto const errorIfAny = alGetError();
+    if (errorIfAny != AL_NO_ERROR) {
+        auto const errorMessage
+            = "Could not create OpenAL buffer, error code: " + std::to_string(errorIfAny);
+        throw std::exception { errorMessage.c_str() };
+    }
 }
 
 void Sound::play()
