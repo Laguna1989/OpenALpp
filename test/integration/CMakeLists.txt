@@ -1,0 +1,3 @@
+file(GLOB TESTFILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*)
+add_executable(OpenALPP_Integration ${TESTFILES})
+target_link_libraries(OpenALPP_Integration OpenALPP_Lib)
