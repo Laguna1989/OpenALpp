@@ -1,6 +1,6 @@
 #include "sound.hpp"
-#include "low_level_frickel.hpp"
 #include "stb_vorbis.hpp"
+#include <iostream>
 
 Sound::Sound(const std::string& fileName)
 {
@@ -16,29 +16,30 @@ Sound::Sound(const std::string& fileName)
     memcpy(m_buffer.data(), rawData, numberOfSamples);
     free(rawData);
 
-    alCall(alGenBuffers, 1, &m_bufferId);
+    alGenBuffers(1, &m_bufferId);
+
     ALenum format = AL_FORMAT_MONO16;
 
-    alCall(alBufferData, m_bufferId, format, m_buffer.data(), numberOfSamples, sampleRate);
+    alBufferData(m_bufferId, format, m_buffer.data(), numberOfSamples, sampleRate);
 
     // Create source
-    alCall(alGenSources, 1, &m_sourceId);
-    alCall(alSourcef, m_sourceId, AL_PITCH, 1.0);
-    alCall(alSourcef, m_sourceId, AL_GAIN, 1.0f);
-    alCall(alSource3f, m_sourceId, AL_POSITION, 0, 0, 0);
-    alCall(alSource3f, m_sourceId, AL_VELOCITY, 0, 0, 0);
-    alCall(alSourcei, m_sourceId, AL_LOOPING, AL_FALSE);
-    alCall(alSourcei, m_sourceId, AL_BUFFER, m_bufferId);
+    alGenSources(1, &m_sourceId);
+    alSourcef(m_sourceId, AL_PITCH, 1.0);
+    alSourcef(m_sourceId, AL_GAIN, 1.0f);
+    alSource3f(m_sourceId, AL_POSITION, 0, 0, 0);
+    alSource3f(m_sourceId, AL_VELOCITY, 0, 0, 0);
+    alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
+    alSourcei(m_sourceId, AL_BUFFER, m_bufferId);
 }
 
 void Sound::play()
 {
-    alCall(alSourcePlay, m_sourceId);
+    alSourcePlay(m_sourceId);
 
     ALint state = AL_PLAYING;
 
     while (state == AL_PLAYING) {
-        alCall(alGetSourcei, m_sourceId, AL_SOURCE_STATE, &state);
+        alGetSourcei(m_sourceId, AL_SOURCE_STATE, &state);
     }
     alSourceStop(m_sourceId);
 }
