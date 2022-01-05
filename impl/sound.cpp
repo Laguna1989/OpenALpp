@@ -1,31 +1,32 @@
 #include "sound.hpp"
-#include "stb_vorbis.hpp"
+#include "libnyquist/Decoders.h"
 #include <iostream>
 
 Sound::Sound(const std::string& fileName)
 {
     int chan { 0 };
-    int sampleRate { 0 };
-    short* rawData { nullptr };
-    int numberOfSamples
-        = stb_vorbis_decode_filename(fileName.c_str(), &chan, &sampleRate, &rawData);
 
-    std::cout << "numberOfSamples " << numberOfSamples << std::endl;
+    auto fileData = std::make_shared<nqr::AudioData>();
+    nqr::NyquistIO loader;
+    loader.Load(fileData.get(), fileName);
 
-    m_buffer.resize(numberOfSamples);
-    memcpy(m_buffer.data(), rawData, numberOfSamples);
-    free(rawData);
+    m_buffer.resize(fileData->samples.size());
+
+    std::transform(fileData->samples.begin(), fileData->samples.end(), m_buffer.begin(),
+        [](auto in) { return static_cast<short>(in * std::numeric_limits<short>::max()); });
 
     alGenBuffers(1, &m_bufferId);
 
     ALenum format = AL_FORMAT_MONO16;
 
-    alBufferData(m_bufferId, format, m_buffer.data(), numberOfSamples, sampleRate);
+    auto length = fileData->lengthSeconds;
+    alBufferData(
+        m_bufferId, format, m_buffer.data(), fileData->samples.size(), fileData->sampleRate);
 
     // Create source
     alGenSources(1, &m_sourceId);
     alSourcef(m_sourceId, AL_PITCH, 1.0f);
-    alSourcef(m_sourceId, AL_GAIN, 1.0f);
+    alSourcef(m_sourceId, AL_GAIN, 0.125f);
     alSource3f(m_sourceId, AL_POSITION, 0.0f, 0.0f, 0.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
