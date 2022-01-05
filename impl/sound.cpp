@@ -13,6 +13,7 @@ Sound::Sound(const std::string& fileName)
     if (fileData->channelCount == 2) {
         format = AL_FORMAT_STEREO16;
         if (fileData->samples.size() % 4 != 0) {
+            // TODO figure out why there seems to be one sample missing when exporting with reaper.
             size += 2;
         }
     }

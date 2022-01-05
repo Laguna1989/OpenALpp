@@ -11,6 +11,8 @@ int main()
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
+    // figure out why this stops after a time. Might be a buffer issue (perhaps this will be fixed
+    // with streaming audio)
     Sound snd2 { "test.mp3" };
     snd2.play();
 
