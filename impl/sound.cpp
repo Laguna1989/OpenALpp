@@ -4,8 +4,6 @@
 
 Sound::Sound(const std::string& fileName)
 {
-    int chan { 0 };
-
     auto fileData = std::make_shared<nqr::AudioData>();
     nqr::NyquistIO loader;
     loader.Load(fileData.get(), fileName);
@@ -19,14 +17,13 @@ Sound::Sound(const std::string& fileName)
 
     ALenum format = AL_FORMAT_MONO16;
 
-    auto length = fileData->lengthSeconds;
     alBufferData(
         m_bufferId, format, m_buffer.data(), fileData->samples.size(), fileData->sampleRate);
 
     // Create source
     alGenSources(1, &m_sourceId);
     alSourcef(m_sourceId, AL_PITCH, 1.0f);
-    alSourcef(m_sourceId, AL_GAIN, 0.125f);
+    alSourcef(m_sourceId, AL_GAIN, 0.25f);
     alSource3f(m_sourceId, AL_POSITION, 0.0f, 0.0f, 0.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
