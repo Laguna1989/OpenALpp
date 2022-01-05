@@ -8,17 +8,23 @@ Sound::Sound(const std::string& fileName)
     nqr::NyquistIO loader;
     loader.Load(fileData.get(), fileName);
 
-    m_buffer.resize(fileData->samples.size());
+    std::size_t size = fileData->samples.size();
+    ALenum format = AL_FORMAT_MONO16;
+    if (fileData->channelCount == 2) {
+        format = AL_FORMAT_STEREO16;
+        if (fileData->samples.size() % 4 != 0) {
+            size += 2;
+        }
+    }
+
+    m_buffer.resize(size);
 
     std::transform(fileData->samples.begin(), fileData->samples.end(), m_buffer.begin(),
         [](auto in) { return static_cast<short>(in * std::numeric_limits<short>::max()); });
 
     alGenBuffers(1, &m_bufferId);
 
-    ALenum format = AL_FORMAT_MONO16;
-
-    alBufferData(
-        m_bufferId, format, m_buffer.data(), fileData->samples.size(), fileData->sampleRate);
+    alBufferData(m_bufferId, format, m_buffer.data(), m_buffer.size(), fileData->sampleRate);
 
     // Create source
     alGenSources(1, &m_sourceId);

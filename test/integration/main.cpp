@@ -9,7 +9,12 @@ int main()
     Sound snd1 { "test1.ogg" };
     snd1.play();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    Sound snd2 { "test.mp3" };
+    snd2.play();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(9000));
 
     return 0;
 }
