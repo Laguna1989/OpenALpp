@@ -1,7 +1,7 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
 
-Sound::Sound(SoundDataInterface const& buffer, SoundContext const& ctx)
+Sound::Sound(SoundDataInterface const& buffer, SoundContext const& /*unused*/)
 {
     ALenum format = AL_FORMAT_MONO16;
     if (buffer.getNumberOfChannels() == 2) {
