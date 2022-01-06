@@ -2,20 +2,23 @@
 #define OPENALTRYOUT_SOUND_HPP
 
 #include "al.hpp"
+#include "sound_data_interface.hpp"
 #include <memory>
 #include <string>
 #include <vector>
 
+// fwd decl.
+class SoundContext;
+
 class Sound {
 public:
-    explicit Sound(const std::string& fileName);
+    explicit Sound(SoundDataInterface const& buffer, SoundContext const& ctx);
     ~Sound();
     void play();
     bool isPlaying() const;
 
 private:
     ALuint m_bufferId { 0 };
-    std::vector<short> m_buffer;
     ALuint m_sourceId { 0 };
 };
 

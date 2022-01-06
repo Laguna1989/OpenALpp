@@ -1,19 +1,20 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
+#include "sound_data.hpp"
 #include <thread>
 
 int main()
 {
     SoundContext ctx;
 
-    Sound snd1 { "test1.ogg" };
+    SoundData buf1 { "test1.ogg" };
+    Sound snd1 { buf1, ctx };
     snd1.play();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    // figure out why this stops after a time. Might be a buffer issue (perhaps this will be fixed
-    // with streaming audio)
-    Sound snd2 { "test.mp3" };
+    SoundData buf2 { "test.mp3" };
+    Sound snd2 { buf2, ctx };
     snd2.play();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(9000));

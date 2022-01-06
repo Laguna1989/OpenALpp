@@ -1,31 +1,25 @@
 #include "sound.hpp"
-#include "libnyquist/Decoders.h"
-#include <iostream>
+#include "sound_context.hpp"
 
-Sound::Sound(const std::string& fileName)
+Sound::Sound(SoundDataInterface const& buffer, SoundContext const& /*unused*/)
 {
-    auto fileData = std::make_shared<nqr::AudioData>();
-    nqr::NyquistIO loader;
-    loader.Load(fileData.get(), fileName);
-
-    std::size_t size = fileData->samples.size();
     ALenum format = AL_FORMAT_MONO16;
-    if (fileData->channelCount == 2) {
+    if (buffer.getNumberOfChannels() == 2) {
         format = AL_FORMAT_STEREO16;
-        if (fileData->samples.size() % 4 != 0) {
-            // TODO figure out why there seems to be one sample missing when exporting with reaper.
-            size += 2;
-        }
     }
-
-    m_buffer.resize(size);
-
-    std::transform(fileData->samples.begin(), fileData->samples.end(), m_buffer.begin(),
-        [](auto in) { return static_cast<short>(in * std::numeric_limits<short>::max()); });
 
     alGenBuffers(1, &m_bufferId);
 
-    alBufferData(m_bufferId, format, m_buffer.data(), m_buffer.size(), fileData->sampleRate);
+    int size = buffer.getSamples().size();
+    alBufferData(m_bufferId, format, buffer.getSamples().data(), size, buffer.getSampleRate());
+    {
+        auto const errorIfAny = alGetError();
+        if (errorIfAny != AL_NO_ERROR) {
+            auto const errorMessage
+                = "Could not create OpenAL buffer, error code: " + std::to_string(errorIfAny);
+            throw std::exception { errorMessage.c_str() };
+        }
+    }
 
     // Create source
     alGenSources(1, &m_sourceId);
