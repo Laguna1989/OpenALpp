@@ -2,10 +2,10 @@
 
 SoundContext::SoundContext()
 {
-    numberOfInitializations++;
-    if (numberOfInitializations != 1) {
+    if (numberOfInitializations != 0) {
         throw std::exception { "" };
     }
+    numberOfInitializations++;
 
     m_device = alcOpenDevice(nullptr);
     if (!m_device) {
