@@ -8,9 +8,9 @@ class SoundData : public SoundDataInterface {
 public:
     explicit SoundData(std::string const& fileName);
 
-    virtual int getNumberOfChannels() const override;
-    virtual int getSampleRate() const override;
-    virtual std::vector<short> const& getSamples() const override;
+    int getNumberOfChannels() const override;
+    int getSampleRate() const override;
+    std::vector<short> const& getSamples() const override;
 
 private:
     std::vector<short> m_samples {};
