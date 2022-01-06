@@ -17,6 +17,10 @@ public:
     void play();
     bool isPlaying() const;
 
+    float getVolume() const;
+
+    void setVolume(float newVolume);
+
 private:
     ALuint m_bufferId { 0 };
     ALuint m_sourceId { 0 };

@@ -24,7 +24,8 @@ Sound::Sound(SoundDataInterface const& buffer, SoundContext const& /*unused*/)
     // Create source
     alGenSources(1, &m_sourceId);
     alSourcef(m_sourceId, AL_PITCH, 1.0f);
-    alSourcef(m_sourceId, AL_GAIN, 0.25f);
+    alSourcef(m_sourceId, AL_GAIN, 1.0f);
+
     alSource3f(m_sourceId, AL_POSITION, 0.0f, 0.0f, 0.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
@@ -59,4 +60,20 @@ bool Sound::isPlaying() const
     ALint state = AL_PLAYING;
     alGetSourcei(m_sourceId, AL_SOURCE_STATE, &state);
     return (state == AL_PLAYING);
+}
+float Sound::getVolume() const
+{
+    float value { 0.0f };
+    alGetSourcef(m_sourceId, AL_GAIN, &value);
+    return value;
+}
+
+void Sound::setVolume(float newVolume)
+{
+    if (newVolume < 0 || newVolume > 1.0f) {
+        auto const errorMessage
+            = std::string { "invalid volume value: " } + std::to_string(newVolume).c_str();
+        throw std::exception { errorMessage.c_str() };
+    }
+    alSourcef(m_sourceId, AL_GAIN, newVolume);
 }

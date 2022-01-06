@@ -20,7 +20,42 @@ TEST_CASE("Sound is not playing by default", "[Sound]")
     SoundContext ctx;
     SoundDataFake buffer;
     Sound snd { buffer, ctx };
-    REQUIRE_FALSE(snd.isPlaying());
+
+    SECTION("default is Playing") { REQUIRE_FALSE(snd.isPlaying()); }
+    SECTION("default volume") { REQUIRE(1.0f == snd.getVolume()); }
+    SECTION("volume after setVolume")
+    {
+        float const newVolume = GENERATE(0.5f, 1.0f, 0.1f, 0.0f);
+        snd.setVolume(newVolume);
+        REQUIRE(newVolume == snd.getVolume());
+    }
+
+    SECTION("invalid setVolume value")
+    {
+        float const newVolume = GENERATE(-1.5f, -0.1f, 1.1f, 9001.0f, -666.0f);
+        REQUIRE_THROWS(snd.setVolume(newVolume));
+    }
+}
+
+TEST_CASE("Sound volume test", "[Sound]")
+{
+    SoundContext ctx;
+    SoundDataFake buffer;
+    Sound snd { buffer, ctx };
+
+    SECTION("default volume value") { REQUIRE(1.0f == snd.getVolume()); }
+    SECTION("volume after setVolume")
+    {
+        float const newVolume = GENERATE(0.5f, 1.0f, 0.1f, 0.0f);
+        snd.setVolume(newVolume);
+        REQUIRE(newVolume == snd.getVolume());
+    }
+
+    SECTION("invalid setVolume value")
+    {
+        float const newVolume = GENERATE(-1.5f, -0.1f, 1.1f, 9001.0f, -666.0f);
+        REQUIRE_THROWS(snd.setVolume(newVolume));
+    }
 }
 
 TEST_CASE("Sound play does not raise exception", "[Sound]")
