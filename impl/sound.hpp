@@ -2,11 +2,13 @@
 #define OPENALTRYOUT_SOUND_HPP
 
 #include "al.hpp"
-#include "sound_context.hpp"
 #include "sound_data_interface.hpp"
 #include <memory>
 #include <string>
 #include <vector>
+
+// fwd decl.
+class SoundContext;
 
 class Sound {
 public:

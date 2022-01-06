@@ -20,7 +20,7 @@ SoundData::SoundData(std::string const& fileName)
 
     m_samples.resize(size);
 
-    std::transform(fileData->samples.begin(), fileData->samples.end(), m_samples.begin(),
+    std::transform(fileData->samples.cbegin(), fileData->samples.cend(), m_samples.begin(),
         [](auto in) { return static_cast<short>(in * std::numeric_limits<short>::max()); });
 }
 
