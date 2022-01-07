@@ -7,5 +7,9 @@ target_link_libraries(OpenALPP_UnitTests PRIVATE
         OpenALPP_Lib
         Catch2::Catch2)
 
+if (EMSCRIPTEN)
+    set(CMAKE_EXECUTABLE_SUFFIX ".html")
+endif ()
+
 FetchContent_GetProperties(catch2)
 target_include_directories(OpenALPP_UnitTests PUBLIC ${catch2_SOURCE_DIR}/include)

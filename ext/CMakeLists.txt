@@ -1,4 +1,7 @@
-add_subdirectory(openal-soft)
+if (EMSCRIPTEN)
+elseif ()
+    add_subdirectory(openal-soft)
+endif ()
 add_subdirectory(libnyquist)
 
 if (OALPP_ENABLE_UNIT_TESTS)
