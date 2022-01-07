@@ -27,6 +27,9 @@ public:
 private:
     ALuint m_bufferId { 0 };
     ALuint m_sourceId { 0 };
+
+    float m_volume { 1.0f };
+    float m_pan { 0.0f };
 };
 
 #endif // OPENALTRYOUT_SOUND_HPP

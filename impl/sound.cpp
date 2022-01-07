@@ -19,9 +19,8 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     // Create source
     alGenSources(1, &m_sourceId);
     alSourcef(m_sourceId, AL_PITCH, 1.0f);
-    alSourcef(m_sourceId, AL_GAIN, 1.0f);
-
-    alSource3f(m_sourceId, AL_POSITION, 0.0f, 0.0f, -1.0f);
+    alSourcef(m_sourceId, AL_GAIN, m_volume);
+    alSource3f(m_sourceId, AL_POSITION, 0.0f, 0, -1.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
 
@@ -60,12 +59,8 @@ bool Sound::isPlaying() const
     alGetSourcei(m_sourceId, AL_SOURCE_STATE, &state);
     return (state == AL_PLAYING);
 }
-float Sound::getVolume() const
-{
-    float value { 0.0f };
-    alGetSourcef(m_sourceId, AL_GAIN, &value);
-    return value;
-}
+
+float Sound::getVolume() const { return m_volume; }
 
 void Sound::setVolume(float newVolume)
 {
@@ -74,18 +69,11 @@ void Sound::setVolume(float newVolume)
             = std::string { "invalid volume value: " } + std::to_string(newVolume);
         throw std::invalid_argument { errorMessage.c_str() };
     }
+    m_volume = newVolume;
     alSourcef(m_sourceId, AL_GAIN, newVolume);
 }
 
-float Sound::getPan() const
-{
-    float x { 0.0f };
-    float y { 0.0f };
-    float z { 0.0f };
-
-    alGetSource3f(m_sourceId, AL_POSITION, &x, &y, &z);
-    return x;
-}
+float Sound::getPan() const { return m_pan; }
 
 void Sound::setPan(float newPan)
 {
@@ -99,6 +87,6 @@ void Sound::setPan(float newPan)
     if (channels != 1) {
         throw std::logic_error { std::string { "cannot set pan on non-mono file." }.c_str() };
     }
-
+    m_pan = newPan;
     alSource3f(m_sourceId, AL_POSITION, newPan, 0, -sqrt(1.0f - newPan * newPan));
 }
