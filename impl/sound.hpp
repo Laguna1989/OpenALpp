@@ -12,14 +12,24 @@ class SoundContext;
 
 class Sound {
 public:
-    explicit Sound(SoundDataInterface const& buffer, SoundContext const& ctx);
+    explicit Sound(SoundDataInterface const& soundData, SoundContext const& ctx);
     ~Sound();
     void play();
     bool isPlaying() const;
 
+    float getVolume() const;
+    void setVolume(float newVolume);
+
+    float getPan() const;
+
+    void setPan(float newPan);
+
 private:
     ALuint m_bufferId { 0 };
     ALuint m_sourceId { 0 };
+
+    float m_volume { 1.0f };
+    float m_pan { 0.0f };
 };
 
 #endif // OPENALTRYOUT_SOUND_HPP
