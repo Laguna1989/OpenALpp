@@ -12,14 +12,17 @@ class SoundContext;
 
 class Sound {
 public:
-    explicit Sound(SoundDataInterface const& buffer, SoundContext const& ctx);
+    explicit Sound(SoundDataInterface const& soundData, SoundContext const& ctx);
     ~Sound();
     void play();
     bool isPlaying() const;
 
     float getVolume() const;
-
     void setVolume(float newVolume);
+
+    float getPan() const;
+
+    void setPan(float newPan);
 
 private:
     ALuint m_bufferId { 0 };

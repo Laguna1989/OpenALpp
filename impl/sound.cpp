@@ -1,22 +1,23 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
 
-Sound::Sound(SoundDataInterface const& buffer, SoundContext const& /*unused*/)
+Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/)
 {
     ALenum format = AL_FORMAT_MONO16;
-    if (buffer.getNumberOfChannels() == 2) {
+    if (soundData.getNumberOfChannels() == 2) {
         format = AL_FORMAT_STEREO16;
     }
 
     alGenBuffers(1, &m_bufferId);
 
-    int size = buffer.getSamples().size();
-    alBufferData(m_bufferId, format, buffer.getSamples().data(), size, buffer.getSampleRate());
+    int size = soundData.getSamples().size();
+    alBufferData(
+        m_bufferId, format, soundData.getSamples().data(), size, soundData.getSampleRate());
     {
         auto const errorIfAny = alGetError();
         if (errorIfAny != AL_NO_ERROR) {
             auto const errorMessage
-                = "Could not create OpenAL buffer, error code: " + std::to_string(errorIfAny);
+                = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
             throw std::exception { errorMessage.c_str() };
         }
     }
@@ -26,15 +27,19 @@ Sound::Sound(SoundDataInterface const& buffer, SoundContext const& /*unused*/)
     alSourcef(m_sourceId, AL_PITCH, 1.0f);
     alSourcef(m_sourceId, AL_GAIN, 1.0f);
 
-    alSource3f(m_sourceId, AL_POSITION, 0.0f, 0.0f, 0.0f);
+    alSource3f(m_sourceId, AL_POSITION, 0.0f, 1.0f, 0.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
+
+    alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
+    alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
+
     alSourcei(m_sourceId, AL_BUFFER, m_bufferId);
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage
-            = "Could not create OpenAL buffer, error code: " + std::to_string(errorIfAny);
+            = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
         throw std::exception { errorMessage.c_str() };
     }
 }
@@ -72,8 +77,34 @@ void Sound::setVolume(float newVolume)
 {
     if (newVolume < 0 || newVolume > 1.0f) {
         auto const errorMessage
-            = std::string { "invalid volume value: " } + std::to_string(newVolume).c_str();
+            = std::string { "invalid volume value: " } + std::to_string(newVolume);
         throw std::exception { errorMessage.c_str() };
     }
     alSourcef(m_sourceId, AL_GAIN, newVolume);
+}
+
+float Sound::getPan() const
+{
+    float x { 0.0f };
+    float y { 0.0f };
+    float z { 0.0f };
+
+    alGetSource3f(m_sourceId, AL_POSITION, &x, &y, &z);
+    return x;
+}
+
+void Sound::setPan(float newPan)
+{
+    if (newPan < -1.0f || newPan > 1.0f) {
+        auto const errorMessage = std::string { "invalid pan value: " } + std::to_string(newPan);
+        throw std::exception { errorMessage.c_str() };
+    }
+
+    int channels { 0 };
+    alGetBufferi(m_bufferId, AL_CHANNELS, &channels);
+    if (channels != 1) {
+        throw std::exception { "cannot set pan on non-mono file." };
+    }
+
+    alSource3f(m_sourceId, AL_POSITION, newPan, 0, -sqrtf(1.0f - newPan * newPan));
 }
