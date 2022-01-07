@@ -17,5 +17,4 @@ TEST_CASE("Second context raises exception", "[SoundContext]")
 {
     SoundContext ctx1 {};
     REQUIRE_THROWS(SoundContext {});
-    int a = 5;
 }

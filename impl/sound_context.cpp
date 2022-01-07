@@ -1,25 +1,26 @@
 #include "sound_context.hpp"
+#include <stdexcept>
 
 SoundContext::SoundContext()
 {
     if (numberOfInitializations != 0) {
-        throw std::exception { "" };
+        throw std::logic_error { "" };
     }
     numberOfInitializations++;
 
     m_device = alcOpenDevice(nullptr);
     if (!m_device) {
-        throw std::exception { "could not open audio device" };
+        throw std::logic_error { "could not open audio device" };
     }
 
     m_context = alcCreateContext(m_device, nullptr);
     if (!m_context) {
-        throw std::exception { "Could not create audio context" };
+        throw std::logic_error { "Could not create audio context" };
     }
 
     auto const contextMadeCurrent = alcMakeContextCurrent(m_context);
     if (!contextMadeCurrent) {
-        throw std::exception { "Could not make audio context current" };
+        throw std::logic_error { "Could not make audio context current" };
     }
 }
 

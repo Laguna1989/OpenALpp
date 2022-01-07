@@ -1,5 +1,7 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
+#include <cmath>
+#include <stdexcept>
 
 Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/)
 {
@@ -13,21 +15,13 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     int size = soundData.getSamples().size();
     alBufferData(
         m_bufferId, format, soundData.getSamples().data(), size, soundData.getSampleRate());
-    {
-        auto const errorIfAny = alGetError();
-        if (errorIfAny != AL_NO_ERROR) {
-            auto const errorMessage
-                = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
-            throw std::exception { errorMessage.c_str() };
-        }
-    }
 
     // Create source
     alGenSources(1, &m_sourceId);
     alSourcef(m_sourceId, AL_PITCH, 1.0f);
     alSourcef(m_sourceId, AL_GAIN, 1.0f);
 
-    alSource3f(m_sourceId, AL_POSITION, 0.0f, 1.0f, 0.0f);
+    alSource3f(m_sourceId, AL_POSITION, 0.0f, 0.0f, -1.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
 
@@ -40,7 +34,7 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage
             = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
-        throw std::exception { errorMessage.c_str() };
+        throw std::logic_error { errorMessage.c_str() };
     }
 }
 
@@ -56,7 +50,7 @@ void Sound::play()
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage = "Could not play sound, error code: " + std::to_string(errorIfAny);
-        throw std::exception { errorMessage.c_str() };
+        throw std::logic_error { errorMessage.c_str() };
     }
 }
 
@@ -78,7 +72,7 @@ void Sound::setVolume(float newVolume)
     if (newVolume < 0 || newVolume > 1.0f) {
         auto const errorMessage
             = std::string { "invalid volume value: " } + std::to_string(newVolume);
-        throw std::exception { errorMessage.c_str() };
+        throw std::invalid_argument { errorMessage.c_str() };
     }
     alSourcef(m_sourceId, AL_GAIN, newVolume);
 }
@@ -97,14 +91,14 @@ void Sound::setPan(float newPan)
 {
     if (newPan < -1.0f || newPan > 1.0f) {
         auto const errorMessage = std::string { "invalid pan value: " } + std::to_string(newPan);
-        throw std::exception { errorMessage.c_str() };
+        throw std::invalid_argument { errorMessage.c_str() };
     }
 
     int channels { 0 };
     alGetBufferi(m_bufferId, AL_CHANNELS, &channels);
     if (channels != 1) {
-        throw std::exception { "cannot set pan on non-mono file." };
+        throw std::logic_error { std::string { "cannot set pan on non-mono file." }.c_str() };
     }
 
-    alSource3f(m_sourceId, AL_POSITION, newPan, 0, -sqrtf(1.0f - newPan * newPan));
+    alSource3f(m_sourceId, AL_POSITION, newPan, 0, -sqrt(1.0f - newPan * newPan));
 }
