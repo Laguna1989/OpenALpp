@@ -19,6 +19,7 @@ set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD 17)
 
+# speed up fetchcontent on consecutive runs
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 add_subdirectory(ext)
 add_subdirectory(impl)
