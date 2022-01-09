@@ -90,3 +90,13 @@ void Sound::setPan(float newPan)
     m_pan = newPan;
     alSource3f(m_sourceId, AL_POSITION, newPan, 0, -sqrt(1.0f - newPan * newPan));
 }
+float Sound::getPitch() const { return m_pitch; }
+
+void Sound::setPitch(float const newPitch)
+{
+    if (newPitch <= 0.0f) {
+        throw std::invalid_argument { "invalid pitch value" };
+    }
+    m_pitch = newPitch;
+    alSourcef(m_sourceId, AL_PITCH, newPitch);
+}
