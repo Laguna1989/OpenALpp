@@ -3,6 +3,7 @@
 
 #include "al.hpp"
 #include "sound_data_interface.hpp"
+#include <array>
 #include <memory>
 #include <string>
 #include <vector>
@@ -20,8 +21,9 @@ public:
     float getVolume() const;
     void setVolume(float newVolume);
 
-    float getPan() const;
+    std::array<float, 3> getPosition() const;
 
+    void setPosition(std::array<float, 3> const& newPos);
     void setPan(float newPan);
 
 private:
@@ -29,7 +31,7 @@ private:
     ALuint m_sourceId { 0 };
 
     float m_volume { 1.0f };
-    float m_pan { 0.0f };
+    std::array<float, 3> m_position { 0.0f, 0.0f, -1.0f };
 };
 
 #endif // OPENALTRYOUT_SOUND_HPP
