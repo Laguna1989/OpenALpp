@@ -1,9 +1,22 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
 #include "sound_data.hpp"
+#include <emscripten.h>
 #include <fstream>
 #include <iostream>
 #include <thread>
+
+std::shared_ptr<Sound> snd;
+
+void main_loop_function()
+{
+    if (!snd->isPlaying()) {
+        //        snd->play();
+        std::cout << "is not playing\n";
+    } else {
+        std::cout << "is playing\n";
+    }
+}
 
 int main()
 {
@@ -20,14 +33,15 @@ int main()
     std::cout << "post file\n";
     SoundData buf1 { "assets/test1.ogg" };
     std::cout << "post buf\n";
-    Sound snd1 { buf1, ctx };
+    snd = std::make_shared<Sound>(buf1, ctx);
     std::cout << "post snd\n";
-    snd1.setVolume(0.25f);
+    snd->setVolume(0.25f);
 
-    for (float pan = -1.0f; pan <= 1.0f; pan += 2.0f / 7.0f) {
-        snd1.setPan(pan);
-        snd1.play();
-    }
+    //    for (float pan = -1.0f; pan <= 1.0f; pan += 2.0f / 7.0f) {
+    snd->play();
+    //    }
+
+    emscripten_set_main_loop(main_loop_function, 0, 1);
 
     //    std::cout << "pre while\n";
     //    while (true) { }

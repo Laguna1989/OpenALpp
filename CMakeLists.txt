@@ -9,7 +9,7 @@ if (MSVC)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O0 -g --std=c++17 -fpermissive")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --use-preload-plugins --preload-file assets")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  --preload-file assets")
     add_link_options("SHELL:-s TOTAL_MEMORY=256MB " "SHELL:-s ALLOW_MEMORY_GROWTH=1")
 endif ()
 
