@@ -48,9 +48,9 @@ jobs:
       - name: StartJack
         run: jackd -d dummy &
 
-      - name: Test
-        run: ./OpenALpp_UnitTests --order rand
-        working-directory: ${{github.workspace}}/build/bin/
+  #      - name: Test
+  #        run: ./OpenALpp_UnitTests --order rand
+  #        working-directory: ${{github.workspace}}/build/bin/
 
   Windows:
     runs-on: windows-latest
@@ -68,6 +68,14 @@ jobs:
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: cmake --build .
+
+      - name: Install Scream
+        shell: powershell
+        run: |
+          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.8/Scream3.8.zip -OutFile Scream3.8.zip
+          Expand-Archive -Path Scream3.8.zip -DestinationPath Scream
+          Import-Certificate -FilePath Scream\Install\driver\x64\Scream.cat -CertStoreLocation Cert:\LocalMachine\TrustedPublisher 
+          Scream\Install\helpers\devcon-x64.exe install Scream\Install\driver\x64\Scream.inf *Scream
 
       - name: Test
         working-directory: ${{github.workspace}}/build
