@@ -42,7 +42,7 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make OpenALpp_UnitTests -j 4
+        run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
 
       - name: StartJack
         run: jackd -d dummy &
@@ -70,9 +70,9 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build/bin
-        run: ./OpenALpp_UnitTests --order rand
+        run: OpenALpp_UnitTests.exe --order rand
 
-  WebSDL:
+  Web:
     runs-on: ubuntu-latest
     env:
       EMCC_CCACHE: 1
@@ -103,7 +103,8 @@ jobs:
           emcmake cmake -B ${{github.workspace}}/build \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            .
-
+      - name: Copy assets
+        run: cp -r assets ${{github.workspace}}/build/test/integration/
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: emmake make OpenALpp_UnitTests OpenALpp_Integration
