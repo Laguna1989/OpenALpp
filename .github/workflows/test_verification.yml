@@ -24,6 +24,7 @@ jobs:
       - name: Set up system libs
         run: |
           sudo apt-get install -y \
+          alsa-oss \
           jackd 
 
       - uses: actions/checkout@v2
@@ -48,7 +49,7 @@ jobs:
         run: jackd -d dummy &
 
       - name: Test
-        run: ./OpenALpp_UnitTests --order rand
+        run: aoss xmms && ./OpenALpp_UnitTests --order rand
         working-directory: ${{github.workspace}}/build/bin/
 
   Windows:
@@ -69,8 +70,8 @@ jobs:
         run: cmake --build .
 
       - name: Test
-        working-directory: ${{github.workspace}}/build/bin
-        run: OpenALpp_UnitTests.exe --order rand
+        working-directory: ${{github.workspace}}/build
+        run: bin/OpenALpp_UnitTests.exe --order rand
 
   Web:
     runs-on: ubuntu-latest
