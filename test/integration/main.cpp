@@ -49,14 +49,6 @@ int main()
         main_loop_function();
     }
 #endif
-    //    std::cout << "pre while\n";
-    //    while (true) { }
-    //    SoundData buf2 { "test.mp3" };
-    //    Sound snd2 { buf2, ctx };
-    //    snd2.setVolume(0.25f);
-    //    snd2.play();
-    //
-    //    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
+    snd.reset();
     return 0;
 }

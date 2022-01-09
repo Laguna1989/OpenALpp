@@ -1,5 +1,5 @@
 if (EMSCRIPTEN)
-elseif ()
+else ()
     add_subdirectory(openal-soft)
 endif ()
 add_subdirectory(libnyquist)
