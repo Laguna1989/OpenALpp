@@ -1,0 +1,119 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.11
+        with:
+          cmake-version: '3.19.x'
+
+      - name: Set up gcc
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 9
+          platform: x64
+
+      - name: Set up system libs
+        run: |
+          sudo apt-get install -y \
+          pulseaudio libpulse-dev osspd \
+          jackd 
+
+      - uses: actions/checkout@v2
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.type }}
+          max-size: 100M
+
+      - name: CMake
+        run: |
+          cmake \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -B ${{github.workspace}}/build .
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
+
+      - name: StartJack
+        run: jackd -d dummy &
+
+  #      - name: Test
+  #        run: ./OpenALpp_UnitTests --order rand
+  #        working-directory: ${{github.workspace}}/build/bin/
+
+  Windows:
+    runs-on: windows-latest
+    steps:
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.11
+        with:
+          cmake-version: '3.19.x'
+
+      - uses: actions/checkout@v2
+
+      - name: CMake
+        run: cmake -B ${{github.workspace}}/build .
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build .
+
+      - name: Install Scream
+        shell: powershell
+        run: |
+          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.8/Scream3.8.zip -OutFile Scream3.8.zip
+          Expand-Archive -Path Scream3.8.zip -DestinationPath Scream
+          Import-Certificate -FilePath Scream\Install\driver\x64\Scream.cat -CertStoreLocation Cert:\LocalMachine\TrustedPublisher 
+          Scream\Install\helpers\devcon-x64.exe install Scream\Install\driver\x64\Scream.inf *Scream
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: bin/Debug/OpenALpp_UnitTests.exe --order rand
+
+  Web:
+    runs-on: ubuntu-latest
+    env:
+      EMCC_CCACHE: 1
+    steps:
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.11
+        with:
+          cmake-version: '3.19.x'
+
+      - name: Set up gcc
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 9
+          platform: x64
+
+      - uses: mymindstorm/setup-emsdk@v11
+
+      - uses: actions/checkout@v2
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.type }}
+          max-size: 100M
+
+      - name: CMake
+        run: |
+          emcmake cmake -B ${{github.workspace}}/build \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           .
+      - name: Copy assets
+        run: cp -r assets ${{github.workspace}}/build/test/integration/
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: emmake make OpenALpp_UnitTests OpenALpp_Integration
