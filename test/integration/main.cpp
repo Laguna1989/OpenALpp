@@ -1,10 +1,12 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
 #include "sound_data.hpp"
-#include <emscripten.h>
 #include <fstream>
 #include <iostream>
-#include <thread>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 
 std::shared_ptr<Sound> snd;
 
@@ -31,7 +33,7 @@ int main()
         std::cout << "failed to load file\n";
     }
     std::cout << "post file\n";
-    SoundData buf1 { "assets/test1.ogg" };
+    SoundData buf1 { "assets/test.mp3" };
     std::cout << "post buf\n";
     snd = std::make_shared<Sound>(buf1, ctx);
     std::cout << "post snd\n";
@@ -40,9 +42,13 @@ int main()
     //    for (float pan = -1.0f; pan <= 1.0f; pan += 2.0f / 7.0f) {
     snd->play();
     //    }
-
+#ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop_function, 0, 1);
-
+#else
+    while (snd->isPlaying()) {
+        main_loop_function();
+    }
+#endif
     //    std::cout << "pre while\n";
     //    while (true) { }
     //    SoundData buf2 { "test.mp3" };
