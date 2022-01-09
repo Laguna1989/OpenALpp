@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(OpenAlTryout)
+project(OpenAlPP)
 
 option(OALPP_ENABLE_UNIT_TESTS "Enable unit tests" ON)
 
