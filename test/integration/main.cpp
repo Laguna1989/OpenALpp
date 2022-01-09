@@ -1,29 +1,38 @@
 #include "sound.hpp"
 #include "sound_context.hpp"
 #include "sound_data.hpp"
-#include <thread>
+#include <iostream>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
+std::shared_ptr<Sound> snd;
+
+void main_loop_function()
+{
+    if (!snd->isPlaying()) {
+        std::cout << "is not playing\n";
+    } else {
+        std::cout << "is playing\n";
+    }
+}
 
 int main()
 {
     SoundContext ctx;
+    SoundData buf1 { "assets/test.mp3" };
+    snd = std::make_shared<Sound>(buf1, ctx);
+    snd->setVolume(0.25f);
 
-    SoundData buf1 { "test1.ogg" };
-    Sound snd1 { buf1, ctx };
-    snd1.setVolume(0.25f);
-
-    for (float pan = -1.0f; pan <= 1.0f; pan += 2.0f / 7.0f) {
-        snd1.setPan(pan);
-        snd1.play();
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    snd->play();
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop_function, 0, 1);
+#else
+    while (snd->isPlaying()) {
+        main_loop_function();
     }
-
-    SoundData buf2 { "test.mp3" };
-    Sound snd2 { buf2, ctx };
-    snd2.setVolume(0.25f);
-    snd2.play();
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
+#endif
+    snd.reset();
     return 0;
 }

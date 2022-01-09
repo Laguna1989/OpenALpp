@@ -1,3 +1,6 @@
 file(GLOB TESTFILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/*)
-add_executable(OpenALPP_Integration ${TESTFILES})
-target_link_libraries(OpenALPP_Integration OpenALPP_Lib)
+add_executable(OpenALpp_Integration ${TESTFILES})
+if (EMSCRIPTEN)
+    target_link_options(OpenALpp_Integration PUBLIC --preload-file assets)
+endif ()
+target_link_libraries(OpenALpp_Integration OpenALpp_Lib)
