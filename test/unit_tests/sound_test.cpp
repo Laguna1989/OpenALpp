@@ -49,7 +49,7 @@ TEST_CASE("Sound volume test", "[Sound]")
     SECTION("invalid setVolume value")
     {
         float const newVolume = GENERATE(-1.5f, -0.1f, 1.1f, 9001.0f, -666.0f);
-        //        REQUIRE_THROWS(snd.setVolume(newVolume));
+        REQUIRE_THROWS(snd.setVolume(newVolume));
     }
 }
 
@@ -70,7 +70,7 @@ TEST_CASE("Sound pan test", "[Sound]")
     SECTION("invalid pan value")
     {
         float const newPan = GENERATE(-1.5f, -1.1f, 1.1f, 1.5f, 9001.0f, -666.0f);
-        //        REQUIRE_THROWS(snd.setPan(newPan));
+        REQUIRE_THROWS(snd.setPan(newPan));
     }
 }
 
@@ -85,7 +85,7 @@ TEST_CASE("Sound pan stereo sound test", "[Sound]")
     {
         float const newPan
             = GENERATE(-1.5f, -1.1f, 1.1f, 1.5f, 9001.0f, -666.0f, 0.5f, 1.0f, 0.1f, 0.0f);
-        //        REQUIRE_THROWS(snd.setPan(newPan));
+        REQUIRE_THROWS(snd.setPan(newPan));
     }
 }
 

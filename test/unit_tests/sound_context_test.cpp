@@ -15,6 +15,6 @@ TEST_CASE("Single context can be constructed", "[SoundContext]")
 
 TEST_CASE("Second context raises exception", "[SoundContext]")
 {
-    //    SoundContext ctx1 {};
-    //    REQUIRE_THROWS(SoundContext {});
+    SoundContext ctx1 {};
+    REQUIRE_THROWS(SoundContext {});
 }
