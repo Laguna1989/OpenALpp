@@ -17,6 +17,8 @@ set(CXX_STANDARD 17)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# speed up fetchcontent on consecutive runs
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 
 add_subdirectory(ext)
 add_subdirectory(impl)
