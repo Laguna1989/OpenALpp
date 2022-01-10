@@ -53,18 +53,40 @@ TEST_CASE("Sound volume test", "[Sound]")
     }
 }
 
-TEST_CASE("Sound pan test", "[Sound]")
+TEST_CASE("Sound position and pan test", "[Sound]")
 {
     SoundContext const ctx;
     SoundDataMonoFake const buffer;
     Sound snd { buffer, ctx };
 
-    SECTION("default pan value") { REQUIRE(0.0f == snd.getPan()); }
-    SECTION("pan after setPan")
+    SECTION("default position value")
     {
+        auto const pos = snd.getPosition();
+        REQUIRE(std::array<float, 3> { 0.0f, 0.0f, -1.0f } == pos);
+    }
+
+    SECTION("position after setPosition")
+    {
+        auto const newPosition = GENERATE(std::array<float, 3> { 0.0f, 0.0f, 0.0f },
+            std::array<float, 3> { 1.0f, 0.0f, 0.0f }, std::array<float, 3> { 0.0f, 1.0f, 0.0f },
+            std::array<float, 3> { 0.0f, 0.0f, 1.0f }, std::array<float, 3> { -100.0f, 0.0f, 0.0f },
+            std::array<float, 3> { 0.0f, -100.0f, 0.0f },
+            std::array<float, 3> { 0.0f, 0.0f, -100.0f }, std::array<float, 3> { 5.0f, 7.0f, 8.0f },
+            std::array<float, 3> { -10.0f, -17.0f, -2.0f });
+
+        snd.setPosition(newPosition);
+        REQUIRE(newPosition == snd.getPosition());
+    }
+
+    SECTION("position after setPan")
+    {
+        auto const conversion = [](float pan) {
+            return std::array<float, 3> { pan, 0, -sqrt(1.0f - pan * pan) };
+        };
         float const newPan = GENERATE(0.5f, 1.0f, 0.1f, 0.0f);
+        auto const expectedPosition = conversion(newPan);
         snd.setPan(newPan);
-        REQUIRE(newPan == snd.getPan());
+        REQUIRE(expectedPosition == snd.getPosition());
     }
 
     SECTION("invalid pan value")
@@ -101,7 +123,11 @@ TEST_CASE("Sound pan stereo sound test", "[Sound]")
     SoundDataStereoFake const buffer;
     Sound snd { buffer, ctx };
 
-    SECTION("default pan value") { REQUIRE(0.0f == snd.getPan()); }
+    SECTION("default position value")
+    {
+        auto const pos = snd.getPosition();
+        REQUIRE(std::array<float, 3> { 0.0f, 0.0f, -1.0f } == pos);
+    }
     SECTION("pan stereo sound always raises exception")
     {
         float const newPan

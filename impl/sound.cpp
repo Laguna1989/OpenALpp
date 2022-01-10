@@ -73,8 +73,6 @@ void Sound::setVolume(float newVolume)
     alSourcef(m_sourceId, AL_GAIN, newVolume);
 }
 
-float Sound::getPan() const { return m_pan; }
-
 void Sound::setPan(float newPan)
 {
     if (newPan < -1.0f || newPan > 1.0f) {
@@ -82,13 +80,21 @@ void Sound::setPan(float newPan)
         throw std::invalid_argument { errorMessage.c_str() };
     }
 
+    setPosition(std::array<float, 3> { newPan, 0, -sqrt(1.0f - newPan * newPan) });
+}
+
+std::array<float, 3> Sound::getPosition() const { return m_position; }
+
+void Sound::setPosition(std::array<float, 3> const& newPos)
+{
     int channels { 0 };
     alGetBufferi(m_bufferId, AL_CHANNELS, &channels);
     if (channels != 1) {
-        throw std::logic_error { std::string { "cannot set pan on non-mono file." }.c_str() };
+        throw std::logic_error { std::string { "cannot set position on non-mono file." }.c_str() };
     }
-    m_pan = newPan;
-    alSource3f(m_sourceId, AL_POSITION, newPan, 0, -sqrt(1.0f - newPan * newPan));
+
+    m_position = newPos;
+    alSource3f(m_sourceId, AL_POSITION, newPos[0], newPos[1], newPos[2]);
 }
 float Sound::getPitch() const { return m_pitch; }
 
