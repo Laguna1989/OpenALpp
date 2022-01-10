@@ -96,6 +96,27 @@ TEST_CASE("Sound position and pan test", "[Sound]")
     }
 }
 
+TEST_CASE("Sound pitch test", "[Sound]")
+{
+    SoundContext const ctx;
+    SoundDataMonoFake const buffer;
+    Sound snd { buffer, ctx };
+
+    SECTION("default pitch value") { REQUIRE(1.0f == snd.getPitch()); }
+    SECTION("pitch after setPitch")
+    {
+        float const newPitch = GENERATE(0.1f, 0.5f, 1.0f, 100.0f);
+        snd.setPitch(newPitch);
+        REQUIRE(newPitch == snd.getPitch());
+    }
+
+    SECTION("invalid pitch value")
+    {
+        float const newPitch = GENERATE(-0.1f, -100.0f);
+        REQUIRE_THROWS(snd.setPitch(newPitch));
+    }
+}
+
 TEST_CASE("Sound pan stereo sound test", "[Sound]")
 {
     SoundContext const ctx;

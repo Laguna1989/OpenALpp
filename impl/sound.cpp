@@ -96,3 +96,13 @@ void Sound::setPosition(std::array<float, 3> const& newPos)
     m_position = newPos;
     alSource3f(m_sourceId, AL_POSITION, newPos[0], newPos[1], newPos[2]);
 }
+float Sound::getPitch() const { return m_pitch; }
+
+void Sound::setPitch(float const newPitch)
+{
+    if (newPitch <= 0.0f) {
+        throw std::invalid_argument { "invalid pitch value" };
+    }
+    m_pitch = newPitch;
+    alSourcef(m_sourceId, AL_PITCH, newPitch);
+}
