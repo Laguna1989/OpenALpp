@@ -11,7 +11,7 @@ public:
     {
     }
 
-    [[nodiscard]] char const* what() const override { return m_message; }
+    [[nodiscard]] char const* what() const noexcept override { return m_message; }
 
 private:
     char const* m_message;
@@ -24,7 +24,7 @@ public:
     {
     }
 
-    [[nodiscard]] char const* what() const override { return m_message; }
+    [[nodiscard]] char const* what() const noexcept override { return m_message; }
 
 private:
     char const* m_message;
