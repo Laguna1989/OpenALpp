@@ -32,12 +32,15 @@ public:
 
     void setPitch(float const newPitch);
 
+    void update();
+
 private:
-    ALuint m_bufferId { 0 };
+    std::array<ALuint, 4> m_bufferIds { 0 };
     ALuint m_sourceId { 0 };
 
-    float m_volume { 1.0f };
+    std::size_t m_cursor { 0 };
 
+    float m_volume { 1.0f };
     std::array<float, 3> m_position { 0.0f, 0.0f, -1.0f };
     float m_pitch { 1.0f };
 };

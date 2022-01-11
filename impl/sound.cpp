@@ -13,11 +13,16 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
         format = AL_FORMAT_STEREO16;
     }
 
-    alGenBuffers(1, &m_bufferId);
+    alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
 
-    int size = soundData.getSamples().size();
-    alBufferData(
-        m_bufferId, format, soundData.getSamples().data(), size, soundData.getSampleRate());
+    for (std::size_t i = 0u; i != m_bufferIds.size(); ++i) {
+        std::size_t size = 65536u;
+        if (soundData.getSamples().size() <= i * size) {
+            break;
+        }
+        alBufferData(m_bufferIds.at(i), format, &(soundData.getSamples()[i * size]), size,
+            soundData.getSampleRate());
+    }
 
     // Create source
     alGenSources(1, &m_sourceId);
@@ -30,7 +35,7 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
     alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
 
-    alSourcei(m_sourceId, AL_BUFFER, m_bufferId);
+    alSourceQueueBuffers(m_sourceId, m_bufferIds.size(), m_bufferIds.data());
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
@@ -44,7 +49,7 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
 Sound::~Sound()
 {
     alDeleteSources(1, &m_sourceId);
-    alDeleteBuffers(1, &m_bufferId);
+    alDeleteBuffers(m_bufferIds.size(), m_bufferIds.data());
 }
 
 void Sound::play()
@@ -93,7 +98,7 @@ std::array<float, 3> Sound::getPosition() const { return m_position; }
 void Sound::setPosition(std::array<float, 3> const& newPos)
 {
     int channels { 0 };
-    alGetBufferi(m_bufferId, AL_CHANNELS, &channels);
+    alGetBufferi(m_bufferIds[0], AL_CHANNELS, &channels);
     if (channels != 1) {
         throw oalpp::AudioException { "Could not set position on non-mono file" };
     }
@@ -114,5 +119,7 @@ void Sound::setPitch(float const newPitch)
     m_pitch = newPitch;
     alSourcef(m_sourceId, AL_PITCH, newPitch);
 }
+
+void Sound::update() { }
 
 } // namespace oalpp
