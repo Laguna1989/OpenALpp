@@ -35,7 +35,7 @@ public:
     void update();
 
 private:
-    std::array<ALuint, 4> m_bufferIds { 0 };
+    std::array<ALuint, 6> m_bufferIds { 0 };
     ALuint m_sourceId { 0 };
 
     std::size_t m_cursor { 0 };

@@ -12,10 +12,10 @@ public:
 
     int getNumberOfChannels() const override;
     int getSampleRate() const override;
-    std::vector<short> const& getSamples() const override;
+    std::vector<char> const& getSamples() const override;
 
 private:
-    std::vector<short> m_samples {};
+    std::vector<char> m_samples {};
     int m_sampleRate { 0 };
     int m_channels { 0 };
 };

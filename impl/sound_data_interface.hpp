@@ -11,7 +11,7 @@ public:
     virtual ~SoundDataInterface() = default;
     virtual int getNumberOfChannels() const = 0;
     virtual int getSampleRate() const = 0;
-    virtual std::vector<short> const& getSamples() const = 0;
+    virtual std::vector<char> const& getSamples() const = 0;
 };
 
 } // namespace oalpp

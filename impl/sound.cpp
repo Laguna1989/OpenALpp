@@ -20,7 +20,7 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
         if (soundData.getSamples().size() <= i * size) {
             break;
         }
-        alBufferData(m_bufferIds.at(i), format, &(soundData.getSamples()[i * size]), size,
+        alBufferData(m_bufferIds.at(i), format, &soundData.getSamples().data()[i * size], size,
             soundData.getSampleRate());
     }
 

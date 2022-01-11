@@ -20,16 +20,24 @@ SoundData::SoundData(std::string const& fileName)
         }
     }
 
-    m_samples.resize(size);
-
-    std::transform(fileData->samples.cbegin(), fileData->samples.cend(), m_samples.begin(),
-        [](auto in) { return static_cast<short>(in * std::numeric_limits<short>::max()); });
+    // TODO why???
+    m_samples.resize(size * 2);
+    for (auto i = 0u; i != fileData->samples.size(); ++i) {
+        float const in = fileData->samples.at(i);
+        float in_scaled = in * std::numeric_limits<char>::max();
+        short myshort = static_cast<short>(in_scaled);
+        char Lo = myshort & (0xff);
+        char Hi = myshort & (0xff00);
+        Hi <<= 8;
+        m_samples.at(i * 2) = Hi;
+        m_samples.at(i * 2 + 1) = Lo;
+    }
 }
 
 int SoundData::getNumberOfChannels() const { return m_channels; }
 
 int SoundData::getSampleRate() const { return m_sampleRate; }
 
-std::vector<short> const& SoundData::getSamples() const { return m_samples; }
+std::vector<char> const& SoundData::getSamples() const { return m_samples; }
 
 } // namespace oalpp
