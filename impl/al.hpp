@@ -1,6 +1,6 @@
-#ifndef OPENALTRYOUT_AL_HPP
-#define OPENALTRYOUT_AL_HPP
+#ifndef OPENALPP_AL_HPP
+#define OPENALPP_AL_HPP
 
 #include "AL/al.h"
 
-#endif // OPENALTRYOUT_AL_HPP
+#endif // OPENALPP_AL_HPP
