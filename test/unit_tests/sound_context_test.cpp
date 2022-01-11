@@ -1,6 +1,8 @@
 #include "catch2/catch.hpp"
 #include "sound_context.hpp"
 
+using namespace oalpp;
+
 TEST_CASE("Single context is default constructible", "[SoundContext]")
 {
     static_assert(

@@ -1,5 +1,5 @@
-#ifndef OPENALTRYOUT_SOUND_HPP
-#define OPENALTRYOUT_SOUND_HPP
+#ifndef OPENALPP_SOUND_HPP
+#define OPENALPP_SOUND_HPP
 
 #include "al.hpp"
 #include "sound_data_interface.hpp"
@@ -7,6 +7,8 @@
 #include <memory>
 #include <string>
 #include <vector>
+
+namespace oalpp {
 
 // fwd decl.
 class SoundContext;
@@ -40,4 +42,6 @@ private:
     float m_pitch { 1.0f };
 };
 
-#endif // OPENALTRYOUT_SOUND_HPP
+} // namespace oalpp
+
+#endif // OPENALPP_SOUND_HPP

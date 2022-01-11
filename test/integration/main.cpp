@@ -7,6 +7,8 @@
 #include <emscripten.h>
 #endif
 
+using namespace oalpp;
+
 std::shared_ptr<Sound> snd;
 
 void main_loop_function()

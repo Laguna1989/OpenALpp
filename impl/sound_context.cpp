@@ -1,26 +1,28 @@
 #include "sound_context.hpp"
-#include <stdexcept>
+#include "audio_exceptions.hpp"
+
+namespace oalpp {
 
 SoundContext::SoundContext()
 {
     if (numberOfInitializations != 0) {
-        throw std::logic_error { "" };
+        throw oalpp::AudioSystemException { "Sound context has to be unique" };
     }
     numberOfInitializations++;
 
     m_device = alcOpenDevice(nullptr);
     if (!m_device) {
-        throw std::logic_error { "could not open audio device" };
+        throw oalpp::AudioSystemException { "Could not open audio device" };
     }
 
     m_context = alcCreateContext(m_device, nullptr);
     if (!m_context) {
-        throw std::logic_error { "Could not create audio context" };
+        throw oalpp::AudioSystemException { "Could not create audio context" };
     }
 
     auto const contextMadeCurrent = alcMakeContextCurrent(m_context);
     if (!contextMadeCurrent) {
-        throw std::logic_error { "Could not make audio context current" };
+        throw oalpp::AudioSystemException { "Could not make audio context current" };
     }
 }
 
@@ -34,3 +36,5 @@ SoundContext::~SoundContext()
 }
 
 int SoundContext::numberOfInitializations { 0 };
+
+} // namespace oalpp

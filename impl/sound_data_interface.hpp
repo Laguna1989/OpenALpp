@@ -1,8 +1,10 @@
-#ifndef OPENALTRYOUT_SOUND_DATA_INTERFACE_HPP
-#define OPENALTRYOUT_SOUND_DATA_INTERFACE_HPP
+#ifndef OPENALPP_SOUND_DATA_INTERFACE_HPP
+#define OPENALPP_SOUND_DATA_INTERFACE_HPP
 
 #include <cstddef>
 #include <vector>
+
+namespace oalpp {
 
 class SoundDataInterface {
 public:
@@ -12,4 +14,6 @@ public:
     virtual std::vector<short> const& getSamples() const = 0;
 };
 
-#endif // OPENALTRYOUT_SOUND_DATA_INTERFACE_HPP
+} // namespace oalpp
+
+#endif // OPENALPP_SOUND_DATA_INTERFACE_HPP

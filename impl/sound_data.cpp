@@ -1,6 +1,8 @@
 #include "sound_data.hpp"
 #include "libnyquist/Decoders.h"
 
+namespace oalpp {
+
 SoundData::SoundData(std::string const& fileName)
 {
     auto fileData = std::make_shared<nqr::AudioData>();
@@ -29,3 +31,5 @@ int SoundData::getNumberOfChannels() const { return m_channels; }
 int SoundData::getSampleRate() const { return m_sampleRate; }
 
 std::vector<short> const& SoundData::getSamples() const { return m_samples; }
+
+} // namespace oalpp

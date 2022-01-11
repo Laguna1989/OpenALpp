@@ -1,11 +1,13 @@
-#ifndef OPENALTRYOUT_SOUND_CONTEXT_HPP
-#define OPENALTRYOUT_SOUND_CONTEXT_HPP
+#ifndef OPENALPP_SOUND_CONTEXT_HPP
+#define OPENALPP_SOUND_CONTEXT_HPP
 
 #include "alc.hpp"
 #include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>
+
+namespace oalpp {
 
 class SoundContext {
 public:
@@ -18,4 +20,6 @@ private:
     static int numberOfInitializations;
 };
 
-#endif // OPENALTRYOUT_SOUND_CONTEXT_HPP
+} // namespace oalpp
+
+#endif // OPENALPP_SOUND_CONTEXT_HPP
