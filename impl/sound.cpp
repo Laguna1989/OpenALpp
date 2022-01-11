@@ -1,4 +1,5 @@
 #include "sound.hpp"
+#include "audio_exceptions.hpp"
 #include "sound_context.hpp"
 #include <cmath>
 #include <stdexcept>
@@ -33,7 +34,8 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage
             = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
-        throw std::logic_error { errorMessage.c_str() };
+        // TODO put sound into same namespace
+        throw oalpp::AudioException { errorMessage.c_str() };
     }
 }
 
@@ -49,7 +51,7 @@ void Sound::play()
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage = "Could not play sound, error code: " + std::to_string(errorIfAny);
-        throw std::logic_error { errorMessage.c_str() };
+        throw oalpp::AudioException { errorMessage.c_str() };
     }
 }
 
@@ -66,7 +68,7 @@ void Sound::setVolume(float newVolume)
 {
     if (newVolume < 0 || newVolume > 1.0f) {
         auto const errorMessage
-            = std::string { "invalid volume value: " } + std::to_string(newVolume);
+            = std::string { "Could not set volume value: " } + std::to_string(newVolume);
         throw std::invalid_argument { errorMessage.c_str() };
     }
     m_volume = newVolume;
@@ -76,7 +78,8 @@ void Sound::setVolume(float newVolume)
 void Sound::setPan(float newPan)
 {
     if (newPan < -1.0f || newPan > 1.0f) {
-        auto const errorMessage = std::string { "invalid pan value: " } + std::to_string(newPan);
+        auto const errorMessage
+            = std::string { "Could not set pan value: " } + std::to_string(newPan);
         throw std::invalid_argument { errorMessage.c_str() };
     }
 
@@ -90,18 +93,21 @@ void Sound::setPosition(std::array<float, 3> const& newPos)
     int channels { 0 };
     alGetBufferi(m_bufferId, AL_CHANNELS, &channels);
     if (channels != 1) {
-        throw std::logic_error { std::string { "cannot set position on non-mono file." }.c_str() };
+        throw oalpp::AudioException { "Could not set position on non-mono file" };
     }
 
     m_position = newPos;
     alSource3f(m_sourceId, AL_POSITION, newPos[0], newPos[1], newPos[2]);
 }
+
 float Sound::getPitch() const { return m_pitch; }
 
 void Sound::setPitch(float const newPitch)
 {
     if (newPitch <= 0.0f) {
-        throw std::invalid_argument { "invalid pitch value" };
+        auto const errorMessage
+            = std::string { "Could not set pitch value: " } + std::to_string(newPitch);
+        throw std::invalid_argument { errorMessage.c_str() };
     }
     m_pitch = newPitch;
     alSourcef(m_sourceId, AL_PITCH, newPitch);
