@@ -1,6 +1,8 @@
 #include "sound_context.hpp"
 #include "audio_exceptions.hpp"
 
+namespace oalpp {
+
 SoundContext::SoundContext()
 {
     if (numberOfInitializations != 0) {
@@ -34,3 +36,5 @@ SoundContext::~SoundContext()
 }
 
 int SoundContext::numberOfInitializations { 0 };
+
+} // namespace oalpp

@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+namespace oalpp {
+
 // fwd decl.
 class SoundContext;
 
@@ -39,5 +41,7 @@ private:
     std::array<float, 3> m_position { 0.0f, 0.0f, -1.0f };
     float m_pitch { 1.0f };
 };
+
+} // namespace oalpp
 
 #endif // OPENALPP_SOUND_HPP

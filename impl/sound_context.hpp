@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+namespace oalpp {
+
 class SoundContext {
 public:
     SoundContext();
@@ -17,5 +19,7 @@ private:
     ALCcontext* m_context { nullptr };
     static int numberOfInitializations;
 };
+
+} // namespace oalpp
 
 #endif // OPENALPP_SOUND_CONTEXT_HPP

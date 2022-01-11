@@ -4,6 +4,8 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace oalpp {
+
 Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/)
 {
     ALenum format = AL_FORMAT_MONO16;
@@ -112,3 +114,5 @@ void Sound::setPitch(float const newPitch)
     m_pitch = newPitch;
     alSourcef(m_sourceId, AL_PITCH, newPitch);
 }
+
+} // namespace oalpp

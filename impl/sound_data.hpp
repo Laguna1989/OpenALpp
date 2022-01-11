@@ -4,6 +4,8 @@
 #include "sound_data_interface.hpp"
 #include <string>
 
+namespace oalpp {
+
 class SoundData : public SoundDataInterface {
 public:
     explicit SoundData(std::string const& fileName);
@@ -17,5 +19,7 @@ private:
     int m_sampleRate { 0 };
     int m_channels { 0 };
 };
+
+} // namespace oalpp
 
 #endif // OPENALPP_SOUND_DATA_HPP

@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <vector>
 
+namespace oalpp {
+
 class SoundDataInterface {
 public:
     virtual ~SoundDataInterface() = default;
@@ -11,5 +13,7 @@ public:
     virtual int getSampleRate() const = 0;
     virtual std::vector<short> const& getSamples() const = 0;
 };
+
+} // namespace oalpp
 
 #endif // OPENALPP_SOUND_DATA_INTERFACE_HPP
