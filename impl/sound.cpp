@@ -116,7 +116,7 @@ void Sound::setPitch(float const newPitch)
 
 void Sound::queueBuffer(ALuint buffer, std::size_t samplesToQueue)
 {
-    alBufferData(buffer, m_format, &m_soundData.getSamples().data()[m_cursor],
+    alBufferData(buffer, m_format, &m_soundData.getSamples()[m_cursor],
         samplesToQueue * sizeof(float), m_soundData.getSampleRate());
     alSourceQueueBuffers(m_sourceId, 1, &buffer);
 

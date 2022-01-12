@@ -14,10 +14,8 @@ std::shared_ptr<Sound> snd;
 void main_loop_function()
 {
     if (snd->isPlaying()) {
-        //        std::cout << "is playing\n";
         snd->update();
     } else {
-        //        std::cout << "is not playing\n";
     }
 }
 
