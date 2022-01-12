@@ -13,16 +13,16 @@ class SoundDataMonoFake : public SoundDataInterface {
 public:
     int getNumberOfChannels() const override { return 1; }
     int getSampleRate() const override { return 44100; }
-    std::vector<short> const& getSamples() const override { return m_emptySamples; }
-    std::vector<short> m_emptySamples {};
+    std::vector<float> const& getSamples() const override { return m_emptySamples; }
+    std::vector<float> m_emptySamples {};
 };
 
 class SoundDataStereoFake : public SoundDataInterface {
 public:
     int getNumberOfChannels() const override { return 2; }
     int getSampleRate() const override { return 44100; }
-    std::vector<short> const& getSamples() const override { return m_emptySamples; }
-    std::vector<short> m_emptySamples {};
+    std::vector<float> const& getSamples() const override { return m_emptySamples; }
+    std::vector<float> m_emptySamples {};
 };
 
 TEST_CASE("Sound is not playing by default", "[Sound]")

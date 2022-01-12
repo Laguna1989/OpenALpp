@@ -7,17 +7,11 @@
 namespace oalpp {
 
 Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/)
+    : m_soundData { soundData }
 {
-    ALenum format = AL_FORMAT_MONO16;
     if (soundData.getNumberOfChannels() == 2) {
-        format = AL_FORMAT_STEREO16;
+        m_format = AL_FORMAT_STEREO_FLOAT32;
     }
-
-    alGenBuffers(1, &m_bufferId);
-
-    int size = soundData.getSamples().size();
-    alBufferData(
-        m_bufferId, format, soundData.getSamples().data(), size, soundData.getSampleRate());
 
     // Create source
     alGenSources(1, &m_sourceId);
@@ -26,17 +20,24 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     alSource3f(m_sourceId, AL_POSITION, 0.0f, 0, -1.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
-
     alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
     alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
 
-    alSourcei(m_sourceId, AL_BUFFER, m_bufferId);
+    // Create and fill buffers
+    alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
+
+    for (std::size_t i = 0u; i != m_bufferIds.size(); ++i) {
+        if (m_cursor >= m_soundData.getSamples().size()) {
+            continue;
+        }
+        // TODO small audio files (less samples than buffer size) might cause issues here.
+        queueBuffer(m_bufferIds.at(i), BUFFER_SIZE);
+    }
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage
             = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
-        // TODO put sound into same namespace
         throw oalpp::AudioException { errorMessage.c_str() };
     }
 }
@@ -44,7 +45,7 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
 Sound::~Sound()
 {
     alDeleteSources(1, &m_sourceId);
-    alDeleteBuffers(1, &m_bufferId);
+    alDeleteBuffers(m_bufferIds.size(), m_bufferIds.data());
 }
 
 void Sound::play()
@@ -92,9 +93,7 @@ std::array<float, 3> Sound::getPosition() const { return m_position; }
 
 void Sound::setPosition(std::array<float, 3> const& newPos)
 {
-    int channels { 0 };
-    alGetBufferi(m_bufferId, AL_CHANNELS, &channels);
-    if (channels != 1) {
+    if (m_format == AL_FORMAT_STEREO_FLOAT32) {
         throw oalpp::AudioException { "Could not set position on non-mono file" };
     }
 
@@ -113,6 +112,45 @@ void Sound::setPitch(float const newPitch)
     }
     m_pitch = newPitch;
     alSourcef(m_sourceId, AL_PITCH, newPitch);
+}
+
+void Sound::queueBuffer(ALuint buffer, std::size_t samplesToQueue)
+{
+    alBufferData(buffer, m_format, &m_soundData.getSamples()[m_cursor],
+        samplesToQueue * sizeof(float), m_soundData.getSampleRate());
+    alSourceQueueBuffers(m_sourceId, 1, &buffer);
+
+    m_cursor += samplesToQueue;
+}
+
+void Sound::update()
+{
+    ALint buffersProcessed = 0;
+    alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &buffersProcessed);
+
+    if (buffersProcessed <= 0) {
+        return;
+    }
+
+    while (buffersProcessed--) {
+        if (m_cursor >= m_soundData.getSamples().size()) {
+            continue;
+        }
+
+        ALuint buffer;
+        alSourceUnqueueBuffers(m_sourceId, 1, &buffer);
+
+        if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
+            // queue a full buffer
+            queueBuffer(buffer, BUFFER_SIZE);
+        } else {
+            // queue only the remaining part of the file into the buffer
+            std::size_t const remainingSamplesInSoundData
+                = m_soundData.getSamples().size() - m_cursor;
+
+            queueBuffer(buffer, remainingSamplesInSoundData);
+        }
+    }
 }
 
 } // namespace oalpp

@@ -32,14 +32,24 @@ public:
 
     void setPitch(float const newPitch);
 
+    void update();
+
 private:
-    ALuint m_bufferId { 0 };
+    SoundDataInterface const& m_soundData;
+
+    std::array<ALuint, 4> m_bufferIds { 0 };
     ALuint m_sourceId { 0 };
+    ALenum m_format { AL_FORMAT_MONO_FLOAT32 };
+
+    std::size_t m_cursor { 0 };
 
     float m_volume { 1.0f };
-
     std::array<float, 3> m_position { 0.0f, 0.0f, -1.0f };
     float m_pitch { 1.0f };
+
+    static constexpr std::size_t BUFFER_SIZE = 65536u;
+
+    void queueBuffer(ALuint buffer, size_t samplesToQueue);
 };
 
 } // namespace oalpp
