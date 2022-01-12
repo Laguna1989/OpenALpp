@@ -7,22 +7,22 @@
 namespace oalpp {
 
 Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/)
+    : m_soundData { soundData }
 {
-    ALenum format = AL_FORMAT_MONO16;
     if (soundData.getNumberOfChannels() == 2) {
-        format = AL_FORMAT_STEREO16;
+        m_format = AL_STEREO32F_SOFT;
     }
 
     alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
 
     for (std::size_t i = 0u; i != m_bufferIds.size(); ++i) {
-        std::size_t size = 65536u;
-        if (soundData.getSamples().size() <= i * size) {
+        if (soundData.getSamples().size() <= i * BUFFER_SIZE) {
             break;
         }
-        alBufferData(m_bufferIds.at(i), format, &soundData.getSamples().data()[i * size], size,
-            soundData.getSampleRate());
+        alBufferData(m_bufferIds.at(i), m_format, soundData.getSamples().data() + (i * BUFFER_SIZE),
+            BUFFER_SIZE * sizeof(float), soundData.getSampleRate());
     }
+    m_cursor = m_bufferIds.size() * BUFFER_SIZE;
 
     // Create source
     alGenSources(1, &m_sourceId);
@@ -41,7 +41,6 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage
             = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
-        // TODO put sound into same namespace
         throw oalpp::AudioException { errorMessage.c_str() };
     }
 }
@@ -97,9 +96,7 @@ std::array<float, 3> Sound::getPosition() const { return m_position; }
 
 void Sound::setPosition(std::array<float, 3> const& newPos)
 {
-    int channels { 0 };
-    alGetBufferi(m_bufferIds[0], AL_CHANNELS, &channels);
-    if (channels != 1) {
+    if (m_format == AL_FORMAT_STEREO_FLOAT32) {
         throw oalpp::AudioException { "Could not set position on non-mono file" };
     }
 
@@ -120,6 +117,41 @@ void Sound::setPitch(float const newPitch)
     alSourcef(m_sourceId, AL_PITCH, newPitch);
 }
 
-void Sound::update() { }
+void Sound::update()
+{
+    ALint buffersProcessed = 0;
+    alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &buffersProcessed);
+
+    if (buffersProcessed <= 0) {
+        return;
+    }
+
+    while (buffersProcessed--) {
+        if (m_cursor >= m_soundData.getSamples().size()) {
+            continue;
+        }
+        ALuint buffer;
+        alSourceUnqueueBuffers(m_sourceId, 1, &buffer);
+
+        if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
+            // queue a full buffer
+            alBufferData(buffer, m_format, &m_soundData.getSamples().data()[m_cursor],
+                BUFFER_SIZE * sizeof(float), m_soundData.getSampleRate());
+            alSourceQueueBuffers(m_sourceId, 1, &buffer);
+            // move cursor forward
+            m_cursor += BUFFER_SIZE;
+        } else {
+            // queue only the remaining part of the file into the buffer
+            std::size_t const remainingSamplesInSoundData
+                = m_soundData.getSamples().size() - m_cursor;
+
+            alBufferData(buffer, m_format, &m_soundData.getSamples().data()[m_cursor],
+                remainingSamplesInSoundData * sizeof(float), m_soundData.getSampleRate());
+            alSourceQueueBuffers(m_sourceId, 1, &buffer);
+
+            m_cursor += remainingSamplesInSoundData;
+        }
+    }
+}
 
 } // namespace oalpp
