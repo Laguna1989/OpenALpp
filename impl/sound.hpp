@@ -48,6 +48,8 @@ private:
     float m_pitch { 1.0f };
 
     static constexpr std::size_t BUFFER_SIZE = 65536u;
+
+    void queueBuffer(ALuint buffer, size_t samplesToQueue);
 };
 
 } // namespace oalpp

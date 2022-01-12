@@ -10,19 +10,8 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     : m_soundData { soundData }
 {
     if (soundData.getNumberOfChannels() == 2) {
-        m_format = AL_STEREO32F_SOFT;
+        m_format = AL_FORMAT_STEREO_FLOAT32;
     }
-
-    alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
-
-    for (std::size_t i = 0u; i != m_bufferIds.size(); ++i) {
-        if (soundData.getSamples().size() <= i * BUFFER_SIZE) {
-            break;
-        }
-        alBufferData(m_bufferIds.at(i), m_format, soundData.getSamples().data() + (i * BUFFER_SIZE),
-            BUFFER_SIZE * sizeof(float), soundData.getSampleRate());
-    }
-    m_cursor = m_bufferIds.size() * BUFFER_SIZE;
 
     // Create source
     alGenSources(1, &m_sourceId);
@@ -31,11 +20,19 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     alSource3f(m_sourceId, AL_POSITION, 0.0f, 0, -1.0f);
     alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
-
     alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
     alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
 
-    alSourceQueueBuffers(m_sourceId, m_bufferIds.size(), m_bufferIds.data());
+    // Create and fill buffers
+    alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
+
+    for (std::size_t i = 0u; i != m_bufferIds.size(); ++i) {
+        if (m_cursor >= m_soundData.getSamples().size()) {
+            continue;
+        }
+        // TODO small audio files (less samples than buffer size) might cause issues here.
+        queueBuffer(m_bufferIds.at(i), BUFFER_SIZE);
+    }
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
@@ -117,6 +114,15 @@ void Sound::setPitch(float const newPitch)
     alSourcef(m_sourceId, AL_PITCH, newPitch);
 }
 
+void Sound::queueBuffer(ALuint buffer, std::size_t samplesToQueue)
+{
+    alBufferData(buffer, m_format, &m_soundData.getSamples().data()[m_cursor],
+        samplesToQueue * sizeof(float), m_soundData.getSampleRate());
+    alSourceQueueBuffers(m_sourceId, 1, &buffer);
+
+    m_cursor += samplesToQueue;
+}
+
 void Sound::update()
 {
     ALint buffersProcessed = 0;
@@ -130,26 +136,19 @@ void Sound::update()
         if (m_cursor >= m_soundData.getSamples().size()) {
             continue;
         }
+
         ALuint buffer;
         alSourceUnqueueBuffers(m_sourceId, 1, &buffer);
 
         if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
             // queue a full buffer
-            alBufferData(buffer, m_format, &m_soundData.getSamples().data()[m_cursor],
-                BUFFER_SIZE * sizeof(float), m_soundData.getSampleRate());
-            alSourceQueueBuffers(m_sourceId, 1, &buffer);
-            // move cursor forward
-            m_cursor += BUFFER_SIZE;
+            queueBuffer(buffer, BUFFER_SIZE);
         } else {
             // queue only the remaining part of the file into the buffer
             std::size_t const remainingSamplesInSoundData
                 = m_soundData.getSamples().size() - m_cursor;
 
-            alBufferData(buffer, m_format, &m_soundData.getSamples().data()[m_cursor],
-                remainingSamplesInSoundData * sizeof(float), m_soundData.getSampleRate());
-            alSourceQueueBuffers(m_sourceId, 1, &buffer);
-
-            m_cursor += remainingSamplesInSoundData;
+            queueBuffer(buffer, remainingSamplesInSoundData);
         }
     }
 }
