@@ -11,9 +11,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
-        linuxcompiler: [ gcc ]
-        gccver: [ 9 ]
+        include:
+          - os: ubuntu-latest
+            linuxcompiler: gcc
+            gccver: [ 9, 10 ]
+          - os: ubuntu-latest
+            linuxcompiler: gcc
+            gccver: [ 11 ]
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
@@ -37,7 +41,7 @@ jobs:
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.type }}
+          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.type }}-${{matrix.}}
           max-size: 100M
 
       - name: CMake
