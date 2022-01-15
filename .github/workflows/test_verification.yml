@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         linuxcompiler: [ gcc ]
-        gccver: [ 9 ]
+        gccver: [ 9, 10, 11 ]
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
