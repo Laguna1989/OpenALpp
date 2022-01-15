@@ -29,7 +29,7 @@ jobs:
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ github.job }}-${{ matrix.gccgver }}-${{ matrix.os }}
+          key: ${{ github.job }}-${{ matrix.gccver }}-${{ matrix.os }}
           max-size: 100M
 
       - name: CMake
@@ -50,14 +50,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        clangver: [ 6, 10, 13 ]
+        clangver: [ 13 ]
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
         with:
           cmake-version: '3.19.x'
 
-      - name: Set up gcc
+      - name: Set up clang
         uses: egor-tensin/setup-clang@v1
         with:
           version: ${{ matrix.clangver }}
