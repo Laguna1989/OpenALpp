@@ -83,7 +83,7 @@ TEST_CASE("Sound position and pan test", "[Sound]")
     SECTION("position after setPan")
     {
         auto const conversion = [](float pan) {
-            return std::array<float, 3> { pan, 0, -sqrt(1.0f - pan * pan) };
+            return std::array<float, 3> { pan, 0, -static_cast<float>(sqrt(1.0f - pan * pan)) };
         };
         float const newPan = GENERATE(0.5f, 1.0f, 0.1f, 0.0f);
         auto const expectedPosition = conversion(newPan);
