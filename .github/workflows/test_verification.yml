@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-20.04 ]
+        os: [ ubuntu-latest ]
         linuxcompiler: [ gcc ]
         gccver: [ 9 ]
     steps:
@@ -23,7 +23,7 @@ jobs:
       - name: Set up gcc
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: ${{ matrix.cggver }}
+          version: 9
           platform: x64
 
       - name: Set up system libs
