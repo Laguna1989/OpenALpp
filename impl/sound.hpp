@@ -29,8 +29,10 @@ public:
     void setPan(float newPan);
 
     float getPitch() const;
-
     void setPitch(float const newPitch);
+
+    bool getIsLooping() const;
+    void setIsLooping(bool value);
 
     void update();
 
@@ -46,6 +48,8 @@ private:
     float m_volume { 1.0f };
     std::array<float, 3> m_position { 0.0f, 0.0f, -1.0f };
     float m_pitch { 1.0f };
+
+    bool m_isLooping { false };
 
     static constexpr std::size_t BUFFER_SIZE = 65536u;
 

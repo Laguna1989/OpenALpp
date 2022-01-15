@@ -119,6 +119,27 @@ TEST_CASE("Sound pitch test", "[Sound]")
     }
 }
 
+TEST_CASE("Sound looping test", "[Sound]")
+{
+    SoundContext const ctx;
+    SoundDataMonoFake const buffer;
+    Sound snd { buffer, ctx };
+
+    SECTION("default looping value") { REQUIRE(false == snd.getIsLooping()); }
+    SECTION("looping after setIsLooping")
+    {
+        snd.setIsLooping(true);
+        REQUIRE(true == snd.getIsLooping());
+    }
+
+    SECTION("not looping after unset looping")
+    {
+        snd.setIsLooping(true);
+        snd.setIsLooping(false);
+        REQUIRE(false == snd.getIsLooping());
+    }
+}
+
 TEST_CASE("Sound pan stereo sound test", "[Sound]")
 {
     SoundContext const ctx;

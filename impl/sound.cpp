@@ -149,8 +149,15 @@ void Sound::update()
                 = m_soundData.getSamples().size() - m_cursor;
 
             queueBuffer(buffer, remainingSamplesInSoundData);
+
+            if (m_isLooping) {
+                // reset cursor
+                m_cursor = 0;
+            }
         }
     }
 }
+bool Sound::getIsLooping() const { return m_isLooping; }
+void Sound::setIsLooping(bool value) { m_isLooping = value; }
 
 } // namespace oalpp

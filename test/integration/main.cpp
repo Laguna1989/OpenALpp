@@ -26,6 +26,7 @@ int main()
 
     snd = std::make_shared<Sound>(buf1, ctx);
     snd->setVolume(0.25f);
+    snd->setIsLooping(true);
     snd->play();
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop_function, 0, 1);
