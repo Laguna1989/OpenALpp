@@ -14,10 +14,10 @@ jobs:
         include:
           - os: ubuntu-latest
             linuxcompiler: gcc
-            gccver: [ 9, 10 ]
+            gccver: 9
           - os: ubuntu-latest
             linuxcompiler: gcc
-            gccver: [ 11 ]
+            gccver: 11
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
