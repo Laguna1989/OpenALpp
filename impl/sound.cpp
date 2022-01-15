@@ -86,7 +86,8 @@ void Sound::setPan(float newPan)
         throw std::invalid_argument { errorMessage.c_str() };
     }
 
-    setPosition(std::array<float, 3> { newPan, 0, -sqrt(1.0f - newPan * newPan) });
+    setPosition(
+        std::array<float, 3> { newPan, 0, -static_cast<float>(sqrt(1.0f - newPan * newPan)) });
 }
 
 std::array<float, 3> Sound::getPosition() const { return m_position; }

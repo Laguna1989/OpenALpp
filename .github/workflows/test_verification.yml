@@ -7,8 +7,11 @@ on:
     branches: [ master ]
 
 jobs:
-  Linux:
+  Linux_gcc:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gccver: [ 9, 10, 11 ]
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
@@ -18,21 +21,15 @@ jobs:
       - name: Set up gcc
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 9
+          version: ${{ matrix.gccver }}
           platform: x64
-
-      - name: Set up system libs
-        run: |
-          sudo apt-get install -y \
-          pulseaudio libpulse-dev osspd \
-          jackd 
 
       - uses: actions/checkout@v2
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
         with:
-          key: ${{ github.job }}-${{ matrix.os }}-${{ matrix.type }}
+          key: ${{ github.job }}-${{ matrix.gccver }}-${{ matrix.os }}
           max-size: 100M
 
       - name: CMake
@@ -45,12 +42,48 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
 
-      - name: StartJack
-        run: jackd -d dummy &
-
   #      - name: Test
   #        run: ./OpenALpp_UnitTests --order rand
   #        working-directory: ${{github.workspace}}/build/bin/
+
+  Linux_clang:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        clangver: [ 8, 10, 11, 12, 13 ]
+    steps:
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.11
+        with:
+          cmake-version: '3.19.x'
+
+      - name: Set up clang
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: ${{ matrix.clangver }}
+          platform: x64
+
+      - uses: actions/checkout@v2
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ${{ github.job }}-${{ matrix.clangver }}-${{ matrix.os }}
+          max-size: 100M
+
+      - name: CMake
+        run: |
+          cmake \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -B ${{github.workspace}}/build .
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
+
+    #      - name: Test
+    #        run: ./OpenALpp_UnitTests --order rand
+    #        working-directory: ${{github.workspace}}/build/bin/
 
   Windows:
     runs-on: windows-latest
