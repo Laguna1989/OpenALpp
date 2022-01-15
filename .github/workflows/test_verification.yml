@@ -8,11 +8,9 @@ on:
 
 jobs:
   Linux_gcc:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ ubuntu-latest ]
-        linuxcompiler: [ gcc ]
         gccver: [ 9, 10, 11 ]
     steps:
       - name: Set up cmake
@@ -25,12 +23,6 @@ jobs:
         with:
           version: ${{ matrix.gccver }}
           platform: x64
-
-      - name: Set up system libs
-        run: |
-          sudo apt-get install -y \
-          pulseaudio libpulse-dev osspd \
-          jackd 
 
       - uses: actions/checkout@v2
 
@@ -49,9 +41,6 @@ jobs:
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
-
-      - name: StartJack
-        run: jackd -d dummy &
 
   #      - name: Test
   #        run: ./OpenALpp_UnitTests --order rand
