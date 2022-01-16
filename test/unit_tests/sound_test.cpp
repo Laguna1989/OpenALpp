@@ -6,7 +6,7 @@ using namespace oalpp;
 
 TEST_CASE("Sound is not default constructible", "[Sound]")
 {
-    static_assert(!std::is_default_constructible_v<Sound>, "Sound is not default constructible");
+    static_assert(!std::is_default_constructible<Sound>::value, "Sound is not default constructible");
 }
 
 class SoundDataMonoFake : public SoundDataInterface {
