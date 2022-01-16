@@ -57,8 +57,8 @@ private:
 
     static constexpr std::size_t BUFFER_SIZE = 65536u;
 
-    void queueNSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
-    void queueSamplesToBuffer(ALuint bufferId);
+    void enqueueSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
+    void selectSamplesForBuffer(ALuint bufferId);
 };
 
 } // namespace oalpp

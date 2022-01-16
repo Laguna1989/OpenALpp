@@ -26,8 +26,8 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     // Create and fill buffers
     alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
 
-    for (auto i = 0u; i != m_bufferIds.size(); ++i) {
-        queueSamplesToBuffer(m_bufferIds.at(i));
+    for (auto const& bufferId : m_bufferIds) {
+        selectSamplesForBuffer(bufferId);
     }
 
     auto const errorIfAny = alGetError();
@@ -111,7 +111,7 @@ void Sound::setPitch(float const newPitch)
     alSourcef(m_sourceId, AL_PITCH, newPitch);
 }
 
-void Sound::queueNSamplesToBuffer(ALuint buffer, std::size_t samplesToQueue)
+void Sound::enqueueSamplesToBuffer(ALuint buffer, std::size_t samplesToQueue)
 {
     alBufferData(buffer, m_format, &m_soundData.getSamples()[m_cursor],
         samplesToQueue * sizeof(float), m_soundData.getSampleRate());
@@ -137,24 +137,23 @@ void Sound::update()
         ALuint buffer;
         alSourceUnqueueBuffers(m_sourceId, 1, &buffer);
 
-        queueSamplesToBuffer(buffer);
+        selectSamplesForBuffer(buffer);
     }
 }
 
-void Sound::queueSamplesToBuffer(ALuint bufferId)
+void Sound::selectSamplesForBuffer(ALuint bufferId)
 {
     if (m_cursor >= m_soundData.getSamples().size()) {
         // do not queue any buffer
         return;
-    }
-    if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
+    } else if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
         // queue a full buffer
-        queueNSamplesToBuffer(bufferId, BUFFER_SIZE);
+        enqueueSamplesToBuffer(bufferId, BUFFER_SIZE);
     } else {
         // queue only the remaining part of the soundData into the buffer
         std::size_t const remainingSamplesInSoundData = m_soundData.getSamples().size() - m_cursor;
 
-        queueNSamplesToBuffer(bufferId, remainingSamplesInSoundData);
+        enqueueSamplesToBuffer(bufferId, remainingSamplesInSoundData);
 
         if (m_isLooping) {
             // reset cursor
