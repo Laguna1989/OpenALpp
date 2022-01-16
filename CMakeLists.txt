@@ -7,10 +7,10 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /EHsc")
 elseif (EMSCRIPTEN)
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -g --std=c++17 -fpermissive")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -g --std=c++14 -fpermissive")
     add_link_options("SHELL:-s TOTAL_MEMORY=256MB " "SHELL:-s ALLOW_MEMORY_GROWTH=1")
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -g --std=c++17 -fpermissive")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -g --std=c++14 -fpermissive")
 endif ()
 
 if (NOT EMSCRIPTEN)
@@ -19,8 +19,8 @@ if (NOT EMSCRIPTEN)
 endif ()
 
 set(CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
-set(CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
+set(CXX_STANDARD 14)
 
 # speed up fetchcontent on consecutive runs
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
