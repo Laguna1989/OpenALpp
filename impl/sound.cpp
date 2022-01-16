@@ -26,12 +26,8 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     // Create and fill buffers
     alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
 
-    for (std::size_t i = 0u; i != m_bufferIds.size(); ++i) {
-        if (m_cursor >= m_soundData.getSamples().size()) {
-            continue;
-        }
-        // TODO small audio files (less samples than buffer size) might cause issues here.
-        queueBuffer(m_bufferIds.at(i), BUFFER_SIZE);
+    for (auto i = 0u; i != m_bufferIds.size(); ++i) {
+        queueSamplesToBuffer(m_bufferIds.at(i));
     }
 
     auto const errorIfAny = alGetError();
@@ -115,7 +111,7 @@ void Sound::setPitch(float const newPitch)
     alSourcef(m_sourceId, AL_PITCH, newPitch);
 }
 
-void Sound::queueBuffer(ALuint buffer, std::size_t samplesToQueue)
+void Sound::queueNSamplesToBuffer(ALuint buffer, std::size_t samplesToQueue)
 {
     alBufferData(buffer, m_format, &m_soundData.getSamples()[m_cursor],
         samplesToQueue * sizeof(float), m_soundData.getSampleRate());
@@ -141,24 +137,43 @@ void Sound::update()
         ALuint buffer;
         alSourceUnqueueBuffers(m_sourceId, 1, &buffer);
 
-        if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
-            // queue a full buffer
-            queueBuffer(buffer, BUFFER_SIZE);
-        } else {
-            // queue only the remaining part of the file into the buffer
-            std::size_t const remainingSamplesInSoundData
-                = m_soundData.getSamples().size() - m_cursor;
+        queueSamplesToBuffer(buffer);
+    }
+}
 
-            queueBuffer(buffer, remainingSamplesInSoundData);
+void Sound::queueSamplesToBuffer(ALuint bufferId)
+{
+    if (m_cursor >= m_soundData.getSamples().size()) {
+        // do not queue any buffer
+        return;
+    }
+    if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
+        // queue a full buffer
+        queueNSamplesToBuffer(bufferId, BUFFER_SIZE);
+    } else {
+        // queue only the remaining part of the soundData into the buffer
+        std::size_t const remainingSamplesInSoundData = m_soundData.getSamples().size() - m_cursor;
 
-            if (m_isLooping) {
-                // reset cursor
-                m_cursor = 0;
-            }
+        queueNSamplesToBuffer(bufferId, remainingSamplesInSoundData);
+
+        if (m_isLooping) {
+            // reset cursor
+            m_cursor = 0;
         }
     }
 }
+
 bool Sound::getIsLooping() const { return m_isLooping; }
 void Sound::setIsLooping(bool value) { m_isLooping = value; }
+
+size_t Sound::getLengthInSamples() const
+{
+    return m_soundData.getSamples().size() / m_soundData.getNumberOfChannels();
+}
+float Sound::getLengthInSeconds() const
+{
+    return static_cast<float>(getLengthInSamples())
+        / static_cast<float>(m_soundData.getSampleRate());
+}
 
 } // namespace oalpp
