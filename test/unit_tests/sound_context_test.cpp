@@ -6,7 +6,7 @@ using namespace oalpp;
 TEST_CASE("Single context is default constructible", "[SoundContext]")
 {
     static_assert(
-        std::is_default_constructible_v<SoundContext>, "Sound context not default constructible");
+        std::is_default_constructible<SoundContext>::value, "Sound context not default constructible");
 }
 
 TEST_CASE("Single context can be constructed", "[SoundContext]")
