@@ -36,6 +36,10 @@ public:
 
     void update();
 
+    std::size_t getLengthInSamples() const;
+
+    float getLengthInSeconds() const;
+
 private:
     SoundDataInterface const& m_soundData;
 
@@ -53,7 +57,8 @@ private:
 
     static constexpr std::size_t BUFFER_SIZE = 65536u;
 
-    void queueBuffer(ALuint buffer, size_t samplesToQueue);
+    void enqueueSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
+    void selectSamplesForBuffer(ALuint bufferId);
 };
 
 } // namespace oalpp

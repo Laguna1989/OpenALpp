@@ -13,16 +13,16 @@ class SoundDataMonoFake : public SoundDataInterface {
 public:
     int getNumberOfChannels() const override { return 1; }
     int getSampleRate() const override { return 44100; }
-    std::vector<float> const& getSamples() const override { return m_emptySamples; }
-    std::vector<float> m_emptySamples {};
+    std::vector<float> const& getSamples() const override { return m_samples; }
+    std::vector<float> m_samples {};
 };
 
 class SoundDataStereoFake : public SoundDataInterface {
 public:
     int getNumberOfChannels() const override { return 2; }
     int getSampleRate() const override { return 44100; }
-    std::vector<float> const& getSamples() const override { return m_emptySamples; }
-    std::vector<float> m_emptySamples {};
+    std::vector<float> const& getSamples() const override { return m_samples; }
+    std::vector<float> m_samples {};
 };
 
 TEST_CASE("Sound is not playing by default", "[Sound]")
@@ -159,10 +159,76 @@ TEST_CASE("Sound pan stereo sound test", "[Sound]")
     }
 }
 
-TEST_CASE("Sound play does not raise exception", "[Sound]")
+TEST_CASE("Play does not raise exception", "[Sound]")
 {
     SoundContext ctx;
     SoundDataMonoFake fake;
     Sound snd { fake, ctx };
     REQUIRE_NOTHROW(snd.play());
+}
+
+TEST_CASE("Sound getLength", "[Sound]")
+{
+    SoundContext ctx;
+
+    SECTION("Empty SoundDataMonoFake results in length zero")
+    {
+        SoundDataMonoFake fake;
+        Sound snd { fake, ctx };
+        REQUIRE(0 == snd.getLengthInSamples());
+        REQUIRE(0.0f == snd.getLengthInSeconds());
+    }
+
+    SECTION("Filled SoundDataMonoFake results in correct length in samples")
+    {
+        SoundDataMonoFake fake;
+        std::size_t const newSampleCount = GENERATE(1u, 10u, 100u, 1000u);
+        fake.m_samples.resize(newSampleCount);
+        Sound snd { fake, ctx };
+        REQUIRE(newSampleCount == snd.getLengthInSamples());
+    }
+
+    SECTION("Filled SoundDataMonoFake results in correct length in seconds")
+    {
+        SoundDataMonoFake fake;
+        std::size_t const newSampleCount = fake.getSampleRate();
+        fake.m_samples.resize(newSampleCount);
+        Sound snd { fake, ctx };
+        REQUIRE(1.0f == snd.getLengthInSeconds());
+    }
+
+    SECTION("Filled SoundDataMonoFake results in correct length")
+    {
+        SoundDataMonoFake fake;
+        std::size_t const newSampleCount = GENERATE(1u, 10u, 100u, 1000u);
+        fake.m_samples.resize(newSampleCount);
+        Sound snd { fake, ctx };
+        REQUIRE(newSampleCount == snd.getLengthInSamples());
+    }
+
+    SECTION("Empty SoundDataStereoFake results in length zero")
+    {
+        SoundDataStereoFake fake;
+        Sound snd { fake, ctx };
+        REQUIRE(0 == snd.getLengthInSamples());
+        REQUIRE(0.0f == snd.getLengthInSeconds());
+    }
+
+    SECTION("Filled SoundDataStereoFake results in correct length")
+    {
+        SoundDataStereoFake fake;
+        std::size_t const newSampleCount = GENERATE(2u, 20u, 200u, 2000u);
+        fake.m_samples.resize(newSampleCount);
+        Sound snd { fake, ctx };
+        REQUIRE(newSampleCount / 2u == snd.getLengthInSamples());
+    }
+
+    SECTION("Filled SoundDataStereoFake results in correct length in seconds")
+    {
+        SoundDataStereoFake fake;
+        std::size_t const newSampleCount = fake.getSampleRate();
+        fake.m_samples.resize(2 * newSampleCount);
+        Sound snd { fake, ctx };
+        REQUIRE(1.0f == snd.getLengthInSeconds());
+    }
 }
