@@ -24,6 +24,11 @@ jobs:
           version: ${{ matrix.gccver }}
           platform: x64
 
+      - name: Set up system libs
+        run: |
+          sudo apt-get install -y \
+          jackd
+
       - uses: actions/checkout@v2
 
       - name: ccache
@@ -35,16 +40,19 @@ jobs:
       - name: CMake
         run: |
           cmake \
-          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DALSOFT_REQUIRE_JACK=ON \
           -B ${{github.workspace}}/build .
 
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
 
-  #      - name: Test
-  #        run: ./OpenALpp_UnitTests --order rand
-  #        working-directory: ${{github.workspace}}/build/bin/
+      - name: StartJack
+        run: jackd -d dummy &
+
+      - name: Test
+        run: ./OpenALpp_UnitTests --order rand
+        working-directory: ${{github.workspace}}/build/bin/
 
   Linux_clang:
     runs-on: ubuntu-latest
