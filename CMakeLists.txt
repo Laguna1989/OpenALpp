@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(OpenALpp)
 
 option(OALPP_ENABLE_UNIT_TESTS "Enable unit tests" ON)
+option(OALPP_ENABLE_INTEGRATION_TESTS "Enable integration tests" ON)
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /EHsc")
