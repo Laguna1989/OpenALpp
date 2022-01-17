@@ -1,12 +1,15 @@
 #include "catch2/catch.hpp"
 #include "sound.hpp"
 #include "sound_context.hpp"
+#include <iostream>
+#include <thread>
 
 using namespace oalpp;
 
 TEST_CASE("Sound is not default constructible", "[Sound]")
 {
-    static_assert(!std::is_default_constructible<Sound>::value, "Sound is not default constructible");
+    static_assert(
+        !std::is_default_constructible<Sound>::value, "Sound is not default constructible");
 }
 
 class SoundDataMonoFake : public SoundDataInterface {
@@ -230,5 +233,46 @@ TEST_CASE("Sound getLength", "[Sound]")
         fake.m_samples.resize(2 * newSampleCount);
         Sound snd { fake, ctx };
         REQUIRE(1.0f == snd.getLengthInSeconds());
+    }
+}
+
+TEST_CASE("Sound getCurrentPosition", "[Sound]")
+{
+    SoundContext ctx;
+    SECTION("Empty SoundDataMonoFake results in correct initial Position in seconds")
+    {
+        SoundDataMonoFake fake;
+        Sound snd { fake, ctx };
+
+        REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
+    }
+
+    SECTION("after complete sample is played, getCurrentPosition should return 0.0f")
+    {
+        SoundDataMonoFake fake;
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+        }
+        REQUIRE(snd.getCurrentPositionInSeconds() == 0.0f);
+    }
+
+    SECTION("getCurrentPosition is increasing while playing")
+    {
+        SoundDataMonoFake fake;
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        float oldValue = 0.0f;
+        while (snd.isPlaying()) {
+            snd.update();
+            float const newValue = snd.getCurrentPositionInSeconds();
+            if (newValue != 0.0f) {
+                REQUIRE(newValue >= oldValue);
+                oldValue = newValue;
+            }
+        }
     }
 }

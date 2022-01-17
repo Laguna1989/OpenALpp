@@ -175,4 +175,11 @@ float Sound::getLengthInSeconds() const
         / static_cast<float>(m_soundData.getSampleRate());
 }
 
+float Sound::getCurrentPositionInSeconds() const
+{
+    float value { 0.0f };
+    alGetSourcef(m_sourceId, AL_SEC_OFFSET, &value);
+    return value;
+}
+
 } // namespace oalpp
