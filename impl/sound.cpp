@@ -24,7 +24,7 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
     alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
 
     // Create and fill buffers
-    alGenBuffers(m_bufferIds.size(), m_bufferIds.data());
+    alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
 
     for (auto const& bufferId : m_bufferIds) {
         selectSamplesForBuffer(bufferId);
@@ -41,7 +41,7 @@ Sound::Sound(SoundDataInterface const& soundData, SoundContext const& /*unused*/
 Sound::~Sound()
 {
     alDeleteSources(1, &m_sourceId);
-    alDeleteBuffers(m_bufferIds.size(), m_bufferIds.data());
+    alDeleteBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
 }
 
 void Sound::play()
@@ -114,7 +114,7 @@ void Sound::setPitch(float const newPitch)
 void Sound::enqueueSamplesToBuffer(ALuint buffer, std::size_t samplesToQueue)
 {
     alBufferData(buffer, m_format, &m_soundData.getSamples()[m_cursor],
-        samplesToQueue * sizeof(float), m_soundData.getSampleRate());
+        static_cast<ALsizei>(samplesToQueue) * sizeof(float), m_soundData.getSampleRate());
     alSourceQueueBuffers(m_sourceId, 1, &buffer);
 
     m_cursor += samplesToQueue;
@@ -173,6 +173,19 @@ float Sound::getLengthInSeconds() const
 {
     return static_cast<float>(getLengthInSamples())
         / static_cast<float>(m_soundData.getSampleRate());
+}
+
+float Sound::getCurrentPositionInSeconds() const
+{
+    return static_cast<float>(getCurrentPositionInSamples())
+        / static_cast<float>(m_soundData.getSampleRate());
+}
+
+size_t Sound::getCurrentPositionInSamples() const
+{
+    ALint value { 0 };
+    alGetSourcei(m_sourceId, AL_SAMPLE_OFFSET, &value);
+    return static_cast<std::size_t>(value);
 }
 
 } // namespace oalpp

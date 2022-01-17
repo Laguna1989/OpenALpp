@@ -6,7 +6,8 @@ using namespace oalpp;
 
 TEST_CASE("Sound is not default constructible", "[Sound]")
 {
-    static_assert(!std::is_default_constructible<Sound>::value, "Sound is not default constructible");
+    static_assert(
+        !std::is_default_constructible<Sound>::value, "Sound is not default constructible");
 }
 
 class SoundDataMonoFake : public SoundDataInterface {
@@ -230,5 +231,76 @@ TEST_CASE("Sound getLength", "[Sound]")
         fake.m_samples.resize(2 * newSampleCount);
         Sound snd { fake, ctx };
         REQUIRE(1.0f == snd.getLengthInSeconds());
+    }
+}
+
+TEST_CASE("Sound getCurrentPosition", "[Sound]")
+{
+    SoundContext ctx;
+    SoundDataMonoFake fake;
+    SECTION("Empty SoundDataMonoFake results in correct initial Position in seconds")
+    {
+        Sound snd { fake, ctx };
+        REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
+    }
+
+    SECTION("Empty SoundDataMonoFake results in correct initial Position in samples")
+    {
+        Sound snd { fake, ctx };
+        REQUIRE(0 == snd.getCurrentPositionInSamples());
+    }
+
+    SECTION("after complete sample is played, getCurrentPosition should return 0.0f seconds")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+        }
+        REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
+    }
+
+    SECTION("after complete sample is played, getCurrentPosition should return 0 samples")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+        }
+        REQUIRE(0u == snd.getCurrentPositionInSamples());
+    }
+
+    SECTION("getCurrentPositionSeconds is increasing while playing")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        float oldValue = 0.0f;
+        while (snd.isPlaying()) {
+            snd.update();
+            float const newValue = snd.getCurrentPositionInSeconds();
+            if (newValue != 0.0f) {
+                REQUIRE(newValue >= oldValue);
+                oldValue = newValue;
+            }
+        }
+    }
+
+    SECTION("getCurrentPositionSamples is increasing while playing")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        std::size_t oldValue = 0u;
+        while (snd.isPlaying()) {
+            snd.update();
+            std::size_t const newValue = snd.getCurrentPositionInSamples();
+            if (newValue != 0u) {
+                REQUIRE(newValue >= oldValue);
+                oldValue = newValue;
+            }
+        }
     }
 }

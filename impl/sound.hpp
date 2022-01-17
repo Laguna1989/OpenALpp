@@ -37,8 +37,11 @@ public:
     void update();
 
     std::size_t getLengthInSamples() const;
-
     float getLengthInSeconds() const;
+
+    float getCurrentPositionInSeconds() const;
+
+    std::size_t getCurrentPositionInSamples() const;
 
 private:
     SoundDataInterface const& m_soundData;
