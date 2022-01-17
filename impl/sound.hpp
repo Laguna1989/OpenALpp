@@ -41,6 +41,8 @@ public:
 
     float getCurrentPositionInSeconds() const;
 
+    std::size_t getCurrentPositionInSamples() const;
+
 private:
     SoundDataInterface const& m_soundData;
 

@@ -1,8 +1,6 @@
 #include "catch2/catch.hpp"
 #include "sound.hpp"
 #include "sound_context.hpp"
-#include <iostream>
-#include <thread>
 
 using namespace oalpp;
 
@@ -239,29 +237,43 @@ TEST_CASE("Sound getLength", "[Sound]")
 TEST_CASE("Sound getCurrentPosition", "[Sound]")
 {
     SoundContext ctx;
+    SoundDataMonoFake fake;
     SECTION("Empty SoundDataMonoFake results in correct initial Position in seconds")
     {
-        SoundDataMonoFake fake;
         Sound snd { fake, ctx };
-
         REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
     }
 
-    SECTION("after complete sample is played, getCurrentPosition should return 0.0f")
+    SECTION("Empty SoundDataMonoFake results in correct initial Position in samples")
     {
-        SoundDataMonoFake fake;
+        Sound snd { fake, ctx };
+        REQUIRE(0 == snd.getCurrentPositionInSamples());
+    }
+
+    SECTION("after complete sample is played, getCurrentPosition should return 0.0f seconds")
+    {
         fake.m_samples.resize(8820);
         Sound snd { fake, ctx };
         snd.play();
         while (snd.isPlaying()) {
             snd.update();
         }
-        REQUIRE(snd.getCurrentPositionInSeconds() == 0.0f);
+        REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
     }
 
-    SECTION("getCurrentPosition is increasing while playing")
+    SECTION("after complete sample is played, getCurrentPosition should return 0 samples")
     {
-        SoundDataMonoFake fake;
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+        }
+        REQUIRE(0u == snd.getCurrentPositionInSamples());
+    }
+
+    SECTION("getCurrentPositionSeconds is increasing while playing")
+    {
         fake.m_samples.resize(8820);
         Sound snd { fake, ctx };
         snd.play();
@@ -270,6 +282,22 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
             snd.update();
             float const newValue = snd.getCurrentPositionInSeconds();
             if (newValue != 0.0f) {
+                REQUIRE(newValue >= oldValue);
+                oldValue = newValue;
+            }
+        }
+    }
+
+    SECTION("getCurrentPositionSamples is increasing while playing")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake, ctx };
+        snd.play();
+        std::size_t oldValue = 0u;
+        while (snd.isPlaying()) {
+            snd.update();
+            std::size_t const newValue = snd.getCurrentPositionInSamples();
+            if (newValue != 0u) {
                 REQUIRE(newValue >= oldValue);
                 oldValue = newValue;
             }
