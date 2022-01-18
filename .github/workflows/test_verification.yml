@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master, FEATURE_BuildMac ]
+    branches: [ master ]
 
 jobs:
   Linux_gcc:
@@ -153,9 +153,6 @@ jobs:
 
   Mac_clang:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        clangver: [ 8, 10, 11, 12, 13 ]
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
