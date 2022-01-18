@@ -3,7 +3,7 @@ OpenALpp
 [![Tests](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml/badge.svg)](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml)
 
 OpenALpp is a modern OOP C++14 audio library built on [OpenAL Soft](https://github.com/kcat/openal-soft)
-for Windows, Linux and web (emscripten). It supports loading of wav, mp3, FLAC and ogg files
+for Windows, macOS, Linux and web (emscripten). It supports loading of wav, mp3, FLAC and ogg files
 via [libnyquist](https://github.com/ddiakopoulos/libnyquist).
 
 How to build
@@ -23,6 +23,12 @@ SoundData buffer { "audio.mp3" };
 Sound snd { buffer, ctx };
 snd.play();
 ```
+
+CMake Options
+-------------
+
+* `OALPP_ENABLE_UNIT_TESTS` - Enable unit tests - default `ON`
+* `OALPP_ENABLE_INTEGRATION_TESTS` - Enable integration test - default `ON`
 
 Compiler compatibility
 ----------------------
