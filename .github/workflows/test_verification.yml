@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, FEATURE_BuildMac ]
 
 jobs:
   Linux_gcc:
@@ -150,3 +150,40 @@ jobs:
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: emmake make OpenALpp_UnitTests OpenALpp_Integration
+
+  Mac_clang:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        clangver: [ 8, 10, 11, 12, 13 ]
+    steps:
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.11
+        with:
+          cmake-version: '3.19.x'
+
+      - name: Install dependencies
+        run: |
+          brew install cmake ninja
+
+      - uses: actions/checkout@v2
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1
+        with:
+          key: ${{ github.job }}-${{ matrix.os }}
+          max-size: 100M
+
+      - name: CMake
+        run: |
+          cmake \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -B ${{github.workspace}}/build .
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
+
+    #      - name: Test
+    #        run: ./OpenALpp_UnitTests --order rand
+    #        working-directory: ${{github.workspace}}/build/bin/
