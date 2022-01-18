@@ -1,7 +1,6 @@
-#include "sound.hpp"
-#include "sound_context.hpp"
-#include "sound_data.hpp"
-#include <iostream>
+#include "oalpp/sound.hpp"
+#include "oalpp/sound_context.hpp"
+#include "oalpp/sound_data.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>

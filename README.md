@@ -1,6 +1,7 @@
 OpenALpp
 ========
 [![Tests](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml/badge.svg)](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 OpenALpp is a modern OOP C++14 audio library built on [OpenAL Soft](https://github.com/kcat/openal-soft)
 for Windows, macOS, Linux and web (emscripten). It supports loading of wav, mp3, FLAC and ogg files
@@ -18,6 +19,10 @@ How to use
 ----------
 
 ```
+#include "oalpp/sound_context.hpp"
+#include "oalpp/sound_data.hpp"
+#include "oalpp/sound.hpp"
+
 SoundContext ctx;
 SoundData buffer { "audio.mp3" };
 Sound snd { buffer, ctx };
