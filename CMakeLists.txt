@@ -3,6 +3,11 @@ project(OpenALpp)
 
 option(OALPP_ENABLE_UNIT_TESTS "Enable unit tests" ON)
 option(OALPP_ENABLE_INTEGRATION_TESTS "Enable integration tests" ON)
+option(OALPP_STATIC_LIBRARY "Build openal as static library" OFF)
+
+if (OALPP_STATIC_LIBRARY)
+    set(LIBTYPE STATIC)
+endif ()
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /EHsc")
