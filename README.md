@@ -15,7 +15,7 @@ How to build
 3. `cmake ..`
 4. `cmake --build . --target OpenALpp_Lib`
 
-How to use
+Code Example
 ----------
 
 ```
@@ -27,6 +27,23 @@ SoundContext ctx;
 SoundData buffer { "audio.mp3" };
 Sound snd { buffer, ctx };
 snd.play();
+```
+
+How to include OpenALpp in your project
+---------------------------------------
+
+CMakeLists.txt
+```
+FetchContent_Declare(
+        openalpp
+        GIT_REPOSITORY https://github.com/Laguna1989/OpenALpp.git
+        GIT_TAG master
+)
+
+FetchContent_MakeAvailable(openalpp)
+
+add_executable(MyProject main.cpp)
+target_link_libraries(MyProject OpenALpp_Lib)
 ```
 
 CMake Options
