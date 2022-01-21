@@ -160,12 +160,48 @@ TEST_CASE("Sound pan stereo sound test", "[Sound]")
     }
 }
 
-TEST_CASE("Play does not raise exception", "[Sound]")
+TEST_CASE("is playing is true after play ", "[Sound]")
 {
     SoundContext ctx;
     SoundDataMonoFake fake;
+    fake.m_samples.resize(44100);
     Sound snd { fake, ctx };
-    REQUIRE_NOTHROW(snd.play());
+    snd.play();
+    REQUIRE(true == snd.isPlaying());
+}
+
+TEST_CASE("is playing is false after stop", "[Sound]")
+{
+    SoundContext ctx;
+    SoundDataMonoFake fake;
+    fake.m_samples.resize(44100);
+    Sound snd { fake, ctx };
+    snd.play();
+    snd.stop();
+    REQUIRE(false == snd.isPlaying());
+}
+
+TEST_CASE("stop twice does not raise exception", "[Sound]")
+{
+    SoundContext ctx;
+    SoundDataMonoFake fake;
+    fake.m_samples.resize(44100);
+    Sound snd { fake, ctx };
+    snd.play();
+    snd.stop();
+    REQUIRE_NOTHROW(snd.stop());
+}
+
+TEST_CASE("is playing is true for play after stop", "[Sound]")
+{
+    SoundContext ctx;
+    SoundDataMonoFake fake;
+    fake.m_samples.resize(44100);
+    Sound snd { fake, ctx };
+    snd.play();
+    snd.stop();
+    snd.play();
+    REQUIRE(true == snd.isPlaying());
 }
 
 TEST_CASE("Sound getLength", "[Sound]")

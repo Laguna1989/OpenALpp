@@ -17,7 +17,9 @@ class Sound {
 public:
     explicit Sound(SoundDataInterface const& soundData, SoundContext const& ctx);
     ~Sound();
+
     void play();
+    void stop();
     bool isPlaying() const;
 
     float getVolume() const;
