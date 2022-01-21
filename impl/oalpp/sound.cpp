@@ -54,6 +54,16 @@ void Sound::play()
     }
 }
 
+void Sound::stop()
+{
+    alSourceStop(m_sourceId);
+    auto const errorIfAny = alGetError();
+    if (errorIfAny != AL_NO_ERROR) {
+        auto const errorMessage = "Could not stop sound, error code: " + std::to_string(errorIfAny);
+        throw oalpp::AudioException { errorMessage.c_str() };
+    }
+}
+
 bool Sound::isPlaying() const
 {
     ALint state = AL_PLAYING;
