@@ -96,7 +96,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: CMake
-        run: cmake -B ${{github.workspace}}/build .
+        run: cmake -B ${{github.workspace}}/build . -DOALPP_STATIC_LIBRARY=ON
 
       - name: Build
         working-directory: ${{github.workspace}}/build
@@ -112,7 +112,7 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: bin/Debug/OpenALpp_UnitTests.exe --order rand
+        run: test/unit_tests/Debug/OpenALpp_UnitTests.exe --order rand
 
   Web:
     runs-on: ubuntu-latest

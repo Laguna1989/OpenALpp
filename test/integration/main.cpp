@@ -1,6 +1,7 @@
-#include "sound.hpp"
-#include "sound_context.hpp"
-#include "sound_data.hpp"
+#include "oalpp/sound.hpp"
+#include "oalpp/sound_context.hpp"
+#include "oalpp/sound_data.hpp"
+#include <fstream>
 #include <iostream>
 
 #ifdef __EMSCRIPTEN__
@@ -21,8 +22,17 @@ void main_loop_function()
 
 int main()
 {
+    std::string const fileName { "assets/test.mp3" };
+
+    std::ifstream file { fileName };
+    if (file.fail()) {
+        std::cerr << "Error opening test audio file.\nCopy assets folder from source root next to "
+                     "executable for this test to work\n";
+        return 1;
+    }
+
     SoundContext ctx;
-    SoundData buf1 { "assets/test.mp3" };
+    SoundData buf1 { fileName };
 
     snd = std::make_shared<Sound>(buf1, ctx);
     snd->setVolume(0.25f);
