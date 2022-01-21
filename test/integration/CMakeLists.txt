@@ -4,3 +4,7 @@ if (EMSCRIPTEN)
     target_link_options(OpenALpp_Integration PUBLIC --preload-file assets)
 endif ()
 target_link_libraries(OpenALpp_Integration OpenALpp_Lib)
+
+if (NOT OALPP_STATIC_LIBRARY)
+    message(WARNING "Building OpenALpp integration tests with dynamic library: dll/so will not be copied by default.")
+endif ()

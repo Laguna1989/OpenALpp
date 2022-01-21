@@ -33,6 +33,7 @@ How to include OpenALpp in your project
 ---------------------------------------
 
 CMakeLists.txt
+
 ```
 FetchContent_Declare(
         openalpp
@@ -51,7 +52,7 @@ CMake Options
 
 * `OALPP_ENABLE_UNIT_TESTS` - Enable unit tests - default `ON`
 * `OALPP_ENABLE_INTEGRATION_TESTS` - Enable integration test - default `ON`
-* `OALPP_STATIC_LIBRARY` - Build OpenALpp and dependencies as static library - default OFF
+* `OALPP_STATIC_LIBRARY` - Build OpenALpp and dependencies as static library - default `OFF`
 
 Compiler compatibility
 ----------------------
