@@ -1,7 +1,7 @@
 #ifndef OPENALPP_EFFECTS_FILTER_BUTTERWORTH_24_D_B_HPP
 #define OPENALPP_EFFECTS_FILTER_BUTTERWORTH_24_D_B_HPP
 
-#include "oalpp/effects/effect_interface.hpp"
+#include "oalpp/effects/mono_effect_interface.hpp"
 
 namespace oalpp {
 namespace effects {
