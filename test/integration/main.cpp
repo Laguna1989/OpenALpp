@@ -1,6 +1,8 @@
+#include "oalpp/effects/filter/filter_butterworth_24_d_b.hpp"
 #include "oalpp/sound.hpp"
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
+#include "oalpp/sound_data_with_effect.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -32,9 +34,13 @@ int main()
     }
 
     SoundContext ctx;
-    SoundData buf1 { fileName };
+    SoundData buffer { fileName };
+    // TODO sample rate int <-> float
+    effects::filter::FilterButterworth24db filter { static_cast<float>(buffer.getSampleRate()),
+        1000.0f, 0.0f };
+    SoundDataWithEffect soundDataWithEffect { buffer, filter };
 
-    snd = std::make_shared<Sound>(buf1, ctx);
+    snd = std::make_shared<Sound>(soundDataWithEffect, ctx);
     snd->setVolume(0.25f);
     snd->play();
 #ifdef __EMSCRIPTEN__
