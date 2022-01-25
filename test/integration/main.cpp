@@ -1,4 +1,6 @@
-#include "oalpp/effects/filter/filter_butterworth_24_d_b.hpp"
+#include "oalpp/effects/filter/butterworth_24db_highpass.hpp"
+#include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
+#include "oalpp/effects/filter/random_lowpass.hpp"
 #include "oalpp/sound.hpp"
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
@@ -35,13 +37,13 @@ int main()
 
     SoundContext ctx;
     SoundData buffer { fileName };
-    // TODO sample rate int <-> float
-    effects::filter::FilterButterworth24db filter { static_cast<float>(buffer.getSampleRate()),
-        1000.0f, 0.0f };
+    //    effects::filter::Butterworth24dbLowpass filter { 44100, 200.0f, 0.1f };
+    effects::filter::RandomLowpass filter { 200, 0.2f, 44100.0f };
     SoundDataWithEffect soundDataWithEffect { buffer, filter };
 
     snd = std::make_shared<Sound>(soundDataWithEffect, ctx);
     snd->setVolume(0.25f);
+    snd->setIsLooping(true);
     snd->play();
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop_function, 0, 1);

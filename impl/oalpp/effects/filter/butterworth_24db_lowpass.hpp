@@ -7,33 +7,33 @@ namespace oalpp {
 namespace effects {
 namespace filter {
 
-class FilterButterworth24db : public oalpp::effects::MonoEffectInterface {
+class Butterworth24dbLowpass : public oalpp::effects::MonoEffectInterface {
 public:
-    FilterButterworth24db(float sampleRate, float cutoffFrequency, float q);
+    Butterworth24dbLowpass(int sampleRate, float cutoffFrequency, float q);
     float process(float input) override;
 
 private:
     void setSampleRate(float sampleRate);
     void set(float cutoffFrequency, float q);
 
-    float m_t0;
-    float m_t1;
-    float m_t2;
-    float m_t3;
+    float m_t0 { 0.0f };
+    float m_t1 { 0.0f };
+    float m_t2 { 0.0f };
+    float m_t3 { 0.0f };
 
-    float m_coefficient0;
-    float m_coefficient1;
-    float m_coefficient2;
-    float m_coefficient3;
+    float m_coefficient0 { 0.0f };
+    float m_coefficient1 { 0.0f };
+    float m_coefficient2 { 0.0f };
+    float m_coefficient3 { 0.0f };
 
     float m_history1 { 0.0f };
     float m_history2 { 0.0f };
     float m_history3 { 0.0f };
     float m_history4 { 0.0f };
 
-    float m_gain;
-    float m_minCutoff;
-    float m_maxCutoff;
+    float m_gain { 0.0f };
+    float m_minCutoff { 0.0f };
+    float m_maxCutoff { 0.0f };
 };
 
 } // namespace filter

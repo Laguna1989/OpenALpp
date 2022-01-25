@@ -1,19 +1,17 @@
-#include "filter_butterworth_24_d_b.hpp"
+#include "butterworth_24db_lowpass.hpp"
 #include <math.h>
-
-#define BUDDA_Q_SCALE 6.f
 
 namespace oalpp {
 namespace effects {
 namespace filter {
 
-FilterButterworth24db::FilterButterworth24db(float sampleRate, float cutoffFrequency, float q)
+Butterworth24dbLowpass::Butterworth24dbLowpass(int sampleRate, float cutoffFrequency, float q)
 {
-    setSampleRate(sampleRate);
+    setSampleRate(static_cast<float>(sampleRate));
     set(cutoffFrequency, q);
 }
 
-void FilterButterworth24db::setSampleRate(float sampleRate)
+void Butterworth24dbLowpass::setSampleRate(float sampleRate)
 {
     float pi = 4.f * atanf(1.f);
 
@@ -26,7 +24,7 @@ void FilterButterworth24db::setSampleRate(float sampleRate)
     m_maxCutoff = sampleRate * 0.45f;
 }
 
-void FilterButterworth24db::set(float cutoffFrequency, float q)
+void Butterworth24dbLowpass::set(float cutoffFrequency, float q)
 {
     if (cutoffFrequency < m_minCutoff) {
         cutoffFrequency = m_minCutoff;
@@ -43,7 +41,7 @@ void FilterButterworth24db::set(float cutoffFrequency, float q)
     float wp = m_t2 * tanf(m_t3 * cutoffFrequency);
     float bd, bd_tmp, b1, b2;
 
-    q *= BUDDA_Q_SCALE;
+    q *= 6.f;
     q += 1.f;
 
     b1 = (0.765367f / q) / wp;
@@ -69,7 +67,7 @@ void FilterButterworth24db::set(float cutoffFrequency, float q)
     m_coefficient3 = (bd_tmp - m_t2 * b1) * bd;
 }
 
-float FilterButterworth24db::process(float input)
+float Butterworth24dbLowpass::process(float input)
 {
     float output = input * m_gain;
     float new_hist;
