@@ -13,20 +13,20 @@ public:
     float process(float input) override;
 
 private:
-    float r;
-    float f;
-    float sample_rate;
-    float m_c;
-    float m_a1;
-    float m_a2;
-    float m_a3;
-    float m_b1;
-    float m_b2;
+    float r { 0.0f };
+    float f { 0.0f };
+    float sample_rate { 0.0f };
+    float m_c { 0.0f };
+    float m_a1 { 0.0f };
+    float m_a2 { 0.0f };
+    float m_a3 { 0.0f };
+    float m_b1 { 0.0f };
+    float m_b2 { 0.0f };
 
-    float m_history1;
-    float m_history2;
-    float m_history3;
-    float m_history4;
+    float m_history1 { 0.0f };
+    float m_history2 { 0.0f };
+    float m_history3 { 0.0f };
+    float m_history4 { 0.0f };
 };
 } // namespace filter
 } // namespace effects
