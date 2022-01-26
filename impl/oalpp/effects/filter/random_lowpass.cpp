@@ -28,6 +28,13 @@ float RandomLowpass::process(float input)
 
     return out;
 }
+void RandomLowpass::reset()
+{
+    m_history1 = 0.0f;
+    m_history2 = 0.0f;
+    m_history3 = 0.0f;
+    m_history4 = 0.0f;
+}
 
 } // namespace filter
 } // namespace effects

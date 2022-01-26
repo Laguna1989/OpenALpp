@@ -10,6 +10,7 @@ Butterworth24dbHighpass::Butterworth24dbHighpass(int sampleRate, float cutoffFre
 }
 
 float Butterworth24dbHighpass::process(float input) { return m_lowpass.process(input) - input; }
+void Butterworth24dbHighpass::reset() { m_lowpass.reset(); }
 
 } // namespace filter
 } // namespace effects

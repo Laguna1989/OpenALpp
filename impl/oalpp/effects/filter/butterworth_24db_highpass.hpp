@@ -12,6 +12,7 @@ public:
     Butterworth24dbHighpass(int sampleRate, float cutoffFrequency, float q);
 
     float process(float input) override;
+    void reset() override;
 
 private:
     Butterworth24dbLowpass m_lowpass;

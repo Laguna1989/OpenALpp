@@ -7,6 +7,7 @@ class MonoEffectInterface {
 public:
     virtual ~MonoEffectInterface() = default;
     virtual float process(float input) = 0;
+    virtual void reset() = 0;
 };
 } // namespace effects
 } // namespace oalpp

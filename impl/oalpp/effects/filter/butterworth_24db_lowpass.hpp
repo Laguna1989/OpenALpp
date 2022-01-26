@@ -11,6 +11,7 @@ class Butterworth24dbLowpass : public oalpp::effects::MonoEffectInterface {
 public:
     Butterworth24dbLowpass(int sampleRate, float cutoffFrequency, float q);
     float process(float input) override;
+    void reset() override;
 
 private:
     void setSampleRate(float sampleRate);

@@ -11,6 +11,7 @@ class RandomLowpass : public MonoEffectInterface {
 public:
     RandomLowpass(float f, float r, float sample_rate);
     float process(float input) override;
+    void reset() override;
 
 private:
     float r { 0.0f };
