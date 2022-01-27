@@ -39,7 +39,7 @@ int main()
     SoundData buffer { fileName };
     //    effects::filter::Butterworth24dbLowpass filter { 44100, 200.0f, 0.2f };
     effects::filter::Butterworth24dbHighpass filter { 44100, 5000.0f, 0.2f };
-    //    effects::filter::RandomLowpass filter { 200, 0.2f, 44100.0f };
+    //    effects::filter::RandomLowpass filter { 200, 1.5f, 44100.0f };
     SoundDataWithEffect soundDataWithEffect { buffer, filter };
 
     snd = std::make_shared<Sound>(soundDataWithEffect, ctx);

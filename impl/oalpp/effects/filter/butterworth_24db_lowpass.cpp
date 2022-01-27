@@ -1,4 +1,5 @@
 #include "butterworth_24db_lowpass.hpp"
+#include <iostream>
 #include <math.h>
 
 namespace oalpp {
@@ -22,6 +23,7 @@ void Butterworth24dbLowpass::setSampleRate(float sampleRate)
 
     m_minCutoff = sampleRate * 0.01f;
     m_maxCutoff = sampleRate * 0.45f;
+    std::cout << m_minCutoff << " " << m_maxCutoff << std::endl;
 }
 
 void Butterworth24dbLowpass::set(float cutoffFrequency, float q)

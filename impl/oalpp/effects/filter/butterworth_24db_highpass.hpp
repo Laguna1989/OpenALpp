@@ -1,8 +1,9 @@
 #ifndef OPENALPP_BUTTERWORTH_24_D_B_HIGHPASS_HPP
 #define OPENALPP_BUTTERWORTH_24_D_B_HIGHPASS_HPP
 
-#include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
+#include "oalpp/effects/filter/random_lowpass.hpp"
 #include "oalpp/effects/mono_effect_interface.hpp"
+
 namespace oalpp {
 namespace effects {
 namespace filter {
@@ -15,7 +16,7 @@ public:
     void reset() override;
 
 private:
-    Butterworth24dbLowpass m_lowpass;
+    RandomLowpass m_lowpass;
 };
 
 } // namespace filter

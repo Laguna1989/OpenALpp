@@ -5,11 +5,11 @@ namespace effects {
 namespace filter {
 
 Butterworth24dbHighpass::Butterworth24dbHighpass(int sampleRate, float cutoffFrequency, float q)
-    : m_lowpass { sampleRate, cutoffFrequency, q }
+    : m_lowpass { cutoffFrequency, q, static_cast<float>(sampleRate) }
 {
 }
 
-float Butterworth24dbHighpass::process(float input) { return m_lowpass.process(input) - input; }
+float Butterworth24dbHighpass::process(float input) { return input - m_lowpass.process(input); }
 void Butterworth24dbHighpass::reset() { m_lowpass.reset(); }
 
 } // namespace filter
