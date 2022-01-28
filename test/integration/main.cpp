@@ -1,3 +1,5 @@
+#include "oalpp/effects/distortion/decimator.hpp"
+#include "oalpp/effects/distortion/tanh_distortion.hpp"
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
 #include "oalpp/effects/filter/simple_lowpass.hpp"
@@ -39,8 +41,11 @@ int main()
     SoundData buffer { fileName };
     //    effects::filter::Butterworth24dbLowpass filter { 44100, 200.0f, 0.2f };
     //    effects::filter::SimpleLowpass filter { 200, 1.5f, 44100.0f };
+
+    //    effects::distortion::Decimator decimator { 4, 1.0f };
+    effects::distortion::TanhDistortion dist { 8.5f, 0.7f };
     effects::filter::SimpleHighpass filter { 2000, 1.5f, 44100.0f };
-    SoundDataWithEffect soundDataWithEffect { buffer, filter };
+    SoundDataWithEffect soundDataWithEffect { buffer, dist };
 
     snd = std::make_shared<Sound>(soundDataWithEffect, ctx);
     snd->setVolume(0.25f);
