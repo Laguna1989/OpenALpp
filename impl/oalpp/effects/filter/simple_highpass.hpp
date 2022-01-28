@@ -1,5 +1,5 @@
-#ifndef OPENALPP_EFFECTS_FILTER_RANDOM_LOWPASS_HPP
-#define OPENALPP_EFFECTS_FILTER_RANDOM_LOWPASS_HPP
+#ifndef OPENALPP_EFFECTS_FILTER_SIMPLE_HIGHPASS_HPP
+#define OPENALPP_EFFECTS_FILTER_SIMPLE_HIGHPASS_HPP
 
 #include "oalpp/effects/mono_effect_interface.hpp"
 
@@ -7,9 +7,9 @@ namespace oalpp {
 namespace effects {
 namespace filter {
 
-class RandomLowpass : public MonoEffectInterface {
+class SimpleHighpass : public MonoEffectInterface {
 public:
-    RandomLowpass(float f, float r, float sample_rate);
+    SimpleHighpass(float f, float r, float sample_rate);
     float process(float input) override;
     void reset() override;
 
@@ -33,4 +33,4 @@ private:
 } // namespace effects
 } // namespace oalpp
 
-#endif // OPENALPP_EFFECTS_FILTER_RANDOM_LOWPASS_HPP
+#endif // OPENALPP_EFFECTS_FILTER_SIMPLE_LOWPASS_HPP

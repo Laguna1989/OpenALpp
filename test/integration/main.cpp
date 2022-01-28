@@ -1,6 +1,6 @@
-#include "oalpp/effects/filter/butterworth_24db_highpass.hpp"
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
-#include "oalpp/effects/filter/random_lowpass.hpp"
+#include "oalpp/effects/filter/simple_highpass.hpp"
+#include "oalpp/effects/filter/simple_lowpass.hpp"
 #include "oalpp/sound.hpp"
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
@@ -38,8 +38,8 @@ int main()
     SoundContext ctx;
     SoundData buffer { fileName };
     //    effects::filter::Butterworth24dbLowpass filter { 44100, 200.0f, 0.2f };
-    effects::filter::Butterworth24dbHighpass filter { 44100, 5000.0f, 0.2f };
-    //    effects::filter::RandomLowpass filter { 200, 1.5f, 44100.0f };
+    //    effects::filter::SimpleLowpass filter { 200, 1.5f, 44100.0f };
+    effects::filter::SimpleHighpass filter { 2000, 1.5f, 44100.0f };
     SoundDataWithEffect soundDataWithEffect { buffer, filter };
 
     snd = std::make_shared<Sound>(soundDataWithEffect, ctx);
