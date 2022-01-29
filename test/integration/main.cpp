@@ -1,3 +1,4 @@
+#include "oalpp/effects/distortion/decimator.hpp"
 #include "oalpp/effects/distortion/tanh_distortion.hpp"
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
@@ -38,7 +39,7 @@ int main()
     SoundContext ctx;
     SoundData buffer { fileName };
 
-    effects::filter::SimpleHighpass highpass { 44100, 100, 1.5f };
+    effects::filter::SimpleHighpass highpass { 44100, 150, 2.0f };
     SoundDataWithEffect soundDataWithEffect1 { buffer, highpass };
 
     effects::distortion::TanhDistortion dist { 10.0f, 0.7f };

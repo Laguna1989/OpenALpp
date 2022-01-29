@@ -12,14 +12,13 @@ Decimator::Decimator(int bits, float rate)
 
 float Decimator::process(float input)
 {
-    float returnValue { 0.0f };
 
     m_counter += m_rate;
     if (m_counter >= 1) {
         m_counter -= 1;
-        returnValue = (long int)(input * m_m) / (float)m_m;
+        m_returnValue = (long int)(input * m_m) / (float)m_m;
     }
-    return returnValue;
+    return m_returnValue;
 }
 void Decimator::reset() { m_counter = 0.0f; }
 

@@ -17,6 +17,7 @@ public:
 private:
     float m_rate { 1.0f };
 
+    float m_returnValue { 0.0f };
     long int m_m { 0 };
     float m_counter { 0.0f };
 };
