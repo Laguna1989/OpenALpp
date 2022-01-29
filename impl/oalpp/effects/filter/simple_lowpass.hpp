@@ -9,7 +9,7 @@ namespace filter {
 
 class SimpleLowpass : public MonoEffectInterface {
 public:
-    SimpleLowpass(float f, float r, float sample_rate);
+    SimpleLowpass(int sample_rate, float f, float r);
     float process(float input) override;
     void reset() override;
 

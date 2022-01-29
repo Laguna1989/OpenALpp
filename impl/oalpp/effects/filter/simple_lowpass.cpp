@@ -5,9 +5,9 @@ namespace oalpp {
 namespace effects {
 namespace filter {
 
-SimpleLowpass::SimpleLowpass(float f, float r, float sample_rate)
+SimpleLowpass::SimpleLowpass(int sample_rate, float f, float r)
 {
-    m_c = 1.0f / tan(3.141592f * f / sample_rate);
+    m_c = 1.0f / tan(3.141592f * f / static_cast<float>(sample_rate));
 
     m_a1 = 1.0f / (1.0f + r * m_c + m_c * m_c);
     m_a2 = 2.0f * m_a1;
