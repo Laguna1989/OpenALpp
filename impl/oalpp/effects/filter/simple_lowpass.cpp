@@ -7,13 +7,13 @@ namespace filter {
 
 SimpleLowpass::SimpleLowpass(float f, float r, float sample_rate)
 {
-    m_c = 1.0 / tan(3.141592 * f / sample_rate);
+    m_c = 1.0f / tan(3.141592f * f / sample_rate);
 
-    m_a1 = 1.0 / (1.0 + r * m_c + m_c * m_c);
-    m_a2 = 2 * m_a1;
+    m_a1 = 1.0f / (1.0f + r * m_c + m_c * m_c);
+    m_a2 = 2.0f * m_a1;
     m_a3 = m_a1;
-    m_b1 = 2.0 * (1.0 - m_c * m_c) * m_a1;
-    m_b2 = (1.0 - r * m_c + m_c * m_c) * m_a1;
+    m_b1 = 2.0f * (1.0f - m_c * m_c) * m_a1;
+    m_b2 = (1.0f - r * m_c + m_c * m_c) * m_a1;
 }
 
 float SimpleLowpass::process(float input)

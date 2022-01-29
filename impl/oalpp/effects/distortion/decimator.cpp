@@ -12,16 +12,16 @@ Decimator::Decimator(int bits, float rate)
 
 float Decimator::process(float input)
 {
-    m_y = 0.0f;
+    float returnValue { 0.0f };
 
     m_counter += m_rate;
     if (m_counter >= 1) {
         m_counter -= 1;
-        m_y = (long int)(input * m_m) / (float)m_m;
+        returnValue = (long int)(input * m_m) / (float)m_m;
     }
-    return m_y;
+    return returnValue;
 }
-void Decimator::reset() { }
+void Decimator::reset() { m_counter = 0.0f; }
 
 } // namespace distortion
 } // namespace effects

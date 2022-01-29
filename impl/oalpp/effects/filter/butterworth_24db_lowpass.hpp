@@ -33,8 +33,6 @@ private:
     float m_history4 { 0.0f };
 
     float m_gain { 0.0f };
-    float m_minCutoff { 0.0f };
-    float m_maxCutoff { 0.0f };
 };
 
 } // namespace filter

@@ -9,7 +9,7 @@ namespace oalpp {
 
 class SoundDataWithEffect : public SoundDataInterface {
 public:
-    SoundDataWithEffect(SoundDataInterface& decoratee, effects::MonoEffectInterface& effect);
+    SoundDataWithEffect(SoundDataInterface const& decoratee, effects::MonoEffectInterface& effect);
 
     int getSampleRate() const override;
     const std::vector<float>& getSamples() const override;
@@ -19,6 +19,10 @@ private:
     std::vector<float> m_samples {};
     int m_sampleRate { 0 };
     int m_channels { 0 };
+    void applyEffectToMonoSoundData(
+        effects::MonoEffectInterface& effect, std::vector<float> const& samples);
+    void applyEffectToStereoSoundData(
+        effects::MonoEffectInterface& effect, std::vector<float> const& samples);
 };
 
 } // namespace oalpp

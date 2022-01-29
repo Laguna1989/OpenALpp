@@ -42,10 +42,10 @@ int main()
     //    effects::filter::Butterworth24dbLowpass filter { 44100, 200.0f, 0.2f };
     //    effects::filter::SimpleLowpass filter { 200, 1.5f, 44100.0f };
 
-    //    effects::distortion::Decimator decimator { 4, 1.0f };
+    effects::distortion::Decimator decimator { 4, 1.0f };
     effects::distortion::TanhDistortion dist { 8.5f, 0.7f };
     effects::filter::SimpleHighpass filter { 2000, 1.5f, 44100.0f };
-    SoundDataWithEffect soundDataWithEffect { buffer, dist };
+    SoundDataWithEffect soundDataWithEffect { buffer, decimator };
 
     snd = std::make_shared<Sound>(soundDataWithEffect, ctx);
     snd->setVolume(0.25f);

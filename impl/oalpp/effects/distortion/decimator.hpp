@@ -18,8 +18,7 @@ private:
     float m_rate { 1.0f };
 
     long int m_m { 0 };
-    float m_y = 0.0f;
-    float m_counter = 0.0f;
+    float m_counter { 0.0f };
 };
 
 } // namespace distortion

@@ -1,5 +1,4 @@
 #include "butterworth_24db_lowpass.hpp"
-#include <iostream>
 #include <math.h>
 
 namespace oalpp {
@@ -14,25 +13,16 @@ Butterworth24dbLowpass::Butterworth24dbLowpass(int sampleRate, float cutoffFrequ
 
 void Butterworth24dbLowpass::setSampleRate(float sampleRate)
 {
-    float pi = 4.f * atanf(1.f);
+    constexpr float const pi = 3.141592;
 
     m_t0 = 4.f * sampleRate * sampleRate;
     m_t1 = 8.f * sampleRate * sampleRate;
     m_t2 = 2.f * sampleRate;
     m_t3 = pi / sampleRate;
-
-    m_minCutoff = sampleRate * 0.01f;
-    m_maxCutoff = sampleRate * 0.45f;
-    std::cout << m_minCutoff << " " << m_maxCutoff << std::endl;
 }
 
 void Butterworth24dbLowpass::set(float cutoffFrequency, float q)
 {
-    if (cutoffFrequency < m_minCutoff) {
-        cutoffFrequency = m_minCutoff;
-    } else if (cutoffFrequency > m_maxCutoff) {
-        cutoffFrequency = m_maxCutoff;
-    }
 
     if (q < 0.f) {
         q = 0.f;

@@ -17,7 +17,9 @@ private:
     float r { 0.0f };
     float f { 0.0f };
     float sample_rate { 0.0f };
+
     float m_c { 0.0f };
+
     float m_a1 { 0.0f };
     float m_a2 { 0.0f };
     float m_a3 { 0.0f };
