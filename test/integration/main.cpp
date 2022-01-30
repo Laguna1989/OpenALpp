@@ -1,6 +1,11 @@
+#include "oalpp/effects/distortion/decimator.hpp"
+#include "oalpp/effects/distortion/tanh_distortion.hpp"
+#include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
+#include "oalpp/effects/filter/simple_highpass.hpp"
 #include "oalpp/sound.hpp"
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
+#include "oalpp/sound_data_with_effect.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -32,10 +37,20 @@ int main()
     }
 
     SoundContext ctx;
-    SoundData buf1 { fileName };
+    SoundData buffer { fileName };
 
-    snd = std::make_shared<Sound>(buf1, ctx);
+    effects::filter::SimpleHighpass highpass { 44100, 150, 2.0f };
+    SoundDataWithEffect soundDataWithEffect1 { buffer, highpass };
+
+    effects::distortion::TanhDistortion dist { 10.0f, 0.7f };
+    SoundDataWithEffect soundDataWithEffect2 { soundDataWithEffect1, dist };
+
+    effects::filter::Butterworth24dbLowpass lowpass { 44100, 9000.0f, 0.0f };
+    SoundDataWithEffect soundDataWithEffect3 { soundDataWithEffect2, lowpass };
+
+    snd = std::make_shared<Sound>(soundDataWithEffect3, ctx);
     snd->setVolume(0.25f);
+    snd->setIsLooping(true);
     snd->play();
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop_function, 0, 1);
