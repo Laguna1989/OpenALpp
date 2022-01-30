@@ -2,6 +2,7 @@
 #define OPENALPP_SOUND_HPP
 
 #include "al.hpp"
+#include "sound_context_interface.hpp"
 #include "sound_data_interface.hpp"
 #include <array>
 #include <memory>
@@ -15,7 +16,7 @@ class SoundContext;
 
 class Sound {
 public:
-    explicit Sound(SoundDataInterface const& soundData, SoundContext const& ctx);
+    explicit Sound(SoundDataInterface const& soundData, SoundContextInterface const& ctx);
     ~Sound();
 
     void play();
