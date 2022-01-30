@@ -9,7 +9,7 @@ SoundDataWithEffect::SoundDataWithEffect(
     m_channels = decoratee.getNumberOfChannels();
     m_samples.resize(decoratee.getSamples().size());
 
-    auto& samples = decoratee.getSamples();
+    auto const& samples = decoratee.getSamples();
     if (m_channels == 1) {
         applyEffectToMonoSoundData(effect, samples);
     } else {

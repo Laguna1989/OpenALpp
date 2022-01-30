@@ -22,4 +22,4 @@ protected:
 } // namespace effects
 } // namespace oalpp
 
-#endif // OPENALPP_MONOEFFECTINTERFACE_HPP
+#endif // OPENALPP_EFFECTS_MONOEFFECTINTERFACE_HPP

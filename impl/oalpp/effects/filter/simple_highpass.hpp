@@ -9,16 +9,15 @@ namespace filter {
 
 class SimpleHighpass : public MonoEffectInterface {
 public:
-    SimpleHighpass(int sample_rate, float f, float r);
+    ///
+    /// \param sampleRate Sample rate must be positive
+    /// \param cutoffFrequency Cutoff frequency must be positive and less than sample rate
+    /// \param resonance Resonance value should roughly be between 0.2 and 1.5
+    SimpleHighpass(int sampleRate, float cutoffFrequency, float resonance);
     float process(float input) override;
     void reset() override;
 
 private:
-    float r { 0.0f };
-    float f { 0.0f };
-
-    float sample_rate { 0.0f };
-
     float m_c { 0.0f };
 
     float m_a1 { 0.0f };
@@ -36,4 +35,4 @@ private:
 } // namespace effects
 } // namespace oalpp
 
-#endif // OPENALPP_EFFECTS_FILTER_SIMPLE_LOWPASS_HPP
+#endif // OPENALPP_EFFECTS_FILTER_SIMPLE_HIGHPASS_HPP

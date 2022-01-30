@@ -1,5 +1,5 @@
-#ifndef OPENALPP_TANH_DISTORTION_HPP
-#define OPENALPP_TANH_DISTORTION_HPP
+#ifndef OPENALPP_EFFECTS_DISTORTION_TANH_DISTORTION_HPP
+#define OPENALPP_EFFECTS_DISTORTION_TANH_DISTORTION_HPP
 
 #include "oalpp/effects/mono_effect_interface.hpp"
 namespace oalpp {
@@ -21,4 +21,4 @@ private:
 } // namespace effects
 } // namespace oalpp
 
-#endif // OPENALPP_TANH_DISTORTION_HPP
+#endif // OPENALPP_EFFECTS_DISTORTION_TANH_DISTORTION_HPP

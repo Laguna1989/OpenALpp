@@ -66,3 +66,31 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
         }
     }
 }
+
+TEST_CASE("Decimator invalid arguments", "[SoundEffect]")
+{
+    REQUIRE_THROWS(oalpp::effects::distortion::Decimator { 0, 1.0 });
+    REQUIRE_THROWS(oalpp::effects::distortion::Decimator { 10, -1.0 });
+    REQUIRE_THROWS(oalpp::effects::distortion::Decimator { 10, 1.5 });
+}
+
+TEST_CASE("Butterworth 24db lowpass invalid arguments", "[SoundEffect]")
+{
+    REQUIRE_THROWS(oalpp::effects::filter::Butterworth24dbLowpass { -44100, 2000.0f, 0.2f });
+    REQUIRE_THROWS(oalpp::effects::filter::Butterworth24dbLowpass { 44100, -2000.0f, 0.2f });
+    REQUIRE_THROWS(oalpp::effects::filter::Butterworth24dbLowpass { 44100, 192000.0f, 0.2f });
+}
+
+TEST_CASE("Simple highpass invalid arguments", "[SoundEffect]")
+{
+    REQUIRE_THROWS(oalpp::effects::filter::SimpleHighpass { -44100, 2000.0f, 0.2f });
+    REQUIRE_THROWS(oalpp::effects::filter::SimpleHighpass { 44100, -2000.0f, 0.2f });
+    REQUIRE_THROWS(oalpp::effects::filter::SimpleHighpass { 44100, 192000.0f, 0.2f });
+}
+
+TEST_CASE("Simple lowpass invalid arguments", "[SoundEffect]")
+{
+    REQUIRE_THROWS(oalpp::effects::filter::SimpleLowpass { -44100, 2000.0f, 0.2f });
+    REQUIRE_THROWS(oalpp::effects::filter::SimpleLowpass { 44100, -2000.0f, 0.2f });
+    REQUIRE_THROWS(oalpp::effects::filter::SimpleLowpass { 44100, 192000.0f, 0.2f });
+}

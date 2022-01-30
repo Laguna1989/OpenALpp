@@ -9,7 +9,11 @@ namespace filter {
 
 class Butterworth24dbLowpass : public oalpp::effects::MonoEffectInterface {
 public:
-    Butterworth24dbLowpass(int sampleRate, float cutoffFrequency, float q);
+    ///
+    /// \param sampleRate Sample rate must be positive
+    /// \param cutoffFrequency Cutoff frequency must be positive and less than sample rate
+    /// \param quality Quality value should be between 0 and 1, but technically doesn't have to be.
+    Butterworth24dbLowpass(int sampleRate, float cutoffFrequency, float quality);
     float process(float input) override;
     void reset() override;
 
@@ -22,10 +26,10 @@ private:
     float m_t2 { 0.0f };
     float m_t3 { 0.0f };
 
-    float m_coefficient0 { 0.0f };
     float m_coefficient1 { 0.0f };
     float m_coefficient2 { 0.0f };
     float m_coefficient3 { 0.0f };
+    float m_coefficient4 { 0.0f };
 
     float m_history1 { 0.0f };
     float m_history2 { 0.0f };
