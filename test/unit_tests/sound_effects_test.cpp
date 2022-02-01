@@ -4,6 +4,7 @@
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
 #include "oalpp/effects/filter/simple_lowpass.hpp"
+#include "oalpp/effects/utility/gain.hpp"
 
 TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
 {
@@ -65,6 +66,19 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
             }
         }
     }
+    SECTION("utility")
+    {
+        SECTION("gain")
+        {
+            auto const gainValue = GENERATE(0.0f, 1.0f, 1000.0f, -1.0f);
+            oalpp::effects::utility::Gain gain { gainValue };
+
+            auto const numberOfSamples = 10000u;
+            for (auto i = 0U; i != numberOfSamples; ++i) {
+                REQUIRE(0.0f == gain.process(0.0f));
+            }
+        }
+    }
 }
 
 TEST_CASE("Decimator invalid arguments", "[SoundEffect]")
@@ -93,4 +107,13 @@ TEST_CASE("Simple lowpass invalid arguments", "[SoundEffect]")
     REQUIRE_THROWS(oalpp::effects::filter::SimpleLowpass { -44100, 2000.0f, 0.2f });
     REQUIRE_THROWS(oalpp::effects::filter::SimpleLowpass { 44100, -2000.0f, 0.2f });
     REQUIRE_THROWS(oalpp::effects::filter::SimpleLowpass { 44100, 192000.0f, 0.2f });
+}
+
+TEST_CASE("Gain scales input audio", "[SoundEffect]")
+{
+    auto const gainValue = GENERATE(0.0f, 1.0f, 1000.0f, -1.0f);
+    oalpp::effects::utility::Gain gain { gainValue };
+
+    auto const input = GENERATE(-1.0f, -0.5f, 0.0f, 0.5f, 1.0f);
+    REQUIRE(input * gainValue == gain.process(input));
 }
