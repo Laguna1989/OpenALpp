@@ -1,6 +1,5 @@
 #include "sound_data.hpp"
 #include "libnyquist/Decoders.h"
-#include "libnyquist/Encoders.h"
 #include <utility>
 
 namespace oalpp {
