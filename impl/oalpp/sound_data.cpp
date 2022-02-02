@@ -1,12 +1,13 @@
 #include "sound_data.hpp"
 #include "libnyquist/Decoders.h"
+#include "libnyquist/Encoders.h"
 #include <utility>
 
 namespace oalpp {
 
 SoundData::SoundData(std::string const& fileName)
 {
-    auto fileData = std::make_shared<nqr::AudioData>();
+    auto fileData = std::make_unique<nqr::AudioData>();
     nqr::NyquistIO loader;
     loader.Load(fileData.get(), fileName);
 

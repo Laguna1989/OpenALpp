@@ -52,7 +52,7 @@ int main()
     effects::utility::Gain gain { 1.5f };
     SoundDataWithEffect soundDataWithEffect4 { soundDataWithEffect3, gain };
 
-    snd = std::make_shared<Sound>(soundDataWithEffect4, ctx);
+    snd = std::make_shared<Sound>(soundDataWithEffect4);
     snd->setVolume(0.25f);
     snd->setIsLooping(true);
     snd->play();
