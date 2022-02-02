@@ -6,7 +6,7 @@ namespace oalpp {
 
 SoundData::SoundData(std::string const& fileName)
 {
-    auto fileData = std::make_shared<nqr::AudioData>();
+    auto fileData = std::make_unique<nqr::AudioData>();
     nqr::NyquistIO loader;
     loader.Load(fileData.get(), fileName);
 

@@ -30,7 +30,7 @@ TEST_CASE("Sound is not playing by default", "[Sound]")
 {
     SoundContext const ctx;
     SoundDataMonoFake const buffer;
-    Sound snd { buffer, ctx };
+    Sound snd { buffer };
 
     REQUIRE_FALSE(snd.isPlaying());
 }
@@ -39,7 +39,7 @@ TEST_CASE("Sound volume test", "[Sound]")
 {
     SoundContext const ctx;
     SoundDataMonoFake const buffer;
-    Sound snd { buffer, ctx };
+    Sound snd { buffer };
 
     SECTION("default volume value") { REQUIRE(1.0f == snd.getVolume()); }
     SECTION("volume after setVolume")
@@ -60,7 +60,7 @@ TEST_CASE("Sound position and pan test", "[Sound]")
 {
     SoundContext const ctx;
     SoundDataMonoFake const buffer;
-    Sound snd { buffer, ctx };
+    Sound snd { buffer };
 
     SECTION("default position value")
     {
@@ -103,7 +103,7 @@ TEST_CASE("Sound pitch test", "[Sound]")
 {
     SoundContext const ctx;
     SoundDataMonoFake const buffer;
-    Sound snd { buffer, ctx };
+    Sound snd { buffer };
 
     SECTION("default pitch value") { REQUIRE(1.0f == snd.getPitch()); }
     SECTION("pitch after setPitch")
@@ -124,7 +124,7 @@ TEST_CASE("Sound looping test", "[Sound]")
 {
     SoundContext const ctx;
     SoundDataMonoFake const buffer;
-    Sound snd { buffer, ctx };
+    Sound snd { buffer };
 
     SECTION("default looping value") { REQUIRE(false == snd.getIsLooping()); }
     SECTION("looping after setIsLooping")
@@ -145,7 +145,7 @@ TEST_CASE("Sound pan stereo sound test", "[Sound]")
 {
     SoundContext const ctx;
     SoundDataStereoFake const buffer;
-    Sound snd { buffer, ctx };
+    Sound snd { buffer };
 
     SECTION("default position value")
     {
@@ -165,7 +165,7 @@ TEST_CASE("is playing is true after play ", "[Sound]")
     SoundContext ctx;
     SoundDataMonoFake fake;
     fake.m_samples.resize(44100);
-    Sound snd { fake, ctx };
+    Sound snd { fake };
     snd.play();
     REQUIRE(true == snd.isPlaying());
 }
@@ -175,7 +175,7 @@ TEST_CASE("is playing is false after stop", "[Sound]")
     SoundContext ctx;
     SoundDataMonoFake fake;
     fake.m_samples.resize(44100);
-    Sound snd { fake, ctx };
+    Sound snd { fake };
     snd.play();
     snd.stop();
     REQUIRE(false == snd.isPlaying());
@@ -186,7 +186,7 @@ TEST_CASE("stop twice does not raise exception", "[Sound]")
     SoundContext ctx;
     SoundDataMonoFake fake;
     fake.m_samples.resize(44100);
-    Sound snd { fake, ctx };
+    Sound snd { fake };
     snd.play();
     snd.stop();
     REQUIRE_NOTHROW(snd.stop());
@@ -197,7 +197,7 @@ TEST_CASE("is playing is true for play after stop", "[Sound]")
     SoundContext ctx;
     SoundDataMonoFake fake;
     fake.m_samples.resize(44100);
-    Sound snd { fake, ctx };
+    Sound snd { fake };
     snd.play();
     snd.stop();
     snd.play();
@@ -211,7 +211,7 @@ TEST_CASE("Sound getLength", "[Sound]")
     SECTION("Empty SoundDataMonoFake results in length zero")
     {
         SoundDataMonoFake fake;
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(0 == snd.getLengthInSamples());
         REQUIRE(0.0f == snd.getLengthInSeconds());
     }
@@ -221,7 +221,7 @@ TEST_CASE("Sound getLength", "[Sound]")
         SoundDataMonoFake fake;
         std::size_t const newSampleCount = GENERATE(1u, 10u, 100u, 1000u);
         fake.m_samples.resize(newSampleCount);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(newSampleCount == snd.getLengthInSamples());
     }
 
@@ -230,7 +230,7 @@ TEST_CASE("Sound getLength", "[Sound]")
         SoundDataMonoFake fake;
         std::size_t const newSampleCount = fake.getSampleRate();
         fake.m_samples.resize(newSampleCount);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(1.0f == snd.getLengthInSeconds());
     }
 
@@ -239,14 +239,14 @@ TEST_CASE("Sound getLength", "[Sound]")
         SoundDataMonoFake fake;
         std::size_t const newSampleCount = GENERATE(1u, 10u, 100u, 1000u);
         fake.m_samples.resize(newSampleCount);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(newSampleCount == snd.getLengthInSamples());
     }
 
     SECTION("Empty SoundDataStereoFake results in length zero")
     {
         SoundDataStereoFake fake;
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(0 == snd.getLengthInSamples());
         REQUIRE(0.0f == snd.getLengthInSeconds());
     }
@@ -256,7 +256,7 @@ TEST_CASE("Sound getLength", "[Sound]")
         SoundDataStereoFake fake;
         std::size_t const newSampleCount = GENERATE(2u, 20u, 200u, 2000u);
         fake.m_samples.resize(newSampleCount);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(newSampleCount / 2u == snd.getLengthInSamples());
     }
 
@@ -265,7 +265,7 @@ TEST_CASE("Sound getLength", "[Sound]")
         SoundDataStereoFake fake;
         std::size_t const newSampleCount = fake.getSampleRate();
         fake.m_samples.resize(2 * newSampleCount);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(1.0f == snd.getLengthInSeconds());
     }
 }
@@ -276,20 +276,20 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
     SoundDataMonoFake fake;
     SECTION("Empty SoundDataMonoFake results in correct initial Position in seconds")
     {
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
     }
 
     SECTION("Empty SoundDataMonoFake results in correct initial Position in samples")
     {
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         REQUIRE(0 == snd.getCurrentPositionInSamples());
     }
 
     SECTION("after complete sample is played, getCurrentPosition should return 0.0f seconds")
     {
         fake.m_samples.resize(8820);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         snd.play();
         while (snd.isPlaying()) {
             snd.update();
@@ -300,7 +300,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
     SECTION("after complete sample is played, getCurrentPosition should return 0 samples")
     {
         fake.m_samples.resize(8820);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         snd.play();
         while (snd.isPlaying()) {
             snd.update();
@@ -311,7 +311,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
     SECTION("getCurrentPositionSeconds is increasing while playing")
     {
         fake.m_samples.resize(8820);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         snd.play();
         float oldValue = 0.0f;
         while (snd.isPlaying()) {
@@ -327,7 +327,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
     SECTION("getCurrentPositionSamples is increasing while playing")
     {
         fake.m_samples.resize(8820);
-        Sound snd { fake, ctx };
+        Sound snd { fake };
         snd.play();
         std::size_t oldValue = 0u;
         while (snd.isPlaying()) {

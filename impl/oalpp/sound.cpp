@@ -6,7 +6,7 @@
 
 namespace oalpp {
 
-Sound::Sound(SoundDataInterface const& soundData, SoundContextInterface const& ctx /*unused*/)
+Sound::Sound(SoundDataInterface const& soundData)
     : m_soundData { soundData }
 {
     if (soundData.getNumberOfChannels() == 2) {
