@@ -181,6 +181,17 @@ TEST_CASE("is playing is false after stop", "[Sound]")
     REQUIRE(false == snd.isPlaying());
 }
 
+TEST_CASE("is playing is false after pause", "[Sound]")
+{
+    SoundContext ctx;
+    SoundDataMonoFake fake;
+    fake.m_samples.resize(44100);
+    Sound snd { fake };
+    snd.play();
+    snd.pause();
+    REQUIRE(false == snd.isPlaying());
+}
+
 TEST_CASE("stop twice does not raise exception", "[Sound]")
 {
     SoundContext ctx;

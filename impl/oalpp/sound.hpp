@@ -20,6 +20,7 @@ public:
 
     void play();
     void stop();
+    void pause();
     bool isPlaying() const;
 
     float getVolume() const;
