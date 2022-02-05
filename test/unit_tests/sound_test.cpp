@@ -327,7 +327,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         float oldValue = 0.0f;
         while (snd.isPlaying()) {
             snd.update();
-            float const newValue = snd.getCurrentPositionInSeconds();
+            auto const newValue = snd.getCurrentPositionInSeconds();
             if (newValue != 0.0f) {
                 REQUIRE(newValue >= oldValue);
                 oldValue = newValue;
@@ -343,10 +343,74 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         std::size_t oldValue = 0u;
         while (snd.isPlaying()) {
             snd.update();
-            std::size_t const newValue = snd.getCurrentPositionInSamples();
+            auto const newValue = snd.getCurrentPositionInSamples();
             if (newValue != 0u) {
                 REQUIRE(newValue >= oldValue);
                 oldValue = newValue;
+            }
+        }
+    }
+
+    SECTION("getCurrentPositionSamples is reset on stop")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+            auto const newValue = snd.getCurrentPositionInSamples();
+            if (newValue != 0u) {
+                snd.stop();
+                REQUIRE(0.0f == snd.getCurrentPositionInSamples());
+                break;
+            }
+        }
+    }
+
+    SECTION("getCurrentPositionSeconds is reset on stop")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+            auto const newValue = snd.getCurrentPositionInSeconds();
+            if (newValue != 0.0f) {
+                snd.stop();
+                REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
+                break;
+            }
+        }
+    }
+
+    SECTION("getCurrentPositionSamples is not reset on pause")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+            auto const newValue = snd.getCurrentPositionInSamples();
+            if (newValue != 0u) {
+                snd.pause();
+                REQUIRE(0u != snd.getCurrentPositionInSamples());
+                break;
+            }
+        }
+    }
+
+    SECTION("getCurrentPositionSeconds is reset on pause")
+    {
+        fake.m_samples.resize(8820);
+        Sound snd { fake };
+        snd.play();
+        while (snd.isPlaying()) {
+            snd.update();
+            auto const newValue = snd.getCurrentPositionInSeconds();
+            if (newValue != 0.0f) {
+                snd.pause();
+                REQUIRE(0.0f != snd.getCurrentPositionInSeconds());
+                break;
             }
         }
     }

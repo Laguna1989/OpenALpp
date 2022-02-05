@@ -13,22 +13,11 @@ Sound::Sound(SoundDataInterface const& soundData)
         m_format = AL_FORMAT_STEREO_FLOAT32;
     }
 
-    // Create source
-    alGenSources(1, &m_sourceId);
-    alSourcef(m_sourceId, AL_PITCH, 1.0f);
-    alSourcef(m_sourceId, AL_GAIN, m_volume);
-    alSource3f(m_sourceId, AL_POSITION, 0.0f, 0, -1.0f);
-    alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-    alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
-    alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
-    alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
+    createSource();
 
     // Create and fill buffers
-    alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
-
-    for (auto const& bufferId : m_bufferIds) {
-        selectSamplesForBuffer(bufferId);
-    }
+    createBuffers();
+    fillBufferFromStart();
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
@@ -40,8 +29,41 @@ Sound::Sound(SoundDataInterface const& soundData)
 
 Sound::~Sound()
 {
-    alDeleteSources(1, &m_sourceId);
+    deleteSource();
+    deleteBuffers();
+}
+
+void Sound::deleteBuffers()
+{
     alDeleteBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
+}
+
+void Sound::deleteSource() const { alDeleteSources(1, &m_sourceId); }
+
+void Sound::fillBufferFromStart()
+{
+    m_cursor = 0;
+    for (auto const& bufferId : m_bufferIds) {
+        selectSamplesForBuffer(bufferId);
+    }
+}
+
+void Sound::createBuffers()
+{
+    alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
+}
+
+void Sound::createSource()
+{
+    // Create source
+    alGenSources(1, &m_sourceId);
+    alSourcef(m_sourceId, AL_PITCH, 1.0f);
+    alSourcef(m_sourceId, AL_GAIN, m_volume);
+    alSource3f(m_sourceId, AL_POSITION, 0.0f, 0, -1.0f);
+    alSource3f(m_sourceId, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+    alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
+    alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
+    alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
 }
 
 void Sound::play()
@@ -57,6 +79,13 @@ void Sound::play()
 void Sound::stop()
 {
     alSourceStop(m_sourceId);
+
+    deleteSource();
+    deleteBuffers();
+    createSource();
+    createBuffers();
+    fillBufferFromStart();
+
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
         auto const errorMessage = "Could not stop sound, error code: " + std::to_string(errorIfAny);
