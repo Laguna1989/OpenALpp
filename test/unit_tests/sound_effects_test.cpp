@@ -4,6 +4,7 @@
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
 #include "oalpp/effects/filter/simple_lowpass.hpp"
+#include "oalpp/effects/utility/effect_chain.hpp"
 #include "oalpp/effects/utility/gain.hpp"
 
 TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
@@ -78,6 +79,20 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
                 REQUIRE(0.0f == gain.process(0.0f));
             }
         }
+
+        SECTION("effect chain")
+        {
+            oalpp::effects::utility::Gain gain { 0.5f };
+            oalpp::effects::distortion::Decimator decimator { 32, 1.0f };
+            using namespace oalpp::effects::utility;
+            EffectChain::EffectsT effects { gain, decimator };
+            oalpp::effects::utility::EffectChain chain { effects };
+
+            auto const numberOfSamples = 10000u;
+            for (auto i = 0U; i != numberOfSamples; ++i) {
+                REQUIRE(0.0f == chain.process(0.0f));
+            }
+        }
     }
 }
 
@@ -116,4 +131,42 @@ TEST_CASE("Gain scales input audio", "[SoundEffect]")
 
     auto const input = GENERATE(-1.0f, -0.5f, 0.0f, 0.5f, 1.0f);
     REQUIRE(input * gainValue == gain.process(input));
+}
+
+class FakeEffect : public oalpp::effects::MonoEffectInterface {
+public:
+    float process(float /*unused*/) override
+    {
+        m_hasBeenProcessed = true;
+        return m_returnValue;
+    }
+    void reset() override { }
+    bool m_hasBeenProcessed { false };
+    float m_returnValue { 0.0f };
+};
+
+TEST_CASE("EffectChain calls added effect", "[SoundEffect]")
+{
+    FakeEffect fake;
+
+    using namespace oalpp::effects::utility;
+
+    EffectChain::EffectsT effects { fake };
+    oalpp::effects::utility::EffectChain chain { effects };
+
+    chain.process(0.0f);
+    REQUIRE(fake.m_hasBeenProcessed == true);
+}
+
+TEST_CASE("EffectChain returns processed sample", "[SoundEffect]")
+{
+    FakeEffect fake;
+    fake.m_returnValue = 0.5f;
+
+    using namespace oalpp::effects::utility;
+
+    EffectChain::EffectsT effects { fake };
+    oalpp::effects::utility::EffectChain chain { effects };
+
+    REQUIRE(chain.process(0.0f) == 0.5f);
 }

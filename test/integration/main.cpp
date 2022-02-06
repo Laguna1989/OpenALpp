@@ -2,6 +2,7 @@
 #include "oalpp/effects/distortion/tanh_distortion.hpp"
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
+#include "oalpp/effects/utility/effect_chain.hpp"
 #include "oalpp/effects/utility/gain.hpp"
 #include "oalpp/sound.hpp"
 #include "oalpp/sound_context.hpp"
@@ -41,18 +42,16 @@ int main()
     SoundData buffer { fileName };
 
     effects::filter::SimpleHighpass highpass { 44100, 150, 2.0f };
-    SoundDataWithEffect soundDataWithEffect1 { buffer, highpass };
-
     effects::distortion::TanhDistortion dist { 10.0f, 0.7f };
-    SoundDataWithEffect soundDataWithEffect2 { soundDataWithEffect1, dist };
-
     effects::filter::Butterworth24dbLowpass lowpass { 44100, 9000.0f, 0.0f };
-    SoundDataWithEffect soundDataWithEffect3 { soundDataWithEffect2, lowpass };
-
     effects::utility::Gain gain { 1.5f };
-    SoundDataWithEffect soundDataWithEffect4 { soundDataWithEffect3, gain };
 
-    snd = std::make_shared<Sound>(soundDataWithEffect4);
+    effects::utility::EffectChain::EffectsT effects { highpass, dist, lowpass, gain };
+    effects::utility::EffectChain effectChain { effects };
+
+    SoundDataWithEffect soundDataWithEffect { buffer, effectChain };
+
+    snd = std::make_shared<Sound>(soundDataWithEffect);
     snd->setVolume(0.25f);
     snd->setIsLooping(true);
     snd->play();
