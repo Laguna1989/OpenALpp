@@ -3,7 +3,7 @@ project(OpenALpp)
 
 option(OALPP_ENABLE_UNIT_TESTS "Enable unit tests" ON)
 option(OALPP_ENABLE_INTEGRATION_TESTS "Enable integration tests" ON)
-option(OALPP_STATIC_LIBRARY "Build openal as static library" OFF)
+option(OALPP_STATIC_LIBRARY "Build openal as static library" ON)
 
 if (OALPP_STATIC_LIBRARY)
     set(LIBTYPE STATIC)
