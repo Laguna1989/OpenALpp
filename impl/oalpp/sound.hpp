@@ -20,6 +20,7 @@ public:
 
     void play();
     void stop();
+    void pause();
     bool isPlaying() const;
 
     float getVolume() const;
@@ -64,6 +65,11 @@ private:
 
     void enqueueSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
     void selectSamplesForBuffer(ALuint bufferId);
+    void createSource();
+    void createBuffers();
+    void fillBufferFromStart();
+    void deleteSource() const;
+    void deleteBuffers();
 };
 
 } // namespace oalpp
