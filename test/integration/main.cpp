@@ -46,8 +46,8 @@ int main()
     effects::filter::Butterworth24dbLowpass lowpass { 44100, 9000.0f, 0.0f };
     effects::utility::Gain gain { 1.5f };
 
-    effects::utility::EffectChain effectChain { effects::utility::EffectChain::EffectsT {
-        highpass, dist, lowpass, gain } };
+    effects::utility::EffectChain::EffectsT effects { highpass, dist, lowpass, gain };
+    effects::utility::EffectChain effectChain { effects };
 
     SoundDataWithEffect soundDataWithEffect { buffer, effectChain };
 

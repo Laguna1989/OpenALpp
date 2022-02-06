@@ -85,9 +85,8 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
             oalpp::effects::utility::Gain gain { 0.5f };
             oalpp::effects::distortion::Decimator decimator { 32, 1.0f };
             using namespace oalpp::effects::utility;
-
-            oalpp::effects::utility::EffectChain chain { EffectChain::EffectsT {
-                gain, decimator } };
+            EffectChain::EffectsT effects { gain, decimator };
+            oalpp::effects::utility::EffectChain chain { effects };
 
             auto const numberOfSamples = 10000u;
             for (auto i = 0U; i != numberOfSamples; ++i) {
@@ -152,7 +151,8 @@ TEST_CASE("EffectChain calls added effect", "[SoundEffect]")
 
     using namespace oalpp::effects::utility;
 
-    oalpp::effects::utility::EffectChain chain { EffectChain::EffectsT { fake } };
+    EffectChain::EffectsT effects { fake };
+    oalpp::effects::utility::EffectChain chain { effects };
 
     chain.process(0.0f);
     REQUIRE(fake.m_hasBeenProcessed == true);
@@ -165,7 +165,8 @@ TEST_CASE("EffectChain returns processed sample", "[SoundEffect]")
 
     using namespace oalpp::effects::utility;
 
-    oalpp::effects::utility::EffectChain chain { EffectChain::EffectsT { fake } };
+    EffectChain::EffectsT effects { fake };
+    oalpp::effects::utility::EffectChain chain { effects };
 
     REQUIRE(chain.process(0.0f) == 0.5f);
 }

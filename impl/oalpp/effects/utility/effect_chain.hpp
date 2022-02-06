@@ -2,6 +2,7 @@
 #define OPENALPP_EFFECTS_UTILITY_EFFECT_CHAIN_HPP
 
 #include "oalpp/effects/mono_effect_interface.hpp"
+#include <functional>
 #include <vector>
 
 namespace oalpp {
