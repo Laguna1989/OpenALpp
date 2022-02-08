@@ -175,7 +175,7 @@ TEST_CASE("EffectChain returns processed sample", "[SoundEffect]")
 TEST_CASE("Phase flip returns inverted sample", "[SoundEffect]")
 {
     oalpp::effects::utility::PhaseFlip flip {};
-    float const input = 0.75f;
+    float const input = GENERATE(-1.0f, -0.25f, 0.0f, 0.3f, 0.7f, 0.983f, 1.0f);
     float const expectedOutput = -input;
     float const output = flip.process(input);
 
