@@ -6,6 +6,7 @@
 #include "oalpp/effects/filter/simple_lowpass.hpp"
 #include "oalpp/effects/utility/effect_chain.hpp"
 #include "oalpp/effects/utility/gain.hpp"
+#include "oalpp/effects/utility/phase_flip.hpp"
 
 TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
 {
@@ -169,4 +170,14 @@ TEST_CASE("EffectChain returns processed sample", "[SoundEffect]")
     oalpp::effects::utility::EffectChain chain { effects };
 
     REQUIRE(chain.process(0.0f) == 0.5f);
+}
+
+TEST_CASE("Phase flip returns inverted sample", "[SoundEffect]")
+{
+    oalpp::effects::utility::PhaseFlip flip {};
+    float const input = 0.75f;
+    float const expectedOutput = -input;
+    float const output = flip.process(input);
+
+    REQUIRE(output == expectedOutput);
 }
