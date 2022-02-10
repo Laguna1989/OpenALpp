@@ -299,7 +299,8 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
 
     SECTION("after complete sample is played, getCurrentPosition should return 0.0f seconds")
     {
-        fake.m_samples.resize(8820);
+        // this one test uses a longer sound source to test all branches in update
+        fake.m_samples.resize(Sound::BUFFER_SIZE * Sound::BUFFER_COUNT + 100);
         Sound snd { fake };
         snd.play();
         while (snd.isPlaying()) {
@@ -414,4 +415,25 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
             }
         }
     }
+}
+
+TEST_CASE("Sound Constructor without SoundContext raises exception", "[Sound]")
+{
+    SoundDataMonoFake fake;
+    REQUIRE_THROWS(Sound { fake });
+}
+
+TEST_CASE("Sound actions without context raises exception", "[Sound]")
+{
+    std::unique_ptr<SoundContext> ctx = std::make_unique<SoundContext>();
+    SoundDataMonoFake fake;
+    Sound snd { fake };
+
+    // note: openAL errors about buffers and sound not deleted are expected and intentional for this
+    // test. The error messages are triggered by deleting the SoundContext which is a mandatory step
+    // for this test.
+    ctx.reset();
+    SECTION("play") { REQUIRE_THROWS(snd.play()); }
+    SECTION("stop") { REQUIRE_THROWS(snd.stop()); }
+    SECTION("pause") { REQUIRE_THROWS(snd.pause()); }
 }
