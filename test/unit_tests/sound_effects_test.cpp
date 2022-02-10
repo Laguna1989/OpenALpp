@@ -12,7 +12,7 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
 {
     SECTION("Filters")
     {
-        auto frequency = GENERATE(1.0f, 10.0f, 100.0f, 1000.0f, 10000.0f);
+        auto const frequency = GENERATE(10.0f, 100.0f, 1000.0f, 10000.0f);
         SECTION("Butterworth24dbLopass")
         {
             auto const q = GENERATE(-0.5f, 0.0f, 0.25f, 0.5f, 0.75f, 1.0f, 1.5f);
@@ -101,7 +101,7 @@ TEST_CASE("SoundEffect reset", "[SoundEffect]")
 {
     SECTION("Filters")
     {
-        auto frequency = GENERATE(1.0f, 10.0f, 100.0f, 1000.0f, 10000.0f);
+        auto const frequency = GENERATE(10.0f, 100.0f, 1000.0f, 10000.0f);
         SECTION("Butterworth24dbLopass")
         {
             auto const q = GENERATE(0.0f, 0.25f, 0.5f, 0.75f, 1.0f);
