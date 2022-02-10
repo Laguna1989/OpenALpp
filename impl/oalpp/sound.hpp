@@ -46,10 +46,13 @@ public:
 
     std::size_t getCurrentPositionInSamples() const;
 
+    static constexpr std::size_t BUFFER_SIZE = 65536u;
+    static constexpr std::size_t BUFFER_COUNT = 4u;
+
 private:
     SoundDataInterface const& m_soundData;
 
-    std::array<ALuint, 4> m_bufferIds { 0 };
+    std::array<ALuint, BUFFER_COUNT> m_bufferIds { 0 };
     ALuint m_sourceId { 0 };
     ALenum m_format { AL_FORMAT_MONO_FLOAT32 };
 
@@ -60,8 +63,6 @@ private:
     float m_pitch { 1.0f };
 
     bool m_isLooping { false };
-
-    static constexpr std::size_t BUFFER_SIZE = 65536u;
 
     void enqueueSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
     void selectSamplesForBuffer(ALuint bufferId);
