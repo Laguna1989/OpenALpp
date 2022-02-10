@@ -15,7 +15,7 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
         auto frequency = GENERATE(1.0f, 10.0f, 100.0f, 1000.0f, 10000.0f);
         SECTION("Butterworth24dbLopass")
         {
-            auto const q = GENERATE(0.0f, 0.25f, 0.5f, 0.75f, 1.0f);
+            auto const q = GENERATE(-0.5f, 0.0f, 0.25f, 0.5f, 0.75f, 1.0f, 1.5f);
             oalpp::effects::filter::Butterworth24dbLowpass lowpass { 44100, frequency, q };
             auto const numberOfSamples = 10000u;
             for (auto i = 0U; i != numberOfSamples; ++i) {
@@ -93,6 +93,133 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
             for (auto i = 0U; i != numberOfSamples; ++i) {
                 REQUIRE(0.0f == chain.process(0.0f));
             }
+        }
+    }
+}
+
+TEST_CASE("SoundEffect reset", "[SoundEffect]")
+{
+    SECTION("Filters")
+    {
+        auto frequency = GENERATE(1.0f, 10.0f, 100.0f, 1000.0f, 10000.0f);
+        SECTION("Butterworth24dbLopass")
+        {
+            auto const q = GENERATE(0.0f, 0.25f, 0.5f, 0.75f, 1.0f);
+            auto const input = 1.0f;
+
+            oalpp::effects::filter::Butterworth24dbLowpass lowpass { 44100, frequency, q };
+            // process first sample
+            auto const firstSampleResult = lowpass.process(input);
+
+            // process some more samples
+            auto const numberOfSamples = 3u;
+            for (auto i = 0U; i != numberOfSamples; ++i) {
+                lowpass.process(input);
+            }
+
+            lowpass.reset();
+
+            REQUIRE(firstSampleResult == lowpass.process(input));
+        }
+
+        SECTION("SimpleLowpass")
+        {
+            auto const r = GENERATE(0.2f, 1.0f, 1.4f);
+            oalpp::effects::filter::SimpleLowpass lowpass { 44100, frequency, r };
+            auto const input = 1.0f;
+
+            // process first sample
+            auto const firstSampleResult = lowpass.process(input);
+
+            // process some more samples
+            auto const numberOfSamples = 3u;
+            for (auto i = 0U; i != numberOfSamples; ++i) {
+                lowpass.process(input);
+            }
+
+            lowpass.reset();
+
+            REQUIRE(firstSampleResult == lowpass.process(input));
+        }
+
+        SECTION("SimpleHighpass")
+        {
+            auto const r = GENERATE(0.2f, 1.0f, 1.4f);
+            oalpp::effects::filter::SimpleHighpass highpass { 44100, frequency, r };
+            auto const input = 1.0f;
+
+            // process first sample
+            auto const firstSampleResult = highpass.process(input);
+
+            // process some more samples
+            auto const numberOfSamples = 3u;
+            for (auto i = 0U; i != numberOfSamples; ++i) {
+                highpass.process(input);
+            }
+
+            highpass.reset();
+
+            REQUIRE(firstSampleResult == highpass.process(input));
+        }
+    }
+    SECTION("Distortion")
+    {
+        SECTION("Tanh distortion")
+        {
+            oalpp::effects::distortion::TanhDistortion distortion { 1.0f, 1.0f };
+
+            // distortion does not store any history, so reset does nothing.
+            REQUIRE_NOTHROW(distortion.reset());
+        }
+        SECTION("decimator")
+        {
+            auto const bits = GENERATE(1, 2, 5, 10, 20);
+            oalpp::effects::distortion::Decimator decimator { bits, 1.0f };
+
+            auto const input = 1.0f;
+
+            // process first sample
+            auto const firstSampleResult = decimator.process(input);
+
+            // process some more samples
+            auto const numberOfSamples = 3u;
+            for (auto i = 0U; i != numberOfSamples; ++i) {
+                decimator.process(input);
+            }
+
+            decimator.reset();
+
+            REQUIRE(firstSampleResult == decimator.process(input));
+        }
+    }
+    SECTION("utility")
+    {
+        SECTION("gain")
+        {
+            oalpp::effects::utility::Gain gain { 1.0f };
+
+            // gain does not store any history, so reset does nothing.
+            REQUIRE_NOTHROW(gain.reset());
+        }
+
+        SECTION("effect chain")
+        {
+            oalpp::effects::utility::Gain gain { 0.5f };
+            oalpp::effects::distortion::Decimator decimator { 32, 1.0f };
+            using namespace oalpp::effects::utility;
+            EffectChain::EffectsT effects { gain, decimator };
+            oalpp::effects::utility::EffectChain chain { effects };
+
+            // distortion does not store any history, so reset does nothing.
+            REQUIRE_NOTHROW(chain.reset());
+        }
+
+        SECTION("phase flip")
+        {
+            oalpp::effects::utility::PhaseFlip flip {};
+
+            // flip does not store any history, so reset does nothing.
+            REQUIRE_NOTHROW(flip.reset());
         }
     }
 }
