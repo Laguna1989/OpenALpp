@@ -224,13 +224,13 @@ float Sound::getLengthInSeconds() const
         / static_cast<float>(m_soundData.getSampleRate());
 }
 
-float Sound::getCurrentPositionInSeconds() const
+float Sound::getCurrentOffsetInSeconds() const
 {
-    return static_cast<float>(getCurrentPositionInSamples())
+    return static_cast<float>(getCurrentOffsetInSamples())
         / static_cast<float>(m_soundData.getSampleRate());
 }
 
-size_t Sound::getCurrentPositionInSamples() const
+size_t Sound::getCurrentOffsetInSamples() const
 {
     ALint value { 0 };
     alGetSourcei(m_sourceId, AL_SAMPLE_OFFSET, &value);
