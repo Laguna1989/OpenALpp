@@ -3,7 +3,6 @@
 
 #include "alc.hpp"
 #include "sound_context_interface.hpp"
-#include <functional>
 #include <memory>
 #include <type_traits>
 
