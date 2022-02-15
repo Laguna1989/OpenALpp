@@ -2,32 +2,34 @@
 #define OPENALPP_AUDIO_EXCEPTIONS_HPP
 
 #include <stdexcept>
+#include <string>
+#include <utility>
 
 namespace oalpp {
 class AudioException : public std::exception {
 public:
-    explicit AudioException(char const* const message)
-        : m_message { message }
+    explicit AudioException(std::string message)
+        : m_message { std::move(message) }
     {
     }
 
-    [[nodiscard]] char const* what() const noexcept override { return m_message; }
+    [[nodiscard]] char const* what() const noexcept override { return m_message.c_str(); }
 
 private:
-    char const* m_message;
+    std::string m_message;
 };
 
 class AudioSystemException : public std::exception {
 public:
-    explicit AudioSystemException(char const* const message)
-        : m_message { message }
+    explicit AudioSystemException(std::string message)
+        : m_message { std::move(message) }
     {
     }
 
-    [[nodiscard]] char const* what() const noexcept override { return m_message; }
+    [[nodiscard]] char const* what() const noexcept override { return m_message.c_str(); }
 
 private:
-    char const* m_message;
+    std::string m_message;
 };
 
 } // namespace oalpp

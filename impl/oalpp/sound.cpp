@@ -21,9 +21,8 @@ Sound::Sound(SoundDataInterface const& soundData)
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage
-            = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not create OpenAL soundData, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
 
@@ -71,8 +70,8 @@ void Sound::play()
     alSourcePlay(m_sourceId);
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage = "Could not play sound, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not play sound, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
 
@@ -88,8 +87,8 @@ void Sound::stop()
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage = "Could not stop sound, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not stop sound, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
 
@@ -98,8 +97,8 @@ void Sound::pause()
     alSourcePause(m_sourceId);
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage = "Could not stop sound, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not stop sound, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
 
@@ -115,9 +114,7 @@ float Sound::getVolume() const { return m_volume; }
 void Sound::setVolume(float newVolume)
 {
     if (newVolume < 0 || newVolume > 1.0f) {
-        auto const errorMessage
-            = std::string { "Could not set volume value: " } + std::to_string(newVolume);
-        throw std::invalid_argument { errorMessage.c_str() };
+        throw std::invalid_argument { "Could not set volume value: " + std::to_string(newVolume) };
     }
     m_volume = newVolume;
     alSourcef(m_sourceId, AL_GAIN, newVolume);
@@ -126,9 +123,9 @@ void Sound::setVolume(float newVolume)
 void Sound::setPan(float newPan)
 {
     if (newPan < -1.0f || newPan > 1.0f) {
-        auto const errorMessage
-            = std::string { "Could not set pan value: " } + std::to_string(newPan);
-        throw std::invalid_argument { errorMessage.c_str() };
+        throw std::invalid_argument {
+            ("Could not set pan value: " + std::to_string(newPan)).c_str()
+        };
     }
 
     setPosition(
@@ -152,9 +149,7 @@ float Sound::getPitch() const { return m_pitch; }
 void Sound::setPitch(float const newPitch)
 {
     if (newPitch <= 0.0f) {
-        auto const errorMessage
-            = std::string { "Could not set pitch value: " } + std::to_string(newPitch);
-        throw std::invalid_argument { errorMessage.c_str() };
+        throw std::invalid_argument { "Could not set pitch value: " + std::to_string(newPitch) };
     }
     m_pitch = newPitch;
     alSourcef(m_sourceId, AL_PITCH, newPitch);
