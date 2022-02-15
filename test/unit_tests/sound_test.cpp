@@ -288,13 +288,13 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
     SECTION("Empty SoundDataMonoFake results in correct initial Position in seconds")
     {
         Sound snd { fake };
-        REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
+        REQUIRE(0.0f == snd.getCurrentOffsetInSeconds());
     }
 
     SECTION("Empty SoundDataMonoFake results in correct initial Position in samples")
     {
         Sound snd { fake };
-        REQUIRE(0 == snd.getCurrentPositionInSamples());
+        REQUIRE(0 == snd.getCurrentOffsetInSamples());
     }
 
     SECTION("after complete sample is played, getCurrentPosition should return 0.0f seconds")
@@ -306,7 +306,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         while (snd.isPlaying()) {
             snd.update();
         }
-        REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
+        REQUIRE(0.0f == snd.getCurrentOffsetInSeconds());
     }
 
     SECTION("after complete sample is played, getCurrentPosition should return 0 samples")
@@ -317,7 +317,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         while (snd.isPlaying()) {
             snd.update();
         }
-        REQUIRE(0u == snd.getCurrentPositionInSamples());
+        REQUIRE(0u == snd.getCurrentOffsetInSamples());
     }
 
     SECTION("getCurrentPositionSeconds is increasing while playing")
@@ -328,7 +328,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         float oldValue = 0.0f;
         while (snd.isPlaying()) {
             snd.update();
-            auto const newValue = snd.getCurrentPositionInSeconds();
+            auto const newValue = snd.getCurrentOffsetInSeconds();
             if (newValue != 0.0f) {
                 REQUIRE(newValue >= oldValue);
                 oldValue = newValue;
@@ -344,7 +344,7 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         std::size_t oldValue = 0u;
         while (snd.isPlaying()) {
             snd.update();
-            auto const newValue = snd.getCurrentPositionInSamples();
+            auto const newValue = snd.getCurrentOffsetInSamples();
             if (newValue != 0u) {
                 REQUIRE(newValue >= oldValue);
                 oldValue = newValue;
@@ -359,10 +359,10 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         snd.play();
         while (snd.isPlaying()) {
             snd.update();
-            auto const newValue = snd.getCurrentPositionInSamples();
+            auto const newValue = snd.getCurrentOffsetInSamples();
             if (newValue != 0u) {
                 snd.stop();
-                REQUIRE(0.0f == snd.getCurrentPositionInSamples());
+                REQUIRE(0.0f == snd.getCurrentOffsetInSamples());
                 break;
             }
         }
@@ -375,10 +375,10 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         snd.play();
         while (snd.isPlaying()) {
             snd.update();
-            auto const newValue = snd.getCurrentPositionInSeconds();
+            auto const newValue = snd.getCurrentOffsetInSeconds();
             if (newValue != 0.0f) {
                 snd.stop();
-                REQUIRE(0.0f == snd.getCurrentPositionInSeconds());
+                REQUIRE(0.0f == snd.getCurrentOffsetInSeconds());
                 break;
             }
         }
@@ -391,10 +391,10 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         snd.play();
         while (snd.isPlaying()) {
             snd.update();
-            auto const newValue = snd.getCurrentPositionInSamples();
+            auto const newValue = snd.getCurrentOffsetInSamples();
             if (newValue != 0u) {
                 snd.pause();
-                REQUIRE(0u != snd.getCurrentPositionInSamples());
+                REQUIRE(0u != snd.getCurrentOffsetInSamples());
                 break;
             }
         }
@@ -407,10 +407,10 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         snd.play();
         while (snd.isPlaying()) {
             snd.update();
-            auto const newValue = snd.getCurrentPositionInSeconds();
+            auto const newValue = snd.getCurrentOffsetInSeconds();
             if (newValue != 0.0f) {
                 snd.pause();
-                REQUIRE(0.0f != snd.getCurrentPositionInSeconds());
+                REQUIRE(0.0f != snd.getCurrentOffsetInSeconds());
                 break;
             }
         }

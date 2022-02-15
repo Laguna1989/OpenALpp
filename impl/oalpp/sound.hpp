@@ -42,9 +42,9 @@ public:
     std::size_t getLengthInSamples() const;
     float getLengthInSeconds() const;
 
-    float getCurrentPositionInSeconds() const;
+    float getCurrentOffsetInSeconds() const;
 
-    std::size_t getCurrentPositionInSamples() const;
+    std::size_t getCurrentOffsetInSamples() const;
 
     static constexpr std::size_t BUFFER_SIZE = 65536u;
     static constexpr std::size_t BUFFER_COUNT = 4u;
