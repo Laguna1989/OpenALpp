@@ -5,14 +5,8 @@
 #include "position.hpp"
 #include "sound_data_interface.hpp"
 #include <array>
-#include <memory>
-#include <string>
-#include <vector>
 
 namespace oalpp {
-
-// fwd decl.
-class SoundContext;
 
 class Sound {
 public:
@@ -67,11 +61,11 @@ private:
 
     void enqueueSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
     void selectSamplesForBuffer(ALuint bufferId);
-    void createSource();
-    void createBuffers();
-    void fillBufferFromStart();
-    void deleteSource() const;
-    void deleteBuffers();
+    bool hasDataToEnqueue() const;
+    bool hasDataForFullBufferToEnqueue() const;
+
+    void initSourceAndBuffers();
+    void deleteSourceAndBuffers();
 };
 
 } // namespace oalpp

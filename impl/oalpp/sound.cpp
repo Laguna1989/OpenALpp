@@ -1,6 +1,5 @@
 #include "sound.hpp"
 #include "audio_exceptions.hpp"
-#include "sound_context.hpp"
 #include <cmath>
 #include <stdexcept>
 
@@ -13,11 +12,7 @@ Sound::Sound(SoundDataInterface const& soundData)
         m_format = AL_FORMAT_STEREO_FLOAT32;
     }
 
-    createSource();
-
-    // Create and fill buffers
-    createBuffers();
-    fillBufferFromStart();
+    initSourceAndBuffers();
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
@@ -25,34 +20,7 @@ Sound::Sound(SoundDataInterface const& soundData)
             + std::to_string(errorIfAny) };
     }
 }
-
-Sound::~Sound()
-{
-    deleteSource();
-    deleteBuffers();
-}
-
-void Sound::deleteBuffers()
-{
-    alDeleteBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
-}
-
-void Sound::deleteSource() const { alDeleteSources(1, &m_sourceId); }
-
-void Sound::fillBufferFromStart()
-{
-    m_cursor = 0;
-    for (auto const& bufferId : m_bufferIds) {
-        selectSamplesForBuffer(bufferId);
-    }
-}
-
-void Sound::createBuffers()
-{
-    alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
-}
-
-void Sound::createSource()
+void Sound::initSourceAndBuffers()
 {
     // Create source
     alGenSources(1, &m_sourceId);
@@ -63,6 +31,21 @@ void Sound::createSource()
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
     alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
     alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
+
+    alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
+
+    m_cursor = 0;
+    for (auto const& bufferId : m_bufferIds) {
+        selectSamplesForBuffer(bufferId);
+    }
+}
+
+Sound::~Sound() { deleteSourceAndBuffers(); }
+
+void Sound::deleteSourceAndBuffers()
+{
+    alDeleteSources(1, &m_sourceId);
+    alDeleteBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
 }
 
 void Sound::play()
@@ -79,11 +62,9 @@ void Sound::stop()
 {
     alSourceStop(m_sourceId);
 
-    deleteSource();
-    deleteBuffers();
-    createSource();
-    createBuffers();
-    fillBufferFromStart();
+    deleteSourceAndBuffers();
+
+    initSourceAndBuffers();
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
@@ -186,10 +167,12 @@ void Sound::update()
 
 void Sound::selectSamplesForBuffer(ALuint bufferId)
 {
-    if (m_cursor >= m_soundData.getSamples().size()) {
+    if (!hasDataToEnqueue()) {
         // do not queue any buffer
         return;
-    } else if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
+    }
+
+    if (hasDataForFullBufferToEnqueue()) {
         // queue a full buffer
         enqueueSamplesToBuffer(bufferId, BUFFER_SIZE);
     } else {
@@ -204,6 +187,11 @@ void Sound::selectSamplesForBuffer(ALuint bufferId)
         }
     }
 }
+bool Sound::hasDataForFullBufferToEnqueue() const
+{
+    return m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size();
+}
+bool Sound::hasDataToEnqueue() const { return m_cursor < m_soundData.getSamples().size(); }
 
 bool Sound::getIsLooping() const { return m_isLooping; }
 void Sound::setIsLooping(bool value) { m_isLooping = value; }
