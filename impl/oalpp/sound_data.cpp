@@ -10,12 +10,12 @@ SoundData::SoundData(std::string const& fileName)
     nqr::NyquistIO loader;
     loader.Load(fileData.get(), fileName);
 
-    m_channels = fileData->channelCount;
+    m_numberOfChannels = fileData->channelCount;
     m_sampleRate = fileData->sampleRate;
     m_samples = std::move(fileData->samples);
 }
 
-int SoundData::getNumberOfChannels() const { return m_channels; }
+int SoundData::getNumberOfChannels() const { return m_numberOfChannels; }
 
 int SoundData::getSampleRate() const { return m_sampleRate; }
 

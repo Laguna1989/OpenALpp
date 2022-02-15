@@ -128,20 +128,19 @@ void Sound::setPan(float newPan)
         };
     }
 
-    setPosition(
-        std::array<float, 3> { newPan, 0, -static_cast<float>(sqrt(1.0f - newPan * newPan)) });
+    setPosition(Position { newPan, 0, -static_cast<float>(sqrt(1.0f - newPan * newPan)) });
 }
 
-std::array<float, 3> Sound::getPosition() const { return m_position; }
+Position Sound::getPosition() const { return m_position; }
 
-void Sound::setPosition(std::array<float, 3> const& newPos)
+void Sound::setPosition(Position const& newPosition)
 {
     if (m_format == AL_FORMAT_STEREO_FLOAT32) {
         throw oalpp::AudioException { "Could not set position on non-mono file" };
     }
 
-    m_position = newPos;
-    alSource3f(m_sourceId, AL_POSITION, newPos[0], newPos[1], newPos[2]);
+    m_position = newPosition;
+    alSource3f(m_sourceId, AL_POSITION, newPosition.x, newPosition.y, newPosition.z);
 }
 
 float Sound::getPitch() const { return m_pitch; }

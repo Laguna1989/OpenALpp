@@ -65,17 +65,16 @@ TEST_CASE("Sound position and pan test", "[Sound]")
     SECTION("default position value")
     {
         auto const pos = snd.getPosition();
-        REQUIRE(std::array<float, 3> { 0.0f, 0.0f, -1.0f } == pos);
+        REQUIRE(Position { 0.0f, 0.0f, -1.0f } == pos);
     }
 
     SECTION("position after setPosition")
     {
-        auto const newPosition = GENERATE(std::array<float, 3> { 0.0f, 0.0f, 0.0f },
-            std::array<float, 3> { 1.0f, 0.0f, 0.0f }, std::array<float, 3> { 0.0f, 1.0f, 0.0f },
-            std::array<float, 3> { 0.0f, 0.0f, 1.0f }, std::array<float, 3> { -100.0f, 0.0f, 0.0f },
-            std::array<float, 3> { 0.0f, -100.0f, 0.0f },
-            std::array<float, 3> { 0.0f, 0.0f, -100.0f }, std::array<float, 3> { 5.0f, 7.0f, 8.0f },
-            std::array<float, 3> { -10.0f, -17.0f, -2.0f });
+        auto const newPosition = GENERATE(Position { 0.0f, 0.0f, 0.0f },
+            Position { 1.0f, 0.0f, 0.0f }, Position { 0.0f, 1.0f, 0.0f },
+            Position { 0.0f, 0.0f, 1.0f }, Position { -100.0f, 0.0f, 0.0f },
+            Position { 0.0f, -100.0f, 0.0f }, Position { 0.0f, 0.0f, -100.0f },
+            Position { 5.0f, 7.0f, 8.0f }, Position { -10.0f, -17.0f, -2.0f });
 
         snd.setPosition(newPosition);
         REQUIRE(newPosition == snd.getPosition());
@@ -84,7 +83,7 @@ TEST_CASE("Sound position and pan test", "[Sound]")
     SECTION("position after setPan")
     {
         auto const conversion = [](float pan) {
-            return std::array<float, 3> { pan, 0, -static_cast<float>(sqrt(1.0f - pan * pan)) };
+            return Position { pan, 0, -static_cast<float>(sqrt(1.0f - pan * pan)) };
         };
         float const newPan = GENERATE(0.5f, 1.0f, 0.1f, 0.0f);
         auto const expectedPosition = conversion(newPan);
@@ -150,7 +149,7 @@ TEST_CASE("Sound pan stereo sound test", "[Sound]")
     SECTION("default position value")
     {
         auto const pos = snd.getPosition();
-        REQUIRE(std::array<float, 3> { 0.0f, 0.0f, -1.0f } == pos);
+        REQUIRE(Position { 0.0f, 0.0f, -1.0f } == pos);
     }
     SECTION("pan stereo sound always raises exception")
     {
