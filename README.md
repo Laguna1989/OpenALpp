@@ -25,9 +25,23 @@ Code Example
 
 SoundContext ctx;
 SoundData buffer { "audio.mp3" };
-Sound snd { buffer, ctx };
+Sound snd { buffer };
 snd.play();
+
+while (snd.isPlaying()) {
+    snd.update();
+}
 ```
+
+Common Pitfalls
+------------
+
+* Sound has a dependency to the `SoundData` that is passed in the constructor. You need to keep the `SoundData` alive as
+  long as any `Sound` might access it.
+    * You can bundle `SoundData` and `Sound` together in your implementation.
+    * Alternatively you can write your own `SoundDataManager` to avoid creating multiple `SoundData`s for the same file.
+* Your sound will stop after some seconds, even if the audio file contains a longer sound. `Sound`s do not update
+  themselves. You need to call `update()` regularly.
 
 How to include OpenALpp in your project
 ---------------------------------------
@@ -52,7 +66,7 @@ CMake Options
 
 * `OALPP_ENABLE_UNIT_TESTS` - Enable unit tests - default `ON`
 * `OALPP_ENABLE_INTEGRATION_TESTS` - Enable integration test - default `ON`
-* `OALPP_STATIC_LIBRARY` - Build OpenALpp and dependencies as static library - default `OFF`
+* `OALPP_STATIC_LIBRARY` - Build OpenALpp and dependencies as static library - default `ON`
 
 Compiler compatibility
 ----------------------
@@ -68,4 +82,4 @@ Dependencies
 * CMake 3.19
 * One of the compatible compilers
 
-All other dependencies (openal-soft and libnyquist) are automatically fetched via CMake.
+All other dependencies (`openal-soft` and `libnyquist`) are automatically fetched via CMake.

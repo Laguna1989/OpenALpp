@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(OpenALpp)
+project(OpenALpp VERSION 0.1.0)
 
 option(OALPP_ENABLE_UNIT_TESTS "Enable unit tests" ON)
 option(OALPP_ENABLE_INTEGRATION_TESTS "Enable integration tests" ON)

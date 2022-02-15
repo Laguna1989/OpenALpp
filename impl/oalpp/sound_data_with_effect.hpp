@@ -18,7 +18,7 @@ public:
 private:
     std::vector<float> m_samples {};
     int m_sampleRate { 0 };
-    int m_channels { 0 };
+    int m_numberOfChannels { 0 };
     void applyEffectToMonoSoundData(
         effects::MonoEffectInterface& effect, std::vector<float> const& samples);
     void applyEffectToStereoSoundData(

@@ -1,6 +1,5 @@
 #include "sound.hpp"
 #include "audio_exceptions.hpp"
-#include "sound_context.hpp"
 #include <cmath>
 #include <stdexcept>
 
@@ -13,47 +12,15 @@ Sound::Sound(SoundDataInterface const& soundData)
         m_format = AL_FORMAT_STEREO_FLOAT32;
     }
 
-    createSource();
-
-    // Create and fill buffers
-    createBuffers();
-    fillBufferFromStart();
+    initSourceAndBuffers();
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage
-            = "Could not create OpenAL soundData, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not create OpenAL soundData, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
-
-Sound::~Sound()
-{
-    deleteSource();
-    deleteBuffers();
-}
-
-void Sound::deleteBuffers()
-{
-    alDeleteBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
-}
-
-void Sound::deleteSource() const { alDeleteSources(1, &m_sourceId); }
-
-void Sound::fillBufferFromStart()
-{
-    m_cursor = 0;
-    for (auto const& bufferId : m_bufferIds) {
-        selectSamplesForBuffer(bufferId);
-    }
-}
-
-void Sound::createBuffers()
-{
-    alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
-}
-
-void Sound::createSource()
+void Sound::initSourceAndBuffers()
 {
     // Create source
     alGenSources(1, &m_sourceId);
@@ -64,6 +31,21 @@ void Sound::createSource()
     alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
     alSourcef(m_sourceId, AL_ROLLOFF_FACTOR, 0.0f);
     alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
+
+    alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
+
+    m_cursor = 0;
+    for (auto const& bufferId : m_bufferIds) {
+        selectSamplesForBuffer(bufferId);
+    }
+}
+
+Sound::~Sound() { deleteSourceAndBuffers(); }
+
+void Sound::deleteSourceAndBuffers()
+{
+    alDeleteSources(1, &m_sourceId);
+    alDeleteBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
 }
 
 void Sound::play()
@@ -71,8 +53,8 @@ void Sound::play()
     alSourcePlay(m_sourceId);
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage = "Could not play sound, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not play sound, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
 
@@ -80,16 +62,14 @@ void Sound::stop()
 {
     alSourceStop(m_sourceId);
 
-    deleteSource();
-    deleteBuffers();
-    createSource();
-    createBuffers();
-    fillBufferFromStart();
+    deleteSourceAndBuffers();
+
+    initSourceAndBuffers();
 
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage = "Could not stop sound, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not stop sound, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
 
@@ -98,8 +78,8 @@ void Sound::pause()
     alSourcePause(m_sourceId);
     auto const errorIfAny = alGetError();
     if (errorIfAny != AL_NO_ERROR) {
-        auto const errorMessage = "Could not stop sound, error code: " + std::to_string(errorIfAny);
-        throw oalpp::AudioException { errorMessage.c_str() };
+        throw oalpp::AudioException { "Could not stop sound, error code: "
+            + std::to_string(errorIfAny) };
     }
 }
 
@@ -115,9 +95,7 @@ float Sound::getVolume() const { return m_volume; }
 void Sound::setVolume(float newVolume)
 {
     if (newVolume < 0 || newVolume > 1.0f) {
-        auto const errorMessage
-            = std::string { "Could not set volume value: " } + std::to_string(newVolume);
-        throw std::invalid_argument { errorMessage.c_str() };
+        throw std::invalid_argument { "Could not set volume value: " + std::to_string(newVolume) };
     }
     m_volume = newVolume;
     alSourcef(m_sourceId, AL_GAIN, newVolume);
@@ -126,25 +104,24 @@ void Sound::setVolume(float newVolume)
 void Sound::setPan(float newPan)
 {
     if (newPan < -1.0f || newPan > 1.0f) {
-        auto const errorMessage
-            = std::string { "Could not set pan value: " } + std::to_string(newPan);
-        throw std::invalid_argument { errorMessage.c_str() };
+        throw std::invalid_argument {
+            ("Could not set pan value: " + std::to_string(newPan)).c_str()
+        };
     }
 
-    setPosition(
-        std::array<float, 3> { newPan, 0, -static_cast<float>(sqrt(1.0f - newPan * newPan)) });
+    setPosition(Position { newPan, 0, -static_cast<float>(sqrt(1.0f - newPan * newPan)) });
 }
 
-std::array<float, 3> Sound::getPosition() const { return m_position; }
+Position Sound::getPosition() const { return m_position; }
 
-void Sound::setPosition(std::array<float, 3> const& newPos)
+void Sound::setPosition(Position const& newPosition)
 {
     if (m_format == AL_FORMAT_STEREO_FLOAT32) {
         throw oalpp::AudioException { "Could not set position on non-mono file" };
     }
 
-    m_position = newPos;
-    alSource3f(m_sourceId, AL_POSITION, newPos[0], newPos[1], newPos[2]);
+    m_position = newPosition;
+    alSource3f(m_sourceId, AL_POSITION, newPosition.x, newPosition.y, newPosition.z);
 }
 
 float Sound::getPitch() const { return m_pitch; }
@@ -152,9 +129,7 @@ float Sound::getPitch() const { return m_pitch; }
 void Sound::setPitch(float const newPitch)
 {
     if (newPitch <= 0.0f) {
-        auto const errorMessage
-            = std::string { "Could not set pitch value: " } + std::to_string(newPitch);
-        throw std::invalid_argument { errorMessage.c_str() };
+        throw std::invalid_argument { "Could not set pitch value: " + std::to_string(newPitch) };
     }
     m_pitch = newPitch;
     alSourcef(m_sourceId, AL_PITCH, newPitch);
@@ -192,10 +167,12 @@ void Sound::update()
 
 void Sound::selectSamplesForBuffer(ALuint bufferId)
 {
-    if (m_cursor >= m_soundData.getSamples().size()) {
+    if (!hasDataToEnqueue()) {
         // do not queue any buffer
         return;
-    } else if (m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size()) {
+    }
+
+    if (hasDataForFullBufferToEnqueue()) {
         // queue a full buffer
         enqueueSamplesToBuffer(bufferId, BUFFER_SIZE);
     } else {
@@ -210,6 +187,11 @@ void Sound::selectSamplesForBuffer(ALuint bufferId)
         }
     }
 }
+bool Sound::hasDataForFullBufferToEnqueue() const
+{
+    return m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size();
+}
+bool Sound::hasDataToEnqueue() const { return m_cursor < m_soundData.getSamples().size(); }
 
 bool Sound::getIsLooping() const { return m_isLooping; }
 void Sound::setIsLooping(bool value) { m_isLooping = value; }

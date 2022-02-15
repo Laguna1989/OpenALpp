@@ -3,10 +3,8 @@
 
 #include "alc.hpp"
 #include "sound_context_interface.hpp"
-#include <cstdint>
 #include <memory>
-#include <string>
-#include <vector>
+#include <type_traits>
 
 namespace oalpp {
 
@@ -16,8 +14,11 @@ public:
     ~SoundContext() override;
 
 private:
-    ALCdevice* m_device { nullptr };
-    ALCcontext* m_context { nullptr };
+    using DeviceDestroyer = std::add_pointer<ALCboolean(ALCdevice*)>::type;
+    using ContextDestroyer = std::add_pointer<void(ALCcontext*)>::type;
+
+    std::unique_ptr<ALCdevice, DeviceDestroyer> m_device { nullptr, nullptr };
+    std::unique_ptr<ALCcontext, ContextDestroyer> m_context { nullptr, nullptr };
     static int numberOfInitializations;
 };
 

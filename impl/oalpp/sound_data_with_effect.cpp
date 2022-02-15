@@ -6,11 +6,11 @@ SoundDataWithEffect::SoundDataWithEffect(
     SoundDataInterface const& decoratee, effects::MonoEffectInterface& effect)
 {
     m_sampleRate = decoratee.getSampleRate();
-    m_channels = decoratee.getNumberOfChannels();
+    m_numberOfChannels = decoratee.getNumberOfChannels();
     m_samples.resize(decoratee.getSamples().size());
 
     auto const& samples = decoratee.getSamples();
-    if (m_channels == 1) {
+    if (m_numberOfChannels == 1) {
         applyEffectToMonoSoundData(effect, samples);
     } else {
         applyEffectToStereoSoundData(effect, samples);
@@ -40,7 +40,7 @@ void SoundDataWithEffect::applyEffectToMonoSoundData(
         [&effect](auto f) { return effect.process(f); });
 }
 
-int SoundDataWithEffect::getNumberOfChannels() const { return m_channels; }
+int SoundDataWithEffect::getNumberOfChannels() const { return m_numberOfChannels; }
 int SoundDataWithEffect::getSampleRate() const { return m_sampleRate; }
 const std::vector<float>& SoundDataWithEffect::getSamples() const { return m_samples; }
 

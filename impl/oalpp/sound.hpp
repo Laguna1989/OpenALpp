@@ -2,16 +2,11 @@
 #define OPENALPP_SOUND_HPP
 
 #include "al.hpp"
+#include "position.hpp"
 #include "sound_data_interface.hpp"
 #include <array>
-#include <memory>
-#include <string>
-#include <vector>
 
 namespace oalpp {
-
-// fwd decl.
-class SoundContext;
 
 class Sound {
 public:
@@ -26,13 +21,13 @@ public:
     float getVolume() const;
     void setVolume(float newVolume);
 
-    std::array<float, 3> getPosition() const;
+    Position getPosition() const;
 
-    void setPosition(std::array<float, 3> const& newPos);
+    void setPosition(Position const& newPosition);
     void setPan(float newPan);
 
     float getPitch() const;
-    void setPitch(float const newPitch);
+    void setPitch(float newPitch);
 
     bool getIsLooping() const;
     void setIsLooping(bool value);
@@ -59,18 +54,18 @@ private:
     std::size_t m_cursor { 0 };
 
     float m_volume { 1.0f };
-    std::array<float, 3> m_position { 0.0f, 0.0f, -1.0f };
+    Position m_position { 0.0f, 0.0f, -1.0f };
     float m_pitch { 1.0f };
 
     bool m_isLooping { false };
 
     void enqueueSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
     void selectSamplesForBuffer(ALuint bufferId);
-    void createSource();
-    void createBuffers();
-    void fillBufferFromStart();
-    void deleteSource() const;
-    void deleteBuffers();
+    bool hasDataToEnqueue() const;
+    bool hasDataForFullBufferToEnqueue() const;
+
+    void initSourceAndBuffers();
+    void deleteSourceAndBuffers();
 };
 
 } // namespace oalpp
