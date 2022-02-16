@@ -1,5 +1,5 @@
 #include "sound.hpp"
-#include "audio_exceptions.hpp"
+#include "oalpp/common/audio_exceptions.hpp"
 #include <cmath>
 #include <stdexcept>
 

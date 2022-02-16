@@ -1,5 +1,5 @@
 #include "catch2/catch.hpp"
-#include "oalpp/audio_exceptions.hpp"
+#include "oalpp/common/audio_exceptions.hpp"
 
 TEST_CASE("AudioException returns correct message on what", "[Audio Exception]")
 {

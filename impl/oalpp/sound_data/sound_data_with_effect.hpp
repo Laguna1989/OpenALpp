@@ -1,7 +1,7 @@
 #ifndef OPENALPP_SOUND_DATA_WITH_EFFECT_HPP
 #define OPENALPP_SOUND_DATA_WITH_EFFECT_HPP
 
-#include "effects/mono_effect_interface.hpp"
+#include "oalpp/effects/mono_effect_interface.hpp"
 #include "sound_data_interface.hpp"
 #include <vector>
 
