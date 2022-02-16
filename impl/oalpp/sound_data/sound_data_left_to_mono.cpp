@@ -1,4 +1,3 @@
-
 #include "sound_data_left_to_mono.hpp"
 #include <stdexcept>
 
