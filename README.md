@@ -38,7 +38,7 @@ while (snd.isPlaying()) {
 Common Pitfalls
 ------------
 
-* Sound has a dependency to the `SoundContext`. You need to keep the `SoundContext` alive as long as you want to use
+* `Sound` has a dependency on `SoundContext`. You need to keep the `SoundContext` alive as long as you want to use
   sounds.
     * Note that this does not apply to `SoundData`, which can be created independently of `SoundContext`.
 * Sound has a dependency to the `SoundData` that is passed in the constructor. You need to keep the `SoundData` alive as
