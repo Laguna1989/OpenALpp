@@ -1,25 +1,7 @@
-#ifndef OPENALPP_SOUND_DATA_HPP
-#define OPENALPP_SOUND_DATA_HPP
+#ifndef OPENALPP_SOUND_DATA_INCLUDE_HPP
+#define OPENALPP_SOUND_DATA_INCLUDE_HPP
 
-#include "sound_data_interface.hpp"
-#include <string>
+#include "oalpp/sound_data/sound_data.hpp"
+#include "oalpp/sound_data/sound_data_with_effect.hpp"
 
-namespace oalpp {
-
-class SoundData : public SoundDataInterface {
-public:
-    explicit SoundData(std::string const& fileName);
-
-    int getNumberOfChannels() const override;
-    int getSampleRate() const override;
-    std::vector<float> const& getSamples() const override;
-
-private:
-    std::vector<float> m_samples {};
-    int m_sampleRate { 0 };
-    int m_numberOfChannels { 0 };
-};
-
-} // namespace oalpp
-
-#endif // OPENALPP_SOUND_DATA_HPP
+#endif // OPENALPP_SOUND_DATA_INCLUDE_HPP

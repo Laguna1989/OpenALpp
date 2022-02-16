@@ -1,4 +1,3 @@
-#include "oalpp/effects/distortion/decimator.hpp"
 #include "oalpp/effects/distortion/tanh_distortion.hpp"
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
@@ -7,7 +6,6 @@
 #include "oalpp/sound.hpp"
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
-#include "oalpp/sound_data_with_effect.hpp"
 #include <fstream>
 #include <iostream>
 

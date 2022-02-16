@@ -1,5 +1,5 @@
 #include "sound_context.hpp"
-#include "audio_exceptions.hpp"
+#include "oalpp/common/audio_exceptions.hpp"
 
 namespace oalpp {
 

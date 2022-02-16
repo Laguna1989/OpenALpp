@@ -23,6 +23,8 @@ Code Example
 #include "oalpp/sound_data.hpp"
 #include "oalpp/sound.hpp"
 
+using namespace oalpp;
+
 SoundContext ctx;
 SoundData buffer { "audio.mp3" };
 Sound snd { buffer };
@@ -36,6 +38,9 @@ while (snd.isPlaying()) {
 Common Pitfalls
 ------------
 
+* `Sound` has a dependency on `SoundContext`. You need to keep the `SoundContext` alive as long as you want to use
+  sounds.
+    * Note that this does not apply to `SoundData`, which can be created independently of `SoundContext`.
 * Sound has a dependency to the `SoundData` that is passed in the constructor. You need to keep the `SoundData` alive as
   long as any `Sound` might access it.
     * You can bundle `SoundData` and `Sound` together in your implementation.

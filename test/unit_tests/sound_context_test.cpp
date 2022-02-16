@@ -1,5 +1,5 @@
 #include "catch2/catch.hpp"
-#include "oalpp/sound_context.hpp"
+#include "oalpp/sound_context/sound_context.hpp"
 
 using namespace oalpp;
 
