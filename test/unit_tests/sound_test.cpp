@@ -1,6 +1,7 @@
 #include "catch2/catch.hpp"
 #include "oalpp/sound/sound.hpp"
 #include "oalpp/sound_context/sound_context.hpp"
+#include "sound_data_fake.hpp"
 
 using namespace oalpp;
 
@@ -9,22 +10,6 @@ TEST_CASE("Sound is not default constructible", "[Sound]")
     static_assert(
         !std::is_default_constructible<Sound>::value, "Sound is not default constructible");
 }
-
-class SoundDataMonoFake : public SoundDataInterface {
-public:
-    int getNumberOfChannels() const override { return 1; }
-    int getSampleRate() const override { return 44100; }
-    std::vector<float> const& getSamples() const override { return m_samples; }
-    std::vector<float> m_samples {};
-};
-
-class SoundDataStereoFake : public SoundDataInterface {
-public:
-    int getNumberOfChannels() const override { return 2; }
-    int getSampleRate() const override { return 44100; }
-    std::vector<float> const& getSamples() const override { return m_samples; }
-    std::vector<float> m_samples {};
-};
 
 TEST_CASE("Sound is not playing by default", "[Sound]")
 {
