@@ -4,6 +4,7 @@
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
 #include "oalpp/effects/filter/simple_lowpass.hpp"
+#include "oalpp/effects/utility/convolution.hpp"
 #include "oalpp/effects/utility/effect_chain.hpp"
 #include "oalpp/effects/utility/gain.hpp"
 #include "oalpp/effects/utility/phase_flip.hpp"
@@ -261,7 +262,7 @@ TEST_CASE("Gain scales input audio", "[SoundEffect]")
     REQUIRE(input * gainValue == gain.process(input));
 }
 
-class FakeEffect : public oalpp::effects::MonoEffectInterface {
+class FakeEffect : public oalpp::effects::MonoEffectIterative {
 public:
     float process(float /*unused*/) override
     {
@@ -307,4 +308,53 @@ TEST_CASE("Phase flip returns inverted sample", "[SoundEffect]")
     float const output = flip.process(input);
 
     REQUIRE(output == expectedOutput);
+}
+
+TEST_CASE("Convolution with kernel of size 1 multiplies input", "[SoundEffect]")
+{
+    std::vector<float> kernel;
+    kernel.resize(1U);
+    float const kernelValue = GENERATE(-1.0f, 0.0f, 1.0f);
+    kernel[0] = kernelValue;
+
+    oalpp::effects::utility::Convolution convolution { kernel };
+
+    float const input = GENERATE(-1.0f, -0.25f, 0.0f, 0.3f, 0.7f, 0.983f, 1.0f);
+    std::vector<float> inputVector;
+    inputVector.resize(1);
+    inputVector[0] = input;
+    std::vector<float> expectedOutputVector;
+    expectedOutputVector.resize(2);
+    expectedOutputVector[0] = input * kernelValue;
+
+    std::vector<float> const output = convolution.process(inputVector);
+
+    REQUIRE(abs(output[0] - expectedOutputVector[0]) < 0.00001);
+    REQUIRE(abs(output[1] - expectedOutputVector[1]) < 0.00001);
+}
+
+TEST_CASE("Convolution with kernel of size 2 delays input", "[SoundEffect]")
+{
+    std::vector<float> kernel;
+    kernel.resize(2U);
+    float const kernelValue = GENERATE(-1.0f, 0.0f, 1.0f);
+    kernel[0] = 0.0f;
+    kernel[1] = kernelValue;
+
+    oalpp::effects::utility::Convolution convolution { kernel };
+
+    std::vector<float> inputVector;
+    inputVector.resize(2);
+    inputVector[0] = GENERATE(-1.0f, -0.25f, 0.0f, 0.3f, 0.7f, 0.983f, 1.0f);
+    inputVector[1] = 0.0f;
+
+    std::vector<float> expectedOutputVector;
+    expectedOutputVector.resize(2);
+    expectedOutputVector[0] = 0.0f;
+    expectedOutputVector[1] = inputVector[0] * kernelValue;
+
+    auto const output = convolution.process(inputVector);
+
+    REQUIRE(abs(output[0] - expectedOutputVector[0]) < 0.00001);
+    REQUIRE(abs(output[1] - expectedOutputVector[1]) < 0.00001);
 }

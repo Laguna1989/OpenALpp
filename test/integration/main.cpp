@@ -1,11 +1,16 @@
 #include "oalpp/effects/distortion/tanh_distortion.hpp"
 #include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/simple_highpass.hpp"
+#include "oalpp/effects/utility/convolution.hpp"
+#include "oalpp/effects/utility/dj_fft.h"
 #include "oalpp/effects/utility/effect_chain.hpp"
 #include "oalpp/effects/utility/gain.hpp"
 #include "oalpp/sound.hpp"
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
+#include "oalpp/sound_data/sound_data_left_to_mono.hpp"
+#include "oalpp/sound_data/sound_data_text_writer.hpp"
+
 #include <fstream>
 #include <iostream>
 
@@ -36,28 +41,35 @@ int main()
         return 1;
     }
 
-    SoundContext ctx;
-    SoundData buffer { fileName };
-
     effects::filter::SimpleHighpass highpass { 44100, 150, 2.0f };
     effects::distortion::TanhDistortion dist { 10.0f, 0.7f };
     effects::filter::Butterworth24dbLowpass lowpass { 44100, 9000.0f, 0.0f };
     effects::utility::Gain gain { 1.5f };
+    SoundData kernel { "assets/kernel.wav" };
+
+    SoundContext ctx;
+    SoundData buffer { fileName };
 
     effects::utility::EffectChain::EffectsT effects { highpass, dist, lowpass, gain };
     effects::utility::EffectChain effectChain { effects };
 
     SoundDataWithEffect soundDataWithEffect { buffer, effectChain };
 
-    snd = std::make_shared<Sound>(soundDataWithEffect);
-    snd->setVolume(0.25f);
+    effects::utility::Convolution conv { kernel.getSamples() };
+
+    SoundDataWithEffect convoluted { soundDataWithEffect, conv };
+
+    snd = std::make_shared<Sound>(convoluted);
+    snd->setVolume(0.5f);
     snd->setIsLooping(true);
     snd->play();
+
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop_function, 0, 1);
 #else
     while (snd->isPlaying()) {
-        main_loop_function();
+        //        main_loop_function();
+        snd->update();
     }
 #endif
     snd.reset();

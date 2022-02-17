@@ -1,13 +1,13 @@
 #ifndef OPENALPP_EFFECTS_DISTORTION_DECIMATOR_HPP
 #define OPENALPP_EFFECTS_DISTORTION_DECIMATOR_HPP
 
-#include "oalpp/effects/mono_effect_interface.hpp"
+#include "oalpp/effects/mono_effect_iterative.hpp"
 
 namespace oalpp {
 namespace effects {
 namespace distortion {
 
-class Decimator : public MonoEffectInterface {
+class Decimator : public MonoEffectIterative {
 public:
     Decimator(int bits, float rate);
 

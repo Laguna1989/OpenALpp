@@ -150,11 +150,13 @@ void Sound::update()
     alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &buffersProcessed);
 
     if (buffersProcessed <= 0) {
+
         return;
     }
 
     while (buffersProcessed--) {
-        if (m_cursor >= m_soundData.getSamples().size()) {
+
+        if (m_cursor > m_soundData.getSamples().size()) {
             continue;
         }
 

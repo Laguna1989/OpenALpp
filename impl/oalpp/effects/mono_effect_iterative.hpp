@@ -3,21 +3,21 @@
 
 namespace oalpp {
 namespace effects {
-class MonoEffectInterface {
+class MonoEffectIterative {
 public:
-    virtual ~MonoEffectInterface() = default;
+    virtual ~MonoEffectIterative() = default;
     virtual float process(float input) = 0;
     virtual void reset() = 0;
 
     // avoid slicing via polymorphic copy or move
-    MonoEffectInterface(MonoEffectInterface const& /*other*/) = delete;
-    MonoEffectInterface(MonoEffectInterface&& /*other*/) = delete;
-    MonoEffectInterface& operator=(const MonoEffectInterface&) = delete;
-    MonoEffectInterface& operator=(MonoEffectInterface&&) = delete;
+    MonoEffectIterative(MonoEffectIterative const& /*other*/) = delete;
+    MonoEffectIterative(MonoEffectIterative&& /*other*/) = delete;
+    MonoEffectIterative& operator=(const MonoEffectIterative&) = delete;
+    MonoEffectIterative& operator=(MonoEffectIterative&&) = delete;
 
 protected:
     // allow default construction for derived classes
-    MonoEffectInterface() = default;
+    MonoEffectIterative() = default;
 };
 } // namespace effects
 } // namespace oalpp
