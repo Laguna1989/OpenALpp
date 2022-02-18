@@ -1,17 +1,16 @@
 #ifndef OPENALPP_EFFECTS_UTILITY_GAIN_HPP
 #define OPENALPP_EFFECTS_UTILITY_GAIN_HPP
 
-#include "oalpp/effects/mono_effect_iterative.hpp"
+#include "oalpp/effects/mono_effect_bulk.hpp"
 
 namespace oalpp {
 namespace effects {
 namespace utility {
 
-class Gain : public oalpp::effects::MonoEffectIterative {
+class Gain : public oalpp::effects::MonoEffectBulk {
 public:
     explicit Gain(float gain);
-    float process(float input) override;
-    void reset() override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     float m_gain { 1.0f };

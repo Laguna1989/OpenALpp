@@ -45,7 +45,7 @@ std::vector<std::complex<float>> doFFT(std::vector<float> samples)
 
 std::vector<float> doFFT(std::vector<std::complex<float>> samples)
 {
-    -auto const transformed = dj::fft1d(samples, dj::fft_dir::DIR_FWD);
+    auto const transformed = dj::fft1d(samples, dj::fft_dir::DIR_FWD);
     return complex2real(transformed);
 }
 

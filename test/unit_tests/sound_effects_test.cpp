@@ -77,17 +77,16 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
             oalpp::effects::utility::Gain gain { gainValue };
 
             auto const numberOfSamples = 10000u;
-            for (auto i = 0U; i != numberOfSamples; ++i) {
-                REQUIRE(0.0f == gain.process(0.0f));
-            }
+            std::vector<float> inputVector;
+            inputVector.resize(numberOfSamples);
+            REQUIRE(gain.process(inputVector) == inputVector);
         }
 
         SECTION("effect chain")
         {
-            oalpp::effects::utility::Gain gain { 0.5f };
             oalpp::effects::distortion::Decimator decimator { 32, 1.0f };
             using namespace oalpp::effects::utility;
-            EffectChain::EffectsT effects { gain, decimator };
+            EffectChain::EffectsT effects { decimator };
             oalpp::effects::utility::EffectChain chain { effects };
 
             auto const numberOfSamples = 10000u;
@@ -195,20 +194,12 @@ TEST_CASE("SoundEffect reset", "[SoundEffect]")
     }
     SECTION("utility")
     {
-        SECTION("gain")
-        {
-            oalpp::effects::utility::Gain gain { 1.0f };
-
-            // gain does not store any history, so reset does nothing.
-            REQUIRE_NOTHROW(gain.reset());
-        }
 
         SECTION("effect chain")
         {
-            oalpp::effects::utility::Gain gain { 0.5f };
             oalpp::effects::distortion::Decimator decimator { 32, 1.0f };
             using namespace oalpp::effects::utility;
-            EffectChain::EffectsT effects { gain, decimator };
+            EffectChain::EffectsT effects { decimator };
             oalpp::effects::utility::EffectChain chain { effects };
 
             // distortion does not store any history, so reset does nothing.
@@ -258,8 +249,11 @@ TEST_CASE("Gain scales input audio", "[SoundEffect]")
     auto const gainValue = GENERATE(0.0f, 1.0f, 1000.0f, -1.0f);
     oalpp::effects::utility::Gain gain { gainValue };
 
-    auto const input = GENERATE(-1.0f, -0.5f, 0.0f, 0.5f, 1.0f);
-    REQUIRE(input * gainValue == gain.process(input));
+    auto const inputValue = GENERATE(-1.0f, -0.5f, 0.0f, 0.5f, 1.0f);
+    std::vector<float> inputVector;
+    inputVector.resize(1);
+    inputVector[0] = inputValue;
+    REQUIRE(inputValue * gainValue == gain.process(inputVector)[0]);
 }
 
 class FakeEffect : public oalpp::effects::MonoEffectIterative {

@@ -27,20 +27,21 @@ SoundDataWithEffect::SoundDataWithEffect(
     } else {
         std::vector<float> lefts;
         std::vector<float> rights;
-        lefts.resize(decoratee.getSamples().size() / 2);
-        rights.resize(decoratee.getSamples().size() / 2);
-        bool toggle = false;
+        unsigned int halfSize = decoratee.getSamples().size() / 2;
+        lefts.resize(halfSize);
+        rights.resize(halfSize);
 
+        bool toggle = false;
         std::partition_copy(decoratee.getSamples().begin(), decoratee.getSamples().end(),
             lefts.begin(), rights.begin(), [&toggle](float) { return toggle = !toggle; });
 
         std::vector<float> const leftsProcessed = effect.process(lefts);
         std::vector<float> const rightsProcessed = effect.process(rights);
 
-        m_samples.resize(decoratee.getSamples().size() * 2);
-        for (auto i = 0; i != leftsProcessed.size(); ++i) {
-            m_samples[i * 2 + 0] = leftsProcessed[i];
-            m_samples[i * 2 + 1] = rightsProcessed[i];
+        m_samples.resize(decoratee.getSamples().size() * 2U);
+        for (auto i = 0U; i != leftsProcessed.size(); ++i) {
+            m_samples[i * 2U + 0U] = leftsProcessed[i];
+            m_samples[i * 2U + 1U] = rightsProcessed[i];
         }
     }
 }
