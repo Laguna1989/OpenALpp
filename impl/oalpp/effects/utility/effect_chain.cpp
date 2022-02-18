@@ -5,25 +5,18 @@ namespace effects {
 namespace utility {
 
 EffectChain::EffectChain(
-    std::vector<std::reference_wrapper<oalpp::effects::MonoEffectIterative>>& effects)
+    std::vector<std::reference_wrapper<oalpp::effects::MonoEffectBulk>>& effects)
     : m_effects { effects }
 {
 }
 
-float EffectChain::process(float input)
+std::vector<float> EffectChain::process(std::vector<float> const& input)
 {
-    auto result = input;
+    std::vector<float> result = input;
     for (auto effect : m_effects) {
         result = effect.get().process(result);
     }
     return result;
-}
-
-void EffectChain::reset()
-{
-    for (auto effect : m_effects) {
-        effect.get().reset();
-    }
 }
 
 } // namespace utility

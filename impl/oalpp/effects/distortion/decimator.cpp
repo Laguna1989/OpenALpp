@@ -1,4 +1,5 @@
 #include "decimator.hpp"
+#include <algorithm>
 #include <stdexcept>
 
 namespace oalpp {
@@ -18,19 +19,27 @@ Decimator::Decimator(int bits, float rate)
 
     m_m = 1 << (bits - 1);
 }
-
-float Decimator::process(float input)
+std::vector<float> Decimator::process(std::vector<float> const& input)
 {
-    m_counter += m_rate;
-    if (m_counter >= 1) {
-        m_counter -= 1;
-        m_returnValue = static_cast<float>(static_cast<long>(input * static_cast<float>(m_m)))
-            / static_cast<float>(m_m);
-    }
-    return m_returnValue;
-}
+    std::vector<float> result;
+    result.resize(input.size());
 
-void Decimator::reset() { m_counter = 0.0f; }
+    float counter = 0.0f;
+    float lastReturnValue = 0.0f;
+
+    std::transform(input.cbegin(), input.cend(), result.begin(),
+        [&counter, &lastReturnValue, rate = m_rate, m = m_m](float v) {
+            counter += rate;
+            if (counter >= 1) {
+                counter -= 1;
+                lastReturnValue = static_cast<float>(static_cast<long>(v * static_cast<float>(m)))
+                    / static_cast<float>(m);
+            }
+            return lastReturnValue;
+        });
+
+    return result;
+}
 
 } // namespace distortion
 } // namespace effects

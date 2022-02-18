@@ -1,4 +1,5 @@
 #include "butterworth_24db_lowpass.hpp"
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 
@@ -63,36 +64,40 @@ void Butterworth24dbLowpass::set(float cutoffFrequency, float q)
     m_coefficient3 *= bd;
     m_coefficient4 = (bd_tmp - m_t2 * b1) * bd;
 }
-
-float Butterworth24dbLowpass::process(float input)
+std::vector<float> Butterworth24dbLowpass::process(std::vector<float> const& input)
 {
-    float output = (input * m_gain) - (m_history1 * m_coefficient1);
-    float newHist = output - m_history2 * m_coefficient2;
+    std::vector<float> result;
+    result.resize(input.size());
 
-    output = newHist + m_history1 * 2.0f;
-    output += m_history2;
+    float history1 { 0.0f };
+    float history2 { 0.0f };
+    float history3 { 0.0f };
+    float history4 { 0.0f };
 
-    m_history2 = m_history1;
-    m_history1 = newHist;
+    std::transform(input.cbegin(), input.cend(), result.begin(),
+        [this, &history1, &history2, &history3, &history4](float v) {
+            float output = (v * m_gain) - (history1 * m_coefficient1);
+            float newHist = output - history2 * m_coefficient2;
 
-    output -= m_history3 * m_coefficient3;
-    newHist = output - m_history4 * m_coefficient4;
+            output = newHist + history1 * 2.0f;
+            output += history2;
 
-    output = newHist + m_history3 * 2.0f;
-    output += m_history4;
+            history2 = history1;
+            history1 = newHist;
 
-    m_history4 = m_history3;
-    m_history3 = newHist;
+            output -= history3 * m_coefficient3;
+            newHist = output - history4 * m_coefficient4;
 
-    return output;
-}
+            output = newHist + history3 * 2.0f;
+            output += history4;
 
-void Butterworth24dbLowpass::reset()
-{
-    m_history1 = 0.0f;
-    m_history2 = 0.0f;
-    m_history3 = 0.0f;
-    m_history4 = 0.0f;
+            history4 = history3;
+            history3 = newHist;
+
+            return output;
+        });
+
+    return result;
 }
 
 } // namespace filter

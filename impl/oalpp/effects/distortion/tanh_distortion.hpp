@@ -1,16 +1,15 @@
 #ifndef OPENALPP_EFFECTS_DISTORTION_TANH_DISTORTION_HPP
 #define OPENALPP_EFFECTS_DISTORTION_TANH_DISTORTION_HPP
 
-#include "oalpp/effects/mono_effect_iterative.hpp"
+#include "oalpp/effects/mono_effect_bulk.hpp"
 namespace oalpp {
 namespace effects {
 namespace distortion {
 
-class TanhDistortion : public MonoEffectIterative {
+class TanhDistortion : public MonoEffectBulk {
 public:
     TanhDistortion(float preGain, float postGain);
-    float process(float input) override;
-    void reset() override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     float m_preGain { 1.0f };

@@ -44,22 +44,24 @@ int main()
     effects::filter::SimpleHighpass highpass { 44100, 150, 2.0f };
     effects::distortion::TanhDistortion dist { 10.0f, 0.7f };
     effects::filter::Butterworth24dbLowpass lowpass { 44100, 9000.0f, 0.0f };
-    effects::utility::Gain gain { 1.5f };
+
     SoundData kernel { "assets/kernel.wav" };
+    SoundDataLeftToMono kernelLeft(kernel);
+    effects::utility::Convolution conv { kernelLeft.getSamples() };
+
+    effects::utility::Gain gain { 2.0f };
 
     SoundContext ctx;
     SoundData buffer { fileName };
 
-    effects::utility::EffectChain::EffectsT effects { highpass, dist, lowpass, gain };
+    effects::utility::EffectChain::EffectsT effects { highpass, conv, dist, lowpass, gain };
     effects::utility::EffectChain effectChain { effects };
 
     SoundDataWithEffect soundDataWithEffect { buffer, effectChain };
 
-    effects::utility::Convolution conv { kernel.getSamples() };
-
     SoundDataWithEffect convoluted { soundDataWithEffect, conv };
 
-    snd = std::make_shared<Sound>(convoluted);
+    snd = std::make_shared<Sound>(soundDataWithEffect);
     snd->setVolume(0.5f);
     snd->setIsLooping(true);
     snd->play();
