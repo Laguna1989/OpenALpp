@@ -12,7 +12,7 @@ EffectChain::EffectChain(
 
 std::vector<float> EffectChain::process(std::vector<float> const& input)
 {
-    std::vector<float> result = input;
+    auto result = input;
     for (auto effect : m_effects) {
         result = effect.get().process(result);
     }
