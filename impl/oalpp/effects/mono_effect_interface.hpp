@@ -5,20 +5,20 @@
 
 namespace oalpp {
 namespace effects {
-class MonoEffectBulk {
+class MonoEffectInterface {
 public:
-    virtual ~MonoEffectBulk() = default;
+    virtual ~MonoEffectInterface() = default;
     virtual std::vector<float> process(std::vector<float> const& input) = 0;
 
     // avoid slicing via polymorphic copy or move
-    MonoEffectBulk(MonoEffectBulk const& /*other*/) = delete;
-    MonoEffectBulk(MonoEffectBulk&& /*other*/) = delete;
-    MonoEffectBulk& operator=(const MonoEffectBulk&) = delete;
-    MonoEffectBulk& operator=(MonoEffectBulk&&) = delete;
+    MonoEffectInterface(MonoEffectInterface const& /*other*/) = delete;
+    MonoEffectInterface(MonoEffectInterface&& /*other*/) = delete;
+    MonoEffectInterface& operator=(const MonoEffectInterface&) = delete;
+    MonoEffectInterface& operator=(MonoEffectInterface&&) = delete;
 
 protected:
     // allow default construction for derived classes
-    MonoEffectBulk() = default;
+    MonoEffectInterface() = default;
 };
 } // namespace effects
 } // namespace oalpp

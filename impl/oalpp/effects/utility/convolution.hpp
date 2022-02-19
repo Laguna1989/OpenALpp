@@ -1,7 +1,7 @@
 #ifndef OPENALPP_CONVOLUTION_HPP
 #define OPENALPP_CONVOLUTION_HPP
 
-#include "oalpp/effects/mono_effect_bulk.hpp"
+#include "oalpp/effects/mono_effect_interface.hpp"
 #include <complex>
 #include <vector>
 
@@ -9,7 +9,7 @@ namespace oalpp {
 namespace effects {
 namespace utility {
 
-class Convolution : public MonoEffectBulk {
+class Convolution : public MonoEffectInterface {
 public:
     explicit Convolution(std::vector<float> const& kernel);
 

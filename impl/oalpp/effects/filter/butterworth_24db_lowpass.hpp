@@ -1,13 +1,13 @@
 #ifndef OPENALPP_EFFECTS_FILTER_BUTTERWORTH_24_D_B_HPP
 #define OPENALPP_EFFECTS_FILTER_BUTTERWORTH_24_D_B_HPP
 
-#include "oalpp/effects/mono_effect_bulk.hpp"
+#include "oalpp/effects/mono_effect_interface.hpp"
 
 namespace oalpp {
 namespace effects {
 namespace filter {
 
-class Butterworth24dbLowpass : public oalpp::effects::MonoEffectBulk {
+class Butterworth24dbLowpass : public oalpp::effects::MonoEffectInterface {
 public:
     ///
     /// \param sampleRate Sample rate must be positive

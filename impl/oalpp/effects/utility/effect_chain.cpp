@@ -5,7 +5,7 @@ namespace effects {
 namespace utility {
 
 EffectChain::EffectChain(
-    std::vector<std::reference_wrapper<oalpp::effects::MonoEffectBulk>>& effects)
+    std::vector<std::reference_wrapper<oalpp::effects::MonoEffectInterface>>& effects)
     : m_effects { effects }
 {
 }

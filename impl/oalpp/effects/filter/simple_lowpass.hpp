@@ -1,13 +1,13 @@
 #ifndef OPENALPP_EFFECTS_FILTER_SIMPLE_LOWPASS_HPP
 #define OPENALPP_EFFECTS_FILTER_SIMPLE_LOWPASS_HPP
 
-#include "oalpp/effects/mono_effect_bulk.hpp"
+#include "oalpp/effects/mono_effect_interface.hpp"
 
 namespace oalpp {
 namespace effects {
 namespace filter {
 
-class SimpleLowpass : public MonoEffectBulk {
+class SimpleLowpass : public MonoEffectInterface {
 public:
     ///
     /// \param sampleRate Sample rate must be positive

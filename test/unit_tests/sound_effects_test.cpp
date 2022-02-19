@@ -140,7 +140,7 @@ TEST_CASE("Gain scales input audio", "[SoundEffect]")
     REQUIRE(inputValue * gainValue == gain.process(inputVector)[0]);
 }
 
-class FakeEffect : public oalpp::effects::MonoEffectBulk {
+class FakeEffect : public oalpp::effects::MonoEffectInterface {
 public:
     std::vector<float> process(std::vector<float> const& input) override
     {
