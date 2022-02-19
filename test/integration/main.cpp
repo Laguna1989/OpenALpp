@@ -9,8 +9,6 @@
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
 #include "oalpp/sound_data/sound_data_left_to_mono.hpp"
-#include "oalpp/sound_data/sound_data_text_writer.hpp"
-
 #include <fstream>
 #include <iostream>
 
@@ -71,8 +69,7 @@ int main()
     emscripten_set_main_loop(main_loop_function, 0, 1);
 #else
     while (snd->isPlaying()) {
-        //        main_loop_function();
-        snd->update();
+        main_loop_function();
     }
 #endif
     snd.reset();
