@@ -1,13 +1,14 @@
 #ifndef OPENALPP_EFFECTS_MONOEFFECTINTERFACE_HPP
 #define OPENALPP_EFFECTS_MONOEFFECTINTERFACE_HPP
 
+#include <vector>
+
 namespace oalpp {
 namespace effects {
 class MonoEffectInterface {
 public:
     virtual ~MonoEffectInterface() = default;
-    virtual float process(float input) = 0;
-    virtual void reset() = 0;
+    virtual std::vector<float> process(std::vector<float> const& input) = 0;
 
     // avoid slicing via polymorphic copy or move
     MonoEffectInterface(MonoEffectInterface const& /*other*/) = delete;

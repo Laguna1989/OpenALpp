@@ -10,20 +10,13 @@ EffectChain::EffectChain(
 {
 }
 
-float EffectChain::process(float input)
+std::vector<float> EffectChain::process(std::vector<float> const& input)
 {
     auto result = input;
     for (auto effect : m_effects) {
         result = effect.get().process(result);
     }
     return result;
-}
-
-void EffectChain::reset()
-{
-    for (auto effect : m_effects) {
-        effect.get().reset();
-    }
 }
 
 } // namespace utility

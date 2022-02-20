@@ -10,8 +10,7 @@ namespace utility {
 class Gain : public oalpp::effects::MonoEffectInterface {
 public:
     explicit Gain(float gain);
-    float process(float input) override;
-    void reset() override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     float m_gain { 1.0f };

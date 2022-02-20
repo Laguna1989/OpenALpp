@@ -1,4 +1,5 @@
 #include "gain.hpp"
+#include <algorithm>
 
 namespace oalpp {
 namespace effects {
@@ -9,9 +10,14 @@ Gain::Gain(float gain)
 {
 }
 
-float Gain::process(float input) { return input * m_gain; }
-
-void Gain::reset() { }
+std::vector<float> Gain::process(std::vector<float> const& input)
+{
+    std::vector<float> results;
+    results.resize(input.size());
+    std::transform(input.cbegin(), input.cend(), results.begin(),
+        [gain = m_gain](float f) { return f * gain; });
+    return results;
+}
 
 } // namespace utility
 } // namespace effects

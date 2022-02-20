@@ -10,15 +10,11 @@ namespace distortion {
 class Decimator : public MonoEffectInterface {
 public:
     Decimator(int bits, float rate);
-
-    float process(float input) override;
-    void reset() override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     float m_rate { 1.0f };
-    float m_returnValue { 0.0f };
     long int m_m { 0 };
-    float m_counter { 0.0f };
 };
 
 } // namespace distortion

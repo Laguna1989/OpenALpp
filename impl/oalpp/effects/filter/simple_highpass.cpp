@@ -1,4 +1,5 @@
 #include "simple_highpass.hpp"
+#include <algorithm>
 #include <cmath>
 #include <stdexcept>
 
@@ -27,25 +28,30 @@ SimpleHighpass::SimpleHighpass(int sampleRate, float cutoffFrequency, float reso
     m_b2 = (1.0f - resonance * m_c + m_c * m_c) * m_a1;
 }
 
-float SimpleHighpass::process(float input)
+std::vector<float> SimpleHighpass::process(std::vector<float> const& input)
 {
-    auto const out = m_a1 * input + m_a2 * m_history1 + m_a3 * m_history2 - m_b1 * m_history3
-        - m_b2 * m_history4;
+    std::vector<float> result;
+    result.resize(input.size());
 
-    m_history4 = m_history3;
-    m_history3 = out;
-    m_history2 = m_history1;
-    m_history1 = input;
+    float history1 { 0.0f };
+    float history2 { 0.0f };
+    float history3 { 0.0f };
+    float history4 { 0.0f };
 
-    return out;
-}
+    std::transform(input.cbegin(), input.cend(), result.begin(),
+        [this, &history1, &history2, &history3, &history4](float v) {
+            auto const out
+                = m_a1 * v + m_a2 * history1 + m_a3 * history2 - m_b1 * history3 - m_b2 * history4;
 
-void SimpleHighpass::reset()
-{
-    m_history1 = 0.0f;
-    m_history2 = 0.0f;
-    m_history3 = 0.0f;
-    m_history4 = 0.0f;
+            history4 = history3;
+            history3 = out;
+            history2 = history1;
+            history1 = v;
+
+            return out;
+        });
+
+    return result;
 }
 
 } // namespace filter

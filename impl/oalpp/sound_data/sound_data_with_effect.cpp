@@ -2,42 +2,37 @@
 #include <algorithm>
 
 namespace oalpp {
+
 SoundDataWithEffect::SoundDataWithEffect(
     SoundDataInterface const& decoratee, effects::MonoEffectInterface& effect)
 {
     m_sampleRate = decoratee.getSampleRate();
     m_numberOfChannels = decoratee.getNumberOfChannels();
-    m_samples.resize(decoratee.getSamples().size());
-
-    auto const& samples = decoratee.getSamples();
     if (m_numberOfChannels == 1) {
-        applyEffectToMonoSoundData(effect, samples);
+        m_samples = effect.process(decoratee.getSamples());
     } else {
-        applyEffectToStereoSoundData(effect, samples);
-    }
-}
+        std::vector<float> lefts;
+        std::vector<float> rights;
+        unsigned int halfSize = decoratee.getSamples().size() / 2;
+        lefts.resize(halfSize);
+        rights.resize(halfSize);
 
-void SoundDataWithEffect::applyEffectToStereoSoundData(
-    effects::MonoEffectInterface& effect, std::vector<float> const& samples)
-{
-    // left channel
-    for (auto i = 0U; i != samples.size(); ++i) {
-        if (i % 2 == 0)
-            m_samples.at(i) = effect.process(samples.at(i));
-    }
-    effect.reset();
-    // right channel
-    for (auto i = 0U; i != samples.size(); ++i) {
-        if (i % 2 == 1)
-            m_samples.at(i) = effect.process(samples.at(i));
-    }
-}
+        bool toggle = false;
+        std::partition_copy(decoratee.getSamples().begin(), decoratee.getSamples().end(),
+            lefts.begin(), rights.begin(), [&toggle](float) {
+                toggle = !toggle;
+                return toggle;
+            });
 
-void SoundDataWithEffect::applyEffectToMonoSoundData(
-    effects::MonoEffectInterface& effect, std::vector<float> const& samples)
-{
-    std::transform(samples.cbegin(), samples.cend(), m_samples.begin(),
-        [&effect](auto f) { return effect.process(f); });
+        std::vector<float> const leftsProcessed = effect.process(lefts);
+        std::vector<float> const rightsProcessed = effect.process(rights);
+
+        m_samples.resize(leftsProcessed.size() * 2U);
+        for (auto i = 0U; i != leftsProcessed.size(); ++i) {
+            m_samples[i * 2U + 0U] = leftsProcessed[i];
+            m_samples[i * 2U + 1U] = rightsProcessed[i];
+        }
+    }
 }
 
 int SoundDataWithEffect::getNumberOfChannels() const { return m_numberOfChannels; }

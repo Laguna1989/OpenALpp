@@ -15,8 +15,7 @@ public:
 
     explicit EffectChain(
         std::vector<std::reference_wrapper<oalpp::effects::MonoEffectInterface>>& effects);
-    float process(float input) override;
-    void reset() override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     std::vector<std::reference_wrapper<oalpp::effects::MonoEffectInterface>> m_effects;

@@ -1,4 +1,5 @@
 #include "tanh_distortion.hpp"
+#include <algorithm>
 #include <cmath>
 
 namespace oalpp {
@@ -11,8 +12,14 @@ TanhDistortion::TanhDistortion(float preGain, float postGain)
 {
 }
 
-float TanhDistortion::process(float input) { return tanh(input * m_preGain) * m_postGain; }
-void TanhDistortion::reset() { }
+std::vector<float> TanhDistortion::process(std::vector<float> const& input)
+{
+    std::vector<float> result;
+    result.resize(input.size());
+    std::transform(input.cbegin(), input.cend(), result.begin(),
+        [pre = m_preGain, post = m_postGain](float v) { return tanh(v * pre) * post; });
+    return result;
+}
 
 } // namespace distortion
 } // namespace effects

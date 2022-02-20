@@ -9,8 +9,7 @@ namespace distortion {
 class TanhDistortion : public MonoEffectInterface {
 public:
     TanhDistortion(float preGain, float postGain);
-    float process(float input) override;
-    void reset() override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     float m_preGain { 1.0f };

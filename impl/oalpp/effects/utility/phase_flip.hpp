@@ -8,8 +8,7 @@ namespace effects {
 namespace utility {
 class PhaseFlip : public oalpp::effects::MonoEffectInterface {
 public:
-    float process(float input) override;
-    void reset() override;
+    std::vector<float> process(std::vector<float> const& input) override;
 };
 } // namespace utility
 } // namespace effects
