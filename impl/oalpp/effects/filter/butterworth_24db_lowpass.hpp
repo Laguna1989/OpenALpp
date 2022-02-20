@@ -18,7 +18,7 @@ public:
 
 private:
     void setSampleRate(float sampleRate);
-    void set(float cutoffFrequency, float q);
+    void setParameters(float cutoffFrequency, float q);
 
     float m_t0 { 0.0f };
     float m_t1 { 0.0f };

@@ -9,9 +9,7 @@ SoundDataTextWriter::SoundDataTextWriter(SoundDataInterface& soundData)
 
 std::string SoundDataTextWriter::getText() const
 {
-    std::string str { "" };
-
-    str += "# Sound Data\n";
+    std::string str = "# Sound Data\n";
     str += "# SampleRate: " + std::to_string(m_soundData.getSampleRate()) + "\n";
 
     for (auto index = 0U; index != m_soundData.getSamples().size(); ++index) {

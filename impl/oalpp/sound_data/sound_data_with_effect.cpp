@@ -19,12 +19,15 @@ SoundDataWithEffect::SoundDataWithEffect(
 
         bool toggle = false;
         std::partition_copy(decoratee.getSamples().begin(), decoratee.getSamples().end(),
-            lefts.begin(), rights.begin(), [&toggle](float) { return toggle = !toggle; });
+            lefts.begin(), rights.begin(), [&toggle](float) {
+                toggle = !toggle;
+                return toggle;
+            });
 
         std::vector<float> const leftsProcessed = effect.process(lefts);
         std::vector<float> const rightsProcessed = effect.process(rights);
 
-        m_samples.resize(decoratee.getSamples().size() * 2U);
+        m_samples.resize(leftsProcessed.size() * 2U);
         for (auto i = 0U; i != leftsProcessed.size(); ++i) {
             m_samples[i * 2U + 0U] = leftsProcessed[i];
             m_samples[i * 2U + 1U] = rightsProcessed[i];

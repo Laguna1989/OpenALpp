@@ -85,17 +85,15 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
 
         SECTION("effect chain")
         {
-            /*
             oalpp::effects::distortion::Decimator decimator { 32, 1.0f };
             using namespace oalpp::effects::utility;
             EffectChain::EffectsT effects { decimator };
             oalpp::effects::utility::EffectChain chain { effects };
 
             auto const numberOfSamples = 10000u;
-            for (auto i = 0U; i != numberOfSamples; ++i) {
-                REQUIRE(0.0f == chain.process(0.0f));
-            }
-             */
+            std::vector<float> inputVector;
+            inputVector.resize(numberOfSamples);
+            REQUIRE(chain.process(inputVector) == inputVector);
         }
     }
 }

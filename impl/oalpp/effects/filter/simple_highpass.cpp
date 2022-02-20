@@ -27,6 +27,7 @@ SimpleHighpass::SimpleHighpass(int sampleRate, float cutoffFrequency, float reso
     m_b1 = 2.0f * (m_c * m_c - 1.0f) * m_a1;
     m_b2 = (1.0f - resonance * m_c + m_c * m_c) * m_a1;
 }
+
 std::vector<float> SimpleHighpass::process(std::vector<float> const& input)
 {
     std::vector<float> result;

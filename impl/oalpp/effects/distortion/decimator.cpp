@@ -19,6 +19,7 @@ Decimator::Decimator(int bits, float rate)
 
     m_m = 1 << (bits - 1);
 }
+
 std::vector<float> Decimator::process(std::vector<float> const& input)
 {
     std::vector<float> result;

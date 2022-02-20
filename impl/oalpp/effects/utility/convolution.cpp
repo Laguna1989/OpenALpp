@@ -17,7 +17,7 @@ std::vector<std::complex<float>> real2Complex(std::vector<float> const& realValu
     return complexValues;
 }
 
-std::vector<float> complex2real(std::vector<std::complex<float>> const& complexValues)
+std::vector<float> complex2Real(std::vector<std::complex<float>> const& complexValues)
 {
     // mathematical factor from doing the fft two times
     float const gainFactor = 2.0f / sqrt(2.0f);
@@ -38,16 +38,16 @@ std::size_t getNextNSquare(std::size_t size)
     return sizeN2;
 }
 
-std::vector<std::complex<float>> doFFT(std::vector<float> samples)
+std::vector<std::complex<float>> doFFT(std::vector<float> const& samples)
 {
     std::vector<std::complex<float>> samplesComplex = real2Complex(samples);
     samplesComplex.resize(getNextNSquare(samplesComplex.size()));
     return dj::fft1d(samplesComplex, dj::fft_dir::DIR_BWD);
 }
 
-std::vector<float> doFFT(std::vector<std::complex<float>> samples)
+std::vector<float> doFFT(std::vector<std::complex<float>> const& samples)
 {
-    return complex2real(dj::fft1d(samples, dj::fft_dir::DIR_FWD));
+    return complex2Real(dj::fft1d(samples, dj::fft_dir::DIR_FWD));
 }
 
 } // namespace

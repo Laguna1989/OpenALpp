@@ -20,7 +20,7 @@ Butterworth24dbLowpass::Butterworth24dbLowpass(int sampleRate, float cutoffFrequ
     }
 
     setSampleRate(static_cast<float>(sampleRate));
-    set(cutoffFrequency, quality);
+    setParameters(cutoffFrequency, quality);
 }
 
 void Butterworth24dbLowpass::setSampleRate(float sampleRate)
@@ -31,7 +31,7 @@ void Butterworth24dbLowpass::setSampleRate(float sampleRate)
     m_t3 = 3.141592f / sampleRate;
 }
 
-void Butterworth24dbLowpass::set(float cutoffFrequency, float q)
+void Butterworth24dbLowpass::setParameters(float cutoffFrequency, float q)
 {
     if (q < 0.0f) {
         q = 0.0f;
@@ -64,6 +64,7 @@ void Butterworth24dbLowpass::set(float cutoffFrequency, float q)
     m_coefficient3 *= bd;
     m_coefficient4 = (bd_tmp - m_t2 * b1) * bd;
 }
+
 std::vector<float> Butterworth24dbLowpass::process(std::vector<float> const& input)
 {
     std::vector<float> result;
