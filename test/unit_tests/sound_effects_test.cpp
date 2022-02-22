@@ -95,6 +95,21 @@ TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
             inputVector.resize(numberOfSamples);
             REQUIRE(chain.process(inputVector) == inputVector);
         }
+
+        SECTION("convolution")
+        {
+            auto const numberOfSamples = 10000u;
+            std::vector<float> samples;
+            samples.resize(numberOfSamples);
+            oalpp::effects::utility::Convolution convolution { samples };
+
+            std::vector<float> inputVector;
+            inputVector.resize(numberOfSamples);
+
+            auto const result = convolution.process(inputVector);
+            REQUIRE(std::all_of(result.cbegin(), result.cend(), [](float f) { return f == 0.0f; })
+                == true);
+        }
     }
 }
 
