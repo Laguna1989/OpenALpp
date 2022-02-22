@@ -11,4 +11,4 @@ endif ()
 target_link_libraries(OpenALpp_Lib PUBLIC libnyquist)
 target_include_directories(OpenALpp_Lib PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/ext/dj_fft)
+        ${CMAKE_CURRENT_SOURCE_DIR}/../ext/dj_fft)
