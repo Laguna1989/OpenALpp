@@ -15,6 +15,18 @@ How to build
 3. `cmake ..`
 4. `cmake --build . --target OpenALpp_Lib`
 
+How to measure Code Coverage with [OpenCppCoverage](https://github.com/OpenCppCoverage/OpenCppCoverage)
+-----------
+
+```
+OpenCppCoverage.exe
+    --sources <absolute path>\OpenALpp\impl\
+    --excluded_sources <absolute path>\OpenALpp\test\
+    --excluded_sources <absolute path>\OpenALpp\ext*
+    --excluded_sources <absolute path>\OpenALpp\cmake-build-debug*
+    .\path\to\unit_tests\OpenALpp_UnitTests.exe
+```
+
 Code Example
 ----------
 

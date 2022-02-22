@@ -99,8 +99,8 @@ TEST_CASE("SoundDataRightToMono", "[SoundConversion]")
 
     SECTION("Raises exception on mono data")
     {
-        SoundDataMonoFake fakeStereo {};
-        REQUIRE_THROWS(SoundDataLeftToMono { fakeStereo });
+        SoundDataMonoFake fakeMono {};
+        REQUIRE_THROWS(SoundDataRightToMono { fakeMono });
     }
 }
 
@@ -131,8 +131,8 @@ TEST_CASE("SoundDataMidToMono", "[SoundConversion]")
 
     SECTION("Raises exception on mono data")
     {
-        SoundDataMonoFake fakeStereo {};
-        REQUIRE_THROWS(SoundDataLeftToMono { fakeStereo });
+        SoundDataMonoFake fakeMono {};
+        REQUIRE_THROWS(SoundDataMidToMono { fakeMono });
     }
 }
 
@@ -163,7 +163,7 @@ TEST_CASE("SoundDataSideToMono", "[SoundConversion]")
 
     SECTION("Raises exception on mono data")
     {
-        SoundDataMonoFake fakeStereo {};
-        REQUIRE_THROWS(SoundDataLeftToMono { fakeStereo });
+        SoundDataMonoFake fakeMono {};
+        REQUIRE_THROWS(SoundDataSideToMono { fakeMono });
     }
 }
