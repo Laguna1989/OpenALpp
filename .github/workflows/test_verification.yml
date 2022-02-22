@@ -86,7 +86,7 @@ jobs:
     #        working-directory: ${{github.workspace}}/build/bin/
 
   Windows:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
