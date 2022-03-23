@@ -1,7 +1,7 @@
 message(STATUS "Fetching libnyquist")
 include(FetchContent)
 
-set(BUILD_EXAMPLE OFF CACHE BOOL "")
+set(LIBNYQUIST_BUILD_EXAMPLE OFF CACHE BOOL "")
 
 FetchContent_Declare(
         libnyquist
