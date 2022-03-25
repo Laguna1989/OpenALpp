@@ -155,7 +155,7 @@ void Sound::update()
 
     while (buffersProcessed--) {
         if (m_cursor >= m_soundData.getSamples().size()) {
-            continue;
+            break;
         }
 
         ALuint buffer;
