@@ -1,6 +1,10 @@
 #ifndef OPENALPP_MOOG_FILTER_STILSON_HPP
 #define OPENALPP_MOOG_FILTER_STILSON_HPP
 
+// This code is Unlicensed (i.e. public domain); in an email exchange on
+// 6.14.2019 David Lowenfels stated "You're welcome to use the Moog~ code,
+// license it free as in beer or whatever :)"
+
 #include "oalpp/effects/mono_effect_interface.hpp"
 #include <array>
 

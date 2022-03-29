@@ -39,7 +39,7 @@ int main()
         return 1;
     }
 
-    effects::filter::MoogFilterStilson moog { 44100, 150, 0.1f };
+    effects::filter::MoogFilterStilson moog { 44100, 1800, 0.5f };
 
     SoundContext ctx;
     SoundData buffer { fileName };
