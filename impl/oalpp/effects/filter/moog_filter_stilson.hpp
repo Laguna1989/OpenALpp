@@ -10,7 +10,7 @@ namespace filter {
 
 class MoogFilterStilson : public MonoEffectInterface {
 public:
-    MoogFilterStilson(float resonance, float cutoff, float sampleRate);
+    MoogFilterStilson(float sampleRate, float cutoff, float resonance);
 
     std::vector<float> process(const std::vector<float>& input) override;
 
@@ -26,8 +26,6 @@ private:
 
     void setCutoff();
     void setResonance();
-
-    float saturate(float sample) const;
 };
 
 } // namespace filter
