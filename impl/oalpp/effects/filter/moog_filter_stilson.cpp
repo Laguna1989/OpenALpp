@@ -49,9 +49,9 @@ float snapToZero(float input)
 
 oalpp::effects::filter::MoogFilterStilson::MoogFilterStilson(
     float sampleRate, float cutoff, float resonance)
-    : m_resonance { resonance }
+    : m_sampleRate { sampleRate }
     , m_cutoff { cutoff }
-    , m_sampleRate { sampleRate }
+    , m_resonance { resonance }
 {
     setCutoff();
     setResonance();
@@ -62,16 +62,16 @@ std::vector<float> oalpp::effects::filter::MoogFilterStilson::process(
 {
     std::vector<float> output;
     output.resize(input.size());
-    float localState;
+    float localState { 0.0f };
 
-    for (int s = 0; s < input.size(); ++s) {
+    for (int s = 0u; s != input.size(); ++s) {
         // Scale by arbitrary value on account of our saturation function
         float const current_sample = input[s] * 0.65f;
 
         // Negative Feedback
         m_output = 0.25f * (current_sample - m_output);
 
-        for (int pole = 0; pole < 4; ++pole) {
+        for (int pole = 0; pole != 4; ++pole) {
             localState = m_state[pole];
             m_output = saturate(m_output + m_p * (m_output - localState));
             m_state[pole] = m_output;

@@ -1,17 +1,9 @@
-#include "oalpp/effects/distortion/tanh_distortion.hpp"
-#include "oalpp/effects/filter/butterworth_24db_lowpass.hpp"
 #include "oalpp/effects/filter/moog_filter_stilson.hpp"
-#include "oalpp/effects/filter/simple_highpass.hpp"
-#include "oalpp/effects/utility/convolution.hpp"
-#include "oalpp/effects/utility/effect_chain.hpp"
-#include "oalpp/effects/utility/gain.hpp"
-#include "oalpp/sound.hpp"
+#include "oalpp/sound/sound.hpp"
 #include "oalpp/sound_context.hpp"
 #include "oalpp/sound_data.hpp"
-#include "oalpp/sound_data/sound_data_left_to_mono.hpp"
 #include <fstream>
 #include <iostream>
-
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif

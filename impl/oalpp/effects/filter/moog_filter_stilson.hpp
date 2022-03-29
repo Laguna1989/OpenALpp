@@ -19,9 +19,9 @@ public:
     std::vector<float> process(const std::vector<float>& input) override;
 
 private:
+    float m_sampleRate { 0.0f };
     float m_cutoff { 0.0f };
     float m_resonance { 0.0f };
-    float m_sampleRate { 0.0f };
 
     float m_p { 0.0f };
     float m_q { 0.0f };
