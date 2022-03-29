@@ -1,5 +1,6 @@
 #include "sound.hpp"
 #include "oalpp/common/audio_exceptions.hpp"
+#include <cassert>
 #include <cmath>
 #include <stdexcept>
 
@@ -149,9 +150,8 @@ void Sound::update()
     ALint buffersProcessed = 0;
     alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &buffersProcessed);
 
-    if (buffersProcessed <= 0) {
-        return;
-    }
+    assert(buffersProcessed <= BUFFER_COUNT);
+    assert(buffersProcessed >= 0);
 
     while (buffersProcessed--) {
         if (m_cursor >= m_soundData.getSamples().size()) {
