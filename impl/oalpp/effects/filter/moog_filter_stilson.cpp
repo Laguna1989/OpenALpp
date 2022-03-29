@@ -36,6 +36,15 @@ float saturate(float sample)
     auto x2 = static_cast<float>(std::abs(sample - 0.95f));
     return 0.5f * (x1 - x2);
 }
+
+float snapToZero(float input)
+{
+    if (!(input < -1.0e-8 || input > 1.0e-8)) {
+        input = 0;
+    }
+
+    return input;
+}
 } // namespace
 
 oalpp::effects::filter::MoogFilterStilson::MoogFilterStilson(
@@ -68,8 +77,7 @@ std::vector<float> oalpp::effects::filter::MoogFilterStilson::process(
             m_state[pole] = m_output;
             m_output = saturate(m_output + localState);
         }
-        // TODO
-        //        SNAP_TO_ZERO(m_output);
+        m_output = snapToZero(m_output);
         output[s] = m_output;
         m_output *= m_q; // Scale stateful output by Q
     }
