@@ -53,7 +53,7 @@ jobs:
         run: cp -r ${{github.workspace}}/assets ${{github.workspace}}/build/test/approval_tests
 
       - name: ApprovalTest
-        run: ./OpenALpp_ApprovalTests --order rand
+        run: ls && ./OpenALpp_ApprovalTests --order rand
         working-directory: ${{github.workspace}}/build/test/approval_tests
 
   Linux_clang:
