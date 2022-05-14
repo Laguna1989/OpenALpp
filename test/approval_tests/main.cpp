@@ -1,3 +1,6 @@
-// Add these two lines to the top of your main.cpp file:
-#define APPROVALS_CATCH_EXISTING_MAIN
-#include "ApprovalTests.hpp"
+#define APPROVALS_CATCH
+#include "ApprovalTests/ApprovalTests.hpp"
+
+// This puts "received" and "approved" files in approval_tests/ sub-directory,
+// keeping the test source directory tidy:
+auto directoryDisposer = ApprovalTests::Approvals::useApprovalsSubdirectory("approval_tests");
