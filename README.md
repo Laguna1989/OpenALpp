@@ -82,6 +82,7 @@ CMake Options
 -------------
 
 * `OALPP_ENABLE_UNIT_TESTS` - Enable unit tests - default `ON`
+* `OALPP_ENABLE_APPROVAL_TESTS` - Enable approval tests - default `ON`
 * `OALPP_ENABLE_INTEGRATION_TESTS` - Enable integration test - default `ON`
 * `OALPP_STATIC_LIBRARY` - Build OpenALpp and dependencies as static library - default `ON`
 
