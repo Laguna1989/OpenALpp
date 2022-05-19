@@ -92,11 +92,18 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
+        run: make OpenALpp_UnitTests OpenALpp_Integration OpenALpp_ApprovalTests -j
 
-    #      - name: Test
+    #     Commented out because one does not simply acquire a sound context
     #        run: ./OpenALpp_UnitTests --order rand
     #        working-directory: ${{github.workspace}}/build/bin/
+
+      - name: CopyAssets
+        run: cp -r ${{github.workspace}}/assets ${{github.workspace}}/build/test/approval_tests
+
+      - name: ApprovalTest
+        run: ./OpenALpp_ApprovalTests --order rand
+        working-directory: ${{github.workspace}}/build/test/approval_tests
 
   Windows:
     runs-on: windows-2019
