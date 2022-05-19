@@ -3,7 +3,7 @@
 #include <vector>
 
 struct ApprovalTestHelpers {
-    static std::vector<int> ApprovalTestHelpers::asInt(std::vector<float> const& number, unsigned int digits);
+    static std::vector<int> asInt(std::vector<float> const& number, unsigned int digits);
 };
 
 #endif // OPENALPP_APPROVAL_TEST_HELPERS_HPP
