@@ -26,6 +26,7 @@ SoundContext::SoundContext(
     m_device = deviceFactory();
 
     if (!m_device) {
+        numberOfInitializations--;
         throw oalpp::AudioSystemException { "Could not open audio device" };
     }
 
@@ -35,11 +36,13 @@ SoundContext::SoundContext(
             alcDestroyContext(context);
         });
     if (!m_context) {
+        numberOfInitializations--;
         throw oalpp::AudioSystemException { "Could not create audio context" };
     }
 
     auto const contextMadeCurrent = alcMakeContextCurrent(m_context.get());
     if (!contextMadeCurrent) {
+        numberOfInitializations--;
         throw oalpp::AudioSystemException { "Could not make audio context current" };
     }
 }
