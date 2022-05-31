@@ -3,14 +3,27 @@
 
 namespace oalpp {
 
-SoundContext::SoundContext()
+namespace {
+auto defaultDeviceFactory()
+{
+    return std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>(
+        alcOpenDevice(nullptr), alcCloseDevice);
+}
+
+} // namespace
+
+SoundContext::SoundContext(
+    std::function<std::unique_ptr<ALCdevice, DeviceDestroyer>()> deviceFactory)
 {
     if (numberOfInitializations != 0) {
         throw oalpp::AudioSystemException { "Sound context has to be unique" };
     }
     numberOfInitializations++;
 
-    m_device = std::unique_ptr<ALCdevice, DeviceDestroyer>(alcOpenDevice(nullptr), alcCloseDevice);
+    if (deviceFactory == nullptr) {
+        deviceFactory = defaultDeviceFactory;
+    }
+    m_device = deviceFactory();
 
     if (!m_device) {
         throw oalpp::AudioSystemException { "Could not open audio device" };
