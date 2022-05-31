@@ -17,9 +17,10 @@ public:
     using DeviceFactoryT = std::function<std::unique_ptr<ALCdevice, DeviceDestroyer>()>;
     using ContextFactoryT
         = std::function<std::unique_ptr<ALCcontext, ContextDestroyer>(ALCdevice*)>;
+    using MakeContextCurrentT = std::function<bool(ALCcontext*)>;
 
-    explicit SoundContext(
-        DeviceFactoryT deviceFactory = nullptr, ContextFactoryT contextFactory = nullptr);
+    explicit SoundContext(DeviceFactoryT deviceFactory = nullptr,
+        ContextFactoryT contextFactory = nullptr, MakeContextCurrentT makeContextCurrent = nullptr);
     ~SoundContext() override;
 
 private:

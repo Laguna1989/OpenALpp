@@ -50,3 +50,9 @@ TEST_CASE("Create SoundContext which cannot allocate ALContext throws", "[SoundC
     };
     REQUIRE_THROWS(SoundContext { nullptr, factory });
 }
+
+TEST_CASE("Create SoundContext which cannot make ALContext current throws", "[SoundContext]")
+{
+    SoundContext::MakeContextCurrentT factory = [](ALCcontext* /* unused */) { return false; };
+    REQUIRE_THROWS(SoundContext { nullptr, nullptr, factory });
+}

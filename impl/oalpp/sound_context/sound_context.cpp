@@ -19,10 +19,12 @@ auto defaultContextFactory(ALCdevice* device)
         });
 }
 
+bool defaultMakeContextCurrent(ALCcontext* context) { return alcMakeContextCurrent(context); }
+
 } // namespace
 
-SoundContext::SoundContext(
-    SoundContext::DeviceFactoryT deviceFactory, SoundContext::ContextFactoryT contextFactory)
+SoundContext::SoundContext(SoundContext::DeviceFactoryT deviceFactory,
+    SoundContext::ContextFactoryT contextFactory, MakeContextCurrentT makeContextCurrent)
 {
     if (numberOfInitializations != 0) {
         throw oalpp::AudioSystemException { "Sound context has to be unique" };
@@ -46,7 +48,10 @@ SoundContext::SoundContext(
         throw oalpp::AudioSystemException { "Could not create audio context" };
     }
 
-    auto const contextMadeCurrent = alcMakeContextCurrent(m_context.get());
+    if (makeContextCurrent == nullptr) {
+        makeContextCurrent = defaultMakeContextCurrent;
+    }
+    auto const contextMadeCurrent = makeContextCurrent(m_context.get());
     if (!contextMadeCurrent) {
         throw oalpp::AudioSystemException { "Could not make audio context current" };
     }
