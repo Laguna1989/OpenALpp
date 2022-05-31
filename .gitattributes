@@ -1,1 +1,2 @@
 test/approval_tests/approval_tests/* filter=lfs diff=lfs merge=lfs -text
+assets/* filter=lfs diff=lfs merge=lfs -text
