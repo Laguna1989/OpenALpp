@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(OpenALpp VERSION 0.1.0)
 
 option(OALPP_ENABLE_UNIT_TESTS "Enable unit tests" ON)
+option(OALPP_ENABLE_APPROVAL_TESTS "Enable approval tests" ON)
 option(OALPP_ENABLE_INTEGRATION_TESTS "Enable integration tests" ON)
 option(OALPP_STATIC_LIBRARY "Build openal as static library" ON)
 

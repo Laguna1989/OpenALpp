@@ -25,6 +25,11 @@ jobs:
           platform: x64
 
       - uses: actions/checkout@v2
+        with:
+          lfs: 'true'
+
+      - name: gitlfs
+        run: git lfs pull
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1
@@ -40,11 +45,19 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
+        run: make OpenALpp_UnitTests OpenALpp_Integration OpenALpp_ApprovalTests -j
 
-  #      - name: Test
-  #        run: ./OpenALpp_UnitTests --order rand
-  #        working-directory: ${{github.workspace}}/build/bin/
+      #     Commented out because one does not simply acquire a sound context
+      #      - name: Test
+      #        run: ./OpenALpp_UnitTests --order rand
+      #        working-directory: ${{github.workspace}}/build/bin/
+
+      - name: CopyAssets
+        run: cp -r ${{github.workspace}}/assets ${{github.workspace}}/build/test/approval_tests
+
+      - name: ApprovalTest
+        run: ./OpenALpp_ApprovalTests --order rand
+        working-directory: ${{github.workspace}}/build/test/approval_tests
 
   Linux_clang:
     runs-on: ubuntu-latest
@@ -79,11 +92,19 @@ jobs:
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: make OpenALpp_UnitTests OpenALpp_Integration -j 4
+        run: make OpenALpp_UnitTests OpenALpp_Integration OpenALpp_ApprovalTests -j
 
-    #      - name: Test
+    #     Commented out because one does not simply acquire a sound context
     #        run: ./OpenALpp_UnitTests --order rand
     #        working-directory: ${{github.workspace}}/build/bin/
+
+# Do not run approval tests on clang as there seem to be some float inconsistencies happening
+#      - name: CopyAssets
+#        run: cp -r ${{github.workspace}}/assets ${{github.workspace}}/build/test/approval_tests
+#
+#      - name: ApprovalTest
+#        run: ./OpenALpp_ApprovalTests --order rand
+#        working-directory: ${{github.workspace}}/build/test/approval_tests
 
   Windows:
     runs-on: windows-2019
@@ -146,7 +167,7 @@ jobs:
           -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            .
       - name: Copy assets
-        run: cp -r assets ${{github.workspace}}/build/test/integration/
+        run: cp -r assets ${{github.workspace}}/build/test/integration_tests/
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: emmake make OpenALpp_UnitTests OpenALpp_Integration
