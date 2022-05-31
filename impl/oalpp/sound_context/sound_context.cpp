@@ -3,32 +3,60 @@
 
 namespace oalpp {
 
-SoundContext::SoundContext()
+namespace {
+auto defaultDeviceFactory()
+{
+    return std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>(
+        alcOpenDevice(nullptr), alcCloseDevice);
+}
+
+auto defaultContextFactory(ALCdevice* device)
+{
+    return std::unique_ptr<ALCcontext, SoundContext::ContextDestroyer>(
+        alcCreateContext(device, nullptr), [](ALCcontext* context) {
+            alcMakeContextCurrent(nullptr);
+            alcDestroyContext(context);
+        });
+}
+
+bool defaultMakeContextCurrent(ALCcontext* context) { return alcMakeContextCurrent(context); }
+
+} // namespace
+
+SoundContext::SoundContext(SoundContext::DeviceFactoryT deviceFactory,
+    SoundContext::ContextFactoryT contextFactory, MakeContextCurrentT makeContextCurrent)
 {
     if (numberOfInitializations != 0) {
         throw oalpp::AudioSystemException { "Sound context has to be unique" };
     }
-    numberOfInitializations++;
 
-    m_device = std::unique_ptr<ALCdevice, DeviceDestroyer>(alcOpenDevice(nullptr), alcCloseDevice);
+    if (deviceFactory == nullptr) {
+        deviceFactory = defaultDeviceFactory;
+    }
+    m_device = deviceFactory();
 
     if (!m_device) {
         throw oalpp::AudioSystemException { "Could not open audio device" };
     }
 
-    m_context = std::unique_ptr<ALCcontext, ContextDestroyer>(
-        alcCreateContext(m_device.get(), nullptr), [](ALCcontext* context) {
-            alcMakeContextCurrent(nullptr);
-            alcDestroyContext(context);
-        });
+    if (contextFactory == nullptr) {
+        contextFactory = defaultContextFactory;
+    }
+    m_context = contextFactory(m_device.get());
+
     if (!m_context) {
         throw oalpp::AudioSystemException { "Could not create audio context" };
     }
 
-    auto const contextMadeCurrent = alcMakeContextCurrent(m_context.get());
+    if (makeContextCurrent == nullptr) {
+        makeContextCurrent = defaultMakeContextCurrent;
+    }
+    auto const contextMadeCurrent = makeContextCurrent(m_context.get());
     if (!contextMadeCurrent) {
         throw oalpp::AudioSystemException { "Could not make audio context current" };
     }
+
+    numberOfInitializations++;
 }
 
 SoundContext::~SoundContext() { numberOfInitializations--; }
