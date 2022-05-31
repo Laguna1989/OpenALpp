@@ -21,18 +21,18 @@ TEST_CASE("Second context raises exception", "[SoundContext]")
     REQUIRE_THROWS(SoundContext {});
 }
 
-TEST_CASE("Create Context which cannot allocate device throws", "[SoundContext]")
+TEST_CASE("Create SoundContext which cannot allocate ALDevice throws", "[SoundContext]")
 {
-    std::function<std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>()> factory = []() {
+    SoundContext::DeviceFactoryT factory = []() {
         return std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>(
             nullptr, SoundContext::DeviceDestroyer());
     };
     REQUIRE_THROWS(SoundContext { factory });
 }
 
-TEST_CASE("Create Second Context after first context which failed", "[SoundContext]")
+TEST_CASE("First SoundContext fails, second SoundContext can be created", "[SoundContext]")
 {
-    std::function<std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>()> factory = []() {
+    SoundContext::DeviceFactoryT factory = []() {
         return std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>(
             nullptr, SoundContext::DeviceDestroyer());
     };
@@ -40,4 +40,13 @@ TEST_CASE("Create Second Context after first context which failed", "[SoundConte
 
     // second context can in fact be created after first context creation failed
     SoundContext ctx1 {};
+}
+
+TEST_CASE("Create SoundContext which cannot allocate ALContext throws", "[SoundContext]")
+{
+    SoundContext::ContextFactoryT factory = [](ALCdevice* /* unused */) {
+        return std::unique_ptr<ALCcontext, SoundContext::ContextDestroyer>(
+            nullptr, SoundContext::ContextDestroyer());
+    };
+    REQUIRE_THROWS(SoundContext { nullptr, factory });
 }

@@ -14,8 +14,12 @@ public:
     using DeviceDestroyer = std::add_pointer<ALCboolean(ALCdevice*)>::type;
     using ContextDestroyer = std::add_pointer<void(ALCcontext*)>::type;
 
-    SoundContext(
-        std::function<std::unique_ptr<ALCdevice, DeviceDestroyer>()> deviceFactory = nullptr);
+    using DeviceFactoryT = std::function<std::unique_ptr<ALCdevice, DeviceDestroyer>()>;
+    using ContextFactoryT
+        = std::function<std::unique_ptr<ALCcontext, ContextDestroyer>(ALCdevice*)>;
+
+    explicit SoundContext(
+        DeviceFactoryT deviceFactory = nullptr, ContextFactoryT contextFactory = nullptr);
     ~SoundContext() override;
 
 private:

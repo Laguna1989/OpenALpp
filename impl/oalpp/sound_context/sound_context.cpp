@@ -10,10 +10,19 @@ auto defaultDeviceFactory()
         alcOpenDevice(nullptr), alcCloseDevice);
 }
 
+auto defaultContextFactory(ALCdevice* device)
+{
+    return std::unique_ptr<ALCcontext, SoundContext::ContextDestroyer>(
+        alcCreateContext(device, nullptr), [](ALCcontext* context) {
+            alcMakeContextCurrent(nullptr);
+            alcDestroyContext(context);
+        });
+}
+
 } // namespace
 
 SoundContext::SoundContext(
-    std::function<std::unique_ptr<ALCdevice, DeviceDestroyer>()> deviceFactory)
+    SoundContext::DeviceFactoryT deviceFactory, SoundContext::ContextFactoryT contextFactory)
 {
     if (numberOfInitializations != 0) {
         throw oalpp::AudioSystemException { "Sound context has to be unique" };
@@ -28,11 +37,11 @@ SoundContext::SoundContext(
         throw oalpp::AudioSystemException { "Could not open audio device" };
     }
 
-    m_context = std::unique_ptr<ALCcontext, ContextDestroyer>(
-        alcCreateContext(m_device.get(), nullptr), [](ALCcontext* context) {
-            alcMakeContextCurrent(nullptr);
-            alcDestroyContext(context);
-        });
+    if (contextFactory == nullptr) {
+        contextFactory = defaultContextFactory;
+    }
+    m_context = contextFactory(m_device.get());
+
     if (!m_context) {
         throw oalpp::AudioSystemException { "Could not create audio context" };
     }
