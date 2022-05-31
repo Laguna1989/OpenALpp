@@ -29,3 +29,15 @@ TEST_CASE("Create Context which cannot allocate device throws", "[SoundContext]"
     };
     REQUIRE_THROWS(SoundContext { factory });
 }
+
+TEST_CASE("Create Second Context after first context which failed", "[SoundContext]")
+{
+    std::function<std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>()> factory = []() {
+        return std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>(
+            nullptr, SoundContext::DeviceDestroyer());
+    };
+    REQUIRE_THROWS(SoundContext { factory });
+
+    // second context can in fact be created after first context creation failed
+    SoundContext ctx1 {};
+}
