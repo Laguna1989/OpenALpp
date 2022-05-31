@@ -18,7 +18,6 @@ SoundContext::SoundContext(
     if (numberOfInitializations != 0) {
         throw oalpp::AudioSystemException { "Sound context has to be unique" };
     }
-    numberOfInitializations++;
 
     if (deviceFactory == nullptr) {
         deviceFactory = defaultDeviceFactory;
@@ -26,7 +25,6 @@ SoundContext::SoundContext(
     m_device = deviceFactory();
 
     if (!m_device) {
-        numberOfInitializations--;
         throw oalpp::AudioSystemException { "Could not open audio device" };
     }
 
@@ -36,15 +34,15 @@ SoundContext::SoundContext(
             alcDestroyContext(context);
         });
     if (!m_context) {
-        numberOfInitializations--;
         throw oalpp::AudioSystemException { "Could not create audio context" };
     }
 
     auto const contextMadeCurrent = alcMakeContextCurrent(m_context.get());
     if (!contextMadeCurrent) {
-        numberOfInitializations--;
         throw oalpp::AudioSystemException { "Could not make audio context current" };
     }
+
+    numberOfInitializations++;
 }
 
 SoundContext::~SoundContext() { numberOfInitializations--; }
