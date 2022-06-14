@@ -42,12 +42,12 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: cmd
         run: |
-          OpenCppCoverage.exe 
-          --sources ..\impl\ 
-          --excluded_sources ..\test\ 
-          --excluded_sources ..\ext\* 
-          --excluded_sources ${{github.workspace}}/build
-          test/unit_tests/Debug/OpenALpp_UnitTests.exe
+          OpenCppCoverage.exe
+          --sources ${{github.workspace}}\impl 
+          --excluded_sources ${{github.workspace}}\build\test\ 
+          --excluded_sources ${{github.workspace}}\build\ext\* 
+          --excluded_sources ${{github.workspace}}\build
+          ${{github.workspace}}\build\test\unit_tests\Debug\OpenALpp_UnitTests.exe
 
 #      - name: Upload Report to Codecov
 #        uses: codecov/codecov-action@v2
