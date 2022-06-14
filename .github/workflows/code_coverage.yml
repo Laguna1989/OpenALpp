@@ -1,0 +1,52 @@
+name: Code Coverage
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  run:
+    runs-on: windows-2019
+    name: Code Coverage Report
+    steps:
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.11
+        with:
+          cmake-version: '3.19.x'
+
+      - uses: actions/checkout@v2
+
+      - name: CMake
+        run: cmake -B ${{github.workspace}}/build . -DOALPP_STATIC_LIBRARY=ON -DOALPP_ENABLE_APPROVAL_TESTS=OFF -DOALPP_ENABLE_INTEGRATION_TESTS=OFF
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build .
+
+      - name: Install Scream
+        shell: powershell
+        run: |
+          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.8/Scream3.8.zip -OutFile Scream3.8.zip
+          Expand-Archive -Path Scream3.8.zip -DestinationPath Scream
+          Import-Certificate -FilePath Scream\Install\driver\x64\Scream.cat -CertStoreLocation Cert:\LocalMachine\TrustedPublisher 
+          Scream\Install\helpers\devcon-x64.exe install Scream\Install\driver\x64\Scream.inf *Scream
+
+      - name: Setup OpenCppCoverage and add to PATH
+        id: setup_opencppcoverage
+        run: |
+          choco install OpenCppCoverage -y
+          echo "C:\Program Files\OpenCppCoverage" >> $env:GITHUB_PATH
+
+      - name: Generate Report
+        id: generate_test_report
+        working-directory: ${{github.workspace}}/build
+        shell: cmd
+        run: OpenCppCoverage.exe --export_type cobertura:OpenALppCoverage.xml --sources ${{github.workspace}}\impl --excluded_sources ${{github.workspace}}\build\test\ --excluded_sources ${{github.workspace}}\build\ext\* --excluded_sources ${{github.workspace}}\build ${{github.workspace}}\build\test\unit_tests\Debug\OpenALpp_UnitTests.exe
+
+      - name: Upload Report to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          working-directory: ${{github.workspace}}/build
+          files: ./OpenALppCoverage.xml
+          fail_ci_if_error: true
+          functionalities: fix

@@ -1,5 +1,6 @@
 OpenALpp
 ========
+[![codecov](https://codecov.io/gh/Laguna1989/OpenALpp/branch/master/graph/badge.svg?token=X68KWFTRZG)](https://codecov.io/gh/Laguna1989/OpenALpp)
 [![Tests](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml/badge.svg)](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
