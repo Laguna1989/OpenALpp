@@ -41,11 +41,12 @@ jobs:
         id: generate_test_report
         working-directory: ${{github.workspace}}/build
         shell: cmd
-        run: OpenCppCoverage.exe --sources ${{github.workspace}}\impl --excluded_sources ${{github.workspace}}\build\test\ --excluded_sources ${{github.workspace}}\build\ext\* --excluded_sources ${{github.workspace}}\build ${{github.workspace}}\build\test\unit_tests\Debug\OpenALpp_UnitTests.exe
+        run: OpenCppCoverage.exe --export_type cobertura:OpenALppCoverage.xml --sources ${{github.workspace}}\impl --excluded_sources ${{github.workspace}}\build\test\ --excluded_sources ${{github.workspace}}\build\ext\* --excluded_sources ${{github.workspace}}\build ${{github.workspace}}\build\test\unit_tests\Debug\OpenALpp_UnitTests.exe
 
-#      - name: Upload Report to Codecov
-#        uses: codecov/codecov-action@v2
-#        with:
-#          files: ./HelloCov.xml
-#          fail_ci_if_error: true
-#          functionalities: fix
+      - name: Upload Report to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: ${{github.workspace}}/build
+          files: ./OpenALppCoverage.xml
+          fail_ci_if_error: true
+          functionalities: fix
