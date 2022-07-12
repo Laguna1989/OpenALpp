@@ -1,5 +1,6 @@
 #include "sound_data_with_effect.hpp"
 #include <algorithm>
+#include <cstddef>
 
 namespace oalpp {
 
@@ -13,7 +14,7 @@ SoundDataWithEffect::SoundDataWithEffect(
     } else {
         std::vector<float> lefts;
         std::vector<float> rights;
-        unsigned int halfSize = decoratee.getSamples().size() / 2;
+        auto const halfSize = static_cast<std::size_t>(decoratee.getSamples().size() / 2);
         lefts.resize(halfSize);
         rights.resize(halfSize);
 

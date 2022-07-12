@@ -1,6 +1,7 @@
 #include "convolution.hpp"
 #include "dj_fft.h"
 #include <algorithm>
+#include <cstddef>
 
 namespace oalpp {
 namespace effects {
@@ -61,7 +62,8 @@ std::vector<float> Convolution::process(std::vector<float> const& input)
 {
     // perform fft on input
     auto const inputTransformed = doFFT(input);
-    unsigned int const biggerSize = std::max(inputTransformed.size(), m_kernel.size());
+    auto const biggerSize
+        = static_cast<std::size_t>(std::max(inputTransformed.size(), m_kernel.size()));
 
     // convolution in frequency space is just a pairwise multiplication
     std::vector<std::complex<float>> multipliedTransformed;
