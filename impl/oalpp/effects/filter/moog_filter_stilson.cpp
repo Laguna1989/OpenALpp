@@ -64,7 +64,7 @@ std::vector<float> oalpp::effects::filter::MoogFilterStilson::process(
     output.resize(input.size());
     float localState { 0.0f };
 
-    for (int s = 0u; s != input.size(); ++s) {
+    for (auto s = 0u; s != input.size(); ++s) {
         // Scale by arbitrary value on account of our saturation function
         float const current_sample = input[s] * 0.65f;
 
