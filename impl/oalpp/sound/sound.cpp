@@ -150,7 +150,7 @@ void Sound::update()
     ALint buffersProcessed = 0;
     alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &buffersProcessed);
 
-    assert(buffersProcessed <= BUFFER_COUNT);
+    assert(buffersProcessed <= static_cast<int>(BUFFER_COUNT));
     assert(buffersProcessed >= 0);
 
     while (buffersProcessed--) {
