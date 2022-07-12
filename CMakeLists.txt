@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(OpenALpp VERSION 0.1.0)
+project(OpenALpp VERSION 0.1.0 LANGUAGES CXX)
 
 option(OALPP_ENABLE_UNIT_TESTS "Enable unit tests" ON)
 option(OALPP_ENABLE_APPROVAL_TESTS "Enable approval tests" ON)
@@ -8,16 +8,6 @@ option(OALPP_STATIC_LIBRARY "Build openal as static library" ON)
 
 if (OALPP_STATIC_LIBRARY)
     set(LIBTYPE STATIC)
-endif ()
-
-if (MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /EHsc")
-elseif (EMSCRIPTEN)
-    set(CMAKE_EXECUTABLE_SUFFIX ".html")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -g -fpermissive")
-    add_link_options("SHELL:-s TOTAL_MEMORY=256MB " "SHELL:-s ALLOW_MEMORY_GROWTH=1")
-else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -g -fpermissive")
 endif ()
 
 set(CXX_STANDARD_REQUIRED ON)
