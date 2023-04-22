@@ -400,22 +400,99 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
         }
     }
 
-    SECTION("update with looping sound does not raise exception")
+    SECTION("update with looping sound (longer than all buffers) does not raise exception")
     {
         fake.m_samples.resize(262144 + 200);
         Sound snd { fake };
         snd.setIsLooping(true);
         snd.play();
         auto const start = std::chrono::system_clock::now();
-        while (snd.isPlaying()) {
+        while (true) {
+            REQUIRE(snd.isPlaying());
             snd.update();
-            auto const newValue = snd.getCurrentOffsetInSeconds();
+
             auto const now = std::chrono::system_clock::now();
             float const elapsedSeconds
                 = std::chrono::duration_cast<std::chrono::microseconds>(now - start).count()
                 / 1000.0f / 1000.0f;
 
-            if (elapsedSeconds >= 6.0f) {
+            // break after 10s
+            if (elapsedSeconds >= 10.0f) {
+                snd.pause();
+                break;
+            }
+        }
+    }
+    SECTION("update with looping sound (shorter than one single buffer) does not stop playing")
+    {
+        fake.m_samples.resize(1000u);
+        Sound snd { fake };
+        snd.setIsLooping(true);
+        snd.play();
+        auto const start = std::chrono::system_clock::now();
+        while (true) {
+            snd.update();
+            bool const isPlaying = snd.isPlaying();
+            REQUIRE(isPlaying);
+
+            auto const now = std::chrono::system_clock::now();
+            float const elapsedSeconds
+                = std::chrono::duration_cast<std::chrono::microseconds>(now - start).count()
+                / 1000.0f / 1000.0f;
+
+            // break test after 10 s
+            if (elapsedSeconds >= 10.0f) {
+                snd.pause();
+                break;
+            }
+        }
+    }
+    SECTION("update with looping sound (longer than one single buffer but shorter than two "
+            "buffers) does not stop playing")
+    {
+        fake.m_samples.resize(Sound::BUFFER_SIZE * 1.5f);
+        Sound snd { fake };
+        snd.setIsLooping(true);
+        snd.play();
+        auto const start = std::chrono::system_clock::now();
+        while (true) {
+            snd.update();
+            bool const isPlaying = snd.isPlaying();
+            REQUIRE(isPlaying);
+
+            auto const now = std::chrono::system_clock::now();
+            float const elapsedSeconds
+                = std::chrono::duration_cast<std::chrono::microseconds>(now - start).count()
+                / 1000.0f / 1000.0f;
+
+            // break test after 10 s
+            if (elapsedSeconds >= 10.0f) {
+                snd.pause();
+                break;
+            }
+        }
+    }
+
+    SECTION("update with looping sound (longer than two buffer but shorter than all "
+            "buffers) does not stop playing")
+    {
+        fake.m_samples.resize(Sound::BUFFER_SIZE * 3.5f);
+        Sound snd { fake };
+        snd.setIsLooping(true);
+        snd.play();
+        auto const start = std::chrono::system_clock::now();
+        while (true) {
+            snd.update();
+            bool const isPlaying = snd.isPlaying();
+            REQUIRE(isPlaying);
+
+            auto const now = std::chrono::system_clock::now();
+            float const elapsedSeconds
+                = std::chrono::duration_cast<std::chrono::microseconds>(now - start).count()
+                / 1000.0f / 1000.0f;
+
+            // break test after 10 s
+            if (elapsedSeconds >= 10.0f) {
                 snd.pause();
                 break;
             }
