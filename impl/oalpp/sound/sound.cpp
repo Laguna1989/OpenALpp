@@ -254,7 +254,7 @@ void Sound::markBufferAsQueued(ALuint bufferId)
     assert(std::find(m_unqueuedBufferIds.cbegin(), m_unqueuedBufferIds.cend(), bufferId)
         == m_unqueuedBufferIds.cend());
 
-    this->m_unqueuedBufferIds.push_back(bufferId);
+    m_unqueuedBufferIds.push_back(bufferId);
 }
 
 void Sound::markBufferAsUnqueued(ALuint bufferId)
@@ -265,9 +265,9 @@ void Sound::markBufferAsUnqueued(ALuint bufferId)
     assert(std::find(m_unqueuedBufferIds.cbegin(), m_unqueuedBufferIds.cend(), bufferId)
         != m_unqueuedBufferIds.cend());
 
-    this->m_unqueuedBufferIds.erase(
-        std::remove(this->m_unqueuedBufferIds.begin(), this->m_unqueuedBufferIds.end(), bufferId),
-        this->m_unqueuedBufferIds.end());
+    m_unqueuedBufferIds.erase(
+        std::remove(m_unqueuedBufferIds.begin(), m_unqueuedBufferIds.end(), bufferId),
+        m_unqueuedBufferIds.end());
 }
 
 } // namespace oalpp
