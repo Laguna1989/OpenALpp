@@ -1,5 +1,6 @@
 #include "sound.hpp"
 #include "oalpp/common/audio_exceptions.hpp"
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <stdexcept>
@@ -34,9 +35,9 @@ void Sound::initSourceAndBuffers()
     alSourcei(m_sourceId, AL_SOURCE_RELATIVE, true);
 
     alGenBuffers(static_cast<ALsizei>(m_bufferIds.size()), m_bufferIds.data());
-
+    m_unqueuedBufferIds = std::list<ALuint> { m_bufferIds.cbegin(), m_bufferIds.cend() };
     m_cursor = 0;
-    for (auto const& bufferId : m_bufferIds) {
+    for (auto const& bufferId : m_unqueuedBufferIds) {
         selectSamplesForBuffer(bufferId);
     }
 }
@@ -136,34 +137,49 @@ void Sound::setPitch(float const newPitch)
     alSourcef(m_sourceId, AL_PITCH, newPitch);
 }
 
-void Sound::enqueueSamplesToBuffer(ALuint buffer, std::size_t samplesToQueue)
+void Sound::enqueueSamplesToBuffer(ALuint bufferId, std::size_t samplesToQueue)
 {
-    alBufferData(buffer, m_format, &m_soundData.getSamples()[m_cursor],
+    if (samplesToQueue == 0) {
+        return;
+    }
+    alBufferData(bufferId, m_format, &m_soundData.getSamples()[m_cursor],
         static_cast<ALsizei>(samplesToQueue) * sizeof(float), m_soundData.getSampleRate());
-    alSourceQueueBuffers(m_sourceId, 1, &buffer);
+    alSourceQueueBuffers(m_sourceId, 1, &bufferId);
+
+    markBufferAsUnqueued(bufferId);
 
     m_cursor += samplesToQueue;
 }
 
 void Sound::update()
 {
-    ALint buffersProcessed = 0;
-    alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &buffersProcessed);
-
-    assert(buffersProcessed <= static_cast<int>(BUFFER_COUNT));
-    assert(buffersProcessed >= 0);
+    ALint buffersProcessed = getNumberOfBuffersProcessed();
 
     while (buffersProcessed--) {
         if (m_cursor >= m_soundData.getSamples().size()) {
             break;
         }
 
-        ALuint buffer;
-        alSourceUnqueueBuffers(m_sourceId, 1, &buffer);
-
-        selectSamplesForBuffer(buffer);
+        ALuint bufferId;
+        alSourceUnqueueBuffers(m_sourceId, 1, &bufferId);
+        markBufferAsQueued(bufferId);
+        selectSamplesForBuffer(bufferId);
     }
 }
+
+ALint Sound::getNumberOfBuffersProcessed() const
+{
+    ALint numberOfBuffersProcessed = 0;
+    alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &numberOfBuffersProcessed);
+
+    // internal assumptions
+    assert(numberOfBuffersProcessed <= static_cast<int>(BUFFER_COUNT));
+    assert(numberOfBuffersProcessed >= 0);
+
+    return numberOfBuffersProcessed;
+}
+
+std::list<ALuint> Sound::getUnqueuedBufferIds() const { return m_unqueuedBufferIds; }
 
 void Sound::selectSamplesForBuffer(ALuint bufferId)
 {
@@ -175,6 +191,11 @@ void Sound::selectSamplesForBuffer(ALuint bufferId)
     if (hasDataForFullBufferToEnqueue()) {
         // queue a full buffer
         enqueueSamplesToBuffer(bufferId, BUFFER_SIZE);
+        if (m_isLooping) {
+            if (m_cursor == m_soundData.getSamples().size()) {
+                m_cursor = 0;
+            }
+        }
     } else {
         // queue only the remaining part of the soundData into the buffer
         std::size_t const remainingSamplesInSoundData = m_soundData.getSamples().size() - m_cursor;
@@ -187,14 +208,32 @@ void Sound::selectSamplesForBuffer(ALuint bufferId)
         }
     }
 }
+
 bool Sound::hasDataForFullBufferToEnqueue() const
 {
     return m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size();
 }
-bool Sound::hasDataToEnqueue() const { return m_cursor < m_soundData.getSamples().size(); }
+bool Sound::hasDataToEnqueue() const
+{
+    if (m_isLooping) {
+        return m_cursor <= m_soundData.getSamples().size();
+    }
+    return m_cursor < m_soundData.getSamples().size();
+}
 
 bool Sound::getIsLooping() const { return m_isLooping; }
-void Sound::setIsLooping(bool value) { m_isLooping = value; }
+void Sound::setIsLooping(bool value)
+{
+    m_isLooping = value;
+    if (m_isLooping) {
+        if (m_cursor == m_soundData.getSamples().size()) {
+            m_cursor = 0;
+        }
+        for (auto const& bufferId : getUnqueuedBufferIds()) {
+            selectSamplesForBuffer(bufferId);
+        }
+    }
+}
 
 size_t Sound::getLengthInSamples() const
 {
@@ -217,6 +256,30 @@ size_t Sound::getCurrentOffsetInSamples() const
     ALint value { 0 };
     alGetSourcei(m_sourceId, AL_SAMPLE_OFFSET, &value);
     return static_cast<std::size_t>(value);
+}
+
+void Sound::markBufferAsQueued(ALuint bufferId)
+{
+    // internal expectation: bufferId must be in list of all buffers
+    assert(std::find(m_bufferIds.cbegin(), m_bufferIds.cend(), bufferId) != m_bufferIds.cend());
+    // internal expectation: bufferId must not be in list of unqueued buffer ids
+    assert(std::find(m_unqueuedBufferIds.cbegin(), m_unqueuedBufferIds.cend(), bufferId)
+        == m_unqueuedBufferIds.cend());
+
+    m_unqueuedBufferIds.push_back(bufferId);
+}
+
+void Sound::markBufferAsUnqueued(ALuint bufferId)
+{
+    // internal expectation: bufferId must be in list of all buffers
+    assert(std::find(m_bufferIds.cbegin(), m_bufferIds.cend(), bufferId) != m_bufferIds.cend());
+    // internal expectation: bufferId must be in list of unqueued buffer ids
+    assert(std::find(m_unqueuedBufferIds.cbegin(), m_unqueuedBufferIds.cend(), bufferId)
+        != m_unqueuedBufferIds.cend());
+
+    m_unqueuedBufferIds.erase(
+        std::remove(m_unqueuedBufferIds.begin(), m_unqueuedBufferIds.end(), bufferId),
+        m_unqueuedBufferIds.end());
 }
 
 } // namespace oalpp

@@ -5,6 +5,7 @@
 #include "oalpp/sound_data/sound_data_interface.hpp"
 #include "position.hpp"
 #include <array>
+#include <list>
 
 namespace oalpp {
 
@@ -48,6 +49,10 @@ private:
     SoundDataInterface const& m_soundData;
 
     std::array<ALuint, BUFFER_COUNT> m_bufferIds { 0 };
+
+    // buffers that are not queued at the moment
+    // Note: Needs to be a list as this is modified while being iterated
+    std::list<ALuint> m_unqueuedBufferIds {};
     ALuint m_sourceId { 0 };
     ALenum m_format { AL_FORMAT_MONO_FLOAT32 };
 
@@ -59,13 +64,19 @@ private:
 
     bool m_isLooping { false };
 
-    void enqueueSamplesToBuffer(ALuint buffer, size_t samplesToQueue);
+    void enqueueSamplesToBuffer(ALuint bufferId, size_t samplesToQueue);
     void selectSamplesForBuffer(ALuint bufferId);
     bool hasDataToEnqueue() const;
     bool hasDataForFullBufferToEnqueue() const;
 
     void initSourceAndBuffers();
     void deleteSourceAndBuffers();
+
+    ALint getNumberOfBuffersProcessed() const;
+    // buffers that are not currently queued
+    std::list<ALuint> getUnqueuedBufferIds() const;
+    void markBufferAsQueued(ALuint bufferId);
+    void markBufferAsUnqueued(ALuint bufferId);
 };
 
 } // namespace oalpp

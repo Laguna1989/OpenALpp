@@ -265,6 +265,60 @@ TEST_CASE("Sound getLength", "[Sound]")
     }
 }
 
+TEST_CASE("Sound update test", "[Sound]")
+{
+    SoundContext ctx;
+    SoundDataMonoFake fake;
+    SECTION("update with non-looping sound (varying sizes) does not raise an exception")
+    {
+        auto const sampleSizeFactorInBufferSizes
+            = GENERATE(0.2f, 1.0f, 1.5f, 2.0f, 3.5f, 4.0f, 4.5f);
+        fake.m_samples.resize(Sound::BUFFER_SIZE * sampleSizeFactorInBufferSizes);
+        Sound snd { fake };
+        snd.play();
+        auto const start = std::chrono::system_clock::now();
+        while (true) {
+            REQUIRE_NOTHROW(snd.update());
+
+            auto const now = std::chrono::system_clock::now();
+            float const elapsedSeconds
+                = std::chrono::duration_cast<std::chrono::microseconds>(now - start).count()
+                / 1000.0f / 1000.0f;
+
+            // break test after 6 s or when sound stops playing
+            if (elapsedSeconds >= 6.0f || !snd.isPlaying()) {
+                snd.pause();
+                break;
+            }
+        }
+    }
+    SECTION("update with looping sound (varying sizes) does not stop playing")
+    {
+        auto const sampleSizeFactorInBufferSizes
+            = GENERATE(0.2f, 1.0f, 1.5f, 2.0f, 3.5f, 4.0f, 4.5f);
+        fake.m_samples.resize(Sound::BUFFER_SIZE * sampleSizeFactorInBufferSizes);
+        Sound snd { fake };
+        snd.setIsLooping(true);
+        snd.play();
+        auto const start = std::chrono::system_clock::now();
+        while (true) {
+            snd.update();
+            REQUIRE(snd.isPlaying());
+
+            auto const now = std::chrono::system_clock::now();
+            float const elapsedSeconds
+                = std::chrono::duration_cast<std::chrono::microseconds>(now - start).count()
+                / 1000.0f / 1000.0f;
+
+            // break test after 7 s
+            if (elapsedSeconds >= 7.0f) {
+                snd.pause();
+                break;
+            }
+        }
+    }
+}
+
 TEST_CASE("Sound getCurrentPosition", "[Sound]")
 {
     SoundContext ctx;
@@ -395,28 +449,6 @@ TEST_CASE("Sound getCurrentPosition", "[Sound]")
             if (newValue != 0.0f) {
                 snd.pause();
                 REQUIRE(0.0f != snd.getCurrentOffsetInSeconds());
-                break;
-            }
-        }
-    }
-
-    SECTION("update with looping sound does not raise exception")
-    {
-        fake.m_samples.resize(262144 + 200);
-        Sound snd { fake };
-        snd.setIsLooping(true);
-        snd.play();
-        auto const start = std::chrono::system_clock::now();
-        while (snd.isPlaying()) {
-            snd.update();
-            auto const newValue = snd.getCurrentOffsetInSeconds();
-            auto const now = std::chrono::system_clock::now();
-            float const elapsedSeconds
-                = std::chrono::duration_cast<std::chrono::microseconds>(now - start).count()
-                / 1000.0f / 1000.0f;
-
-            if (elapsedSeconds >= 6.0f) {
-                snd.pause();
                 break;
             }
         }
