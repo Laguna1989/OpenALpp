@@ -191,6 +191,11 @@ void Sound::selectSamplesForBuffer(ALuint bufferId)
     if (hasDataForFullBufferToEnqueue()) {
         // queue a full buffer
         enqueueSamplesToBuffer(bufferId, BUFFER_SIZE);
+        if (m_isLooping) {
+            if (m_cursor == m_soundData.getSamples().size()) {
+                m_cursor = 0;
+            }
+        }
     } else {
         // queue only the remaining part of the soundData into the buffer
         std::size_t const remainingSamplesInSoundData = m_soundData.getSamples().size() - m_cursor;
@@ -212,9 +217,8 @@ bool Sound::hasDataToEnqueue() const
 {
     if (m_isLooping) {
         return m_cursor <= m_soundData.getSamples().size();
-    } else {
-        return m_cursor < m_soundData.getSamples().size();
     }
+    return m_cursor < m_soundData.getSamples().size();
 }
 
 bool Sound::getIsLooping() const { return m_isLooping; }
