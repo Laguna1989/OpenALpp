@@ -139,6 +139,9 @@ void Sound::setPitch(float const newPitch)
 
 void Sound::enqueueSamplesToBuffer(ALuint bufferId, std::size_t samplesToQueue)
 {
+    if (samplesToQueue == 0) {
+        return;
+    }
     alBufferData(bufferId, m_format, &m_soundData.getSamples()[m_cursor],
         static_cast<ALsizei>(samplesToQueue) * sizeof(float), m_soundData.getSampleRate());
     alSourceQueueBuffers(m_sourceId, 1, &bufferId);
@@ -151,9 +154,6 @@ void Sound::enqueueSamplesToBuffer(ALuint bufferId, std::size_t samplesToQueue)
 void Sound::update()
 {
     ALint buffersProcessed = getNumberOfBuffersProcessed();
-
-    assert(buffersProcessed <= static_cast<int>(BUFFER_COUNT));
-    assert(buffersProcessed >= 0);
 
     while (buffersProcessed--) {
         if (m_cursor >= m_soundData.getSamples().size()) {
@@ -171,6 +171,11 @@ ALint Sound::getNumberOfBuffersProcessed() const
 {
     ALint numberOfBuffersProcessed = 0;
     alGetSourcei(m_sourceId, AL_BUFFERS_PROCESSED, &numberOfBuffersProcessed);
+
+    // internal assumptions
+    assert(numberOfBuffersProcessed <= static_cast<int>(BUFFER_COUNT));
+    assert(numberOfBuffersProcessed >= 0);
+
     return numberOfBuffersProcessed;
 }
 
@@ -217,6 +222,9 @@ void Sound::setIsLooping(bool value)
 {
     m_isLooping = value;
     if (m_isLooping) {
+        if (m_cursor == m_soundData.getSamples().size()) {
+            m_cursor = 0;
+        }
         for (auto const& bufferId : getUnqueuedBufferIds()) {
             selectSamplesForBuffer(bufferId);
         }
