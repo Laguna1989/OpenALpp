@@ -4,6 +4,7 @@
 namespace oalpp {
 
 namespace {
+
 auto defaultDeviceFactory()
 {
     return std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>(

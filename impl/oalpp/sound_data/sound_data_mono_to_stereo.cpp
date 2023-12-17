@@ -1,5 +1,6 @@
 #include "sound_data_mono_to_stereo.hpp"
 #include <stdexcept>
+
 namespace oalpp {
 
 SoundDataMonoToStereo::SoundDataMonoToStereo(SoundDataInterface& source)
@@ -17,7 +18,9 @@ SoundDataMonoToStereo::SoundDataMonoToStereo(SoundDataInterface& source)
 }
 
 int SoundDataMonoToStereo::getNumberOfChannels() const { return 2; }
+
 int SoundDataMonoToStereo::getSampleRate() const { return m_sampleRate; }
+
 std::vector<float> const& SoundDataMonoToStereo::getSamples() const { return m_samples; }
 
 } // namespace oalpp

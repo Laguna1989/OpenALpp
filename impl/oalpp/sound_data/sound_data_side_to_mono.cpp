@@ -21,7 +21,9 @@ SoundDataSideToMono::SoundDataSideToMono(SoundDataInterface& source)
 }
 
 int SoundDataSideToMono::getNumberOfChannels() const { return 1; }
+
 int SoundDataSideToMono::getSampleRate() const { return m_sampleRate; }
+
 std::vector<float> const& SoundDataSideToMono::getSamples() const { return m_samples; }
 
 } // namespace oalpp

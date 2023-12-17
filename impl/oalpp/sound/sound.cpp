@@ -22,6 +22,7 @@ Sound::Sound(SoundDataInterface const& soundData)
             + std::to_string(errorIfAny) };
     }
 }
+
 void Sound::initSourceAndBuffers()
 {
     // Create source
@@ -213,6 +214,7 @@ bool Sound::hasDataForFullBufferToEnqueue() const
 {
     return m_cursor + BUFFER_SIZE <= m_soundData.getSamples().size();
 }
+
 bool Sound::hasDataToEnqueue() const
 {
     if (m_isLooping) {
@@ -222,6 +224,7 @@ bool Sound::hasDataToEnqueue() const
 }
 
 bool Sound::getIsLooping() const { return m_isLooping; }
+
 void Sound::setIsLooping(bool value)
 {
     m_isLooping = value;
@@ -239,6 +242,7 @@ size_t Sound::getLengthInSamples() const
 {
     return m_soundData.getSamples().size() / m_soundData.getNumberOfChannels();
 }
+
 float Sound::getLengthInSeconds() const
 {
     return static_cast<float>(getLengthInSamples())

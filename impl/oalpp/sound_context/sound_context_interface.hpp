@@ -9,7 +9,7 @@ public:
     // avoid slicing via polymorphic copy or move
     SoundContextInterface(SoundContextInterface const& /*other*/) = delete;
     SoundContextInterface(SoundContextInterface&& /*other*/) = delete;
-    SoundContextInterface& operator=(const SoundContextInterface&) = delete;
+    SoundContextInterface& operator=(SoundContextInterface const&) = delete;
     SoundContextInterface& operator=(SoundContextInterface&&) = delete;
 
 protected:

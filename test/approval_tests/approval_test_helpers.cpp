@@ -5,7 +5,7 @@ std::vector<int> ApprovalTestHelpers::asInt(std::vector<float> const& numbers, u
 {
     std::vector<int> numbersAsInts;
     numbersAsInts.resize(numbers.size());
-    std::transform(numbers.cbegin(), numbers.cend(), numbersAsInts.begin(), [digits](float number)
-        {return static_cast<int>(number * digits);});
+    std::transform(numbers.cbegin(), numbers.cend(), numbersAsInts.begin(),
+        [digits](float number) { return static_cast<int>(number * digits); });
     return numbersAsInts;
 }

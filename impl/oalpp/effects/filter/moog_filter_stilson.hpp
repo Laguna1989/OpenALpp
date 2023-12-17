@@ -16,7 +16,7 @@ class MoogFilterStilson : public MonoEffectInterface {
 public:
     MoogFilterStilson(float sampleRate, float cutoff, float resonance);
 
-    std::vector<float> process(const std::vector<float>& input) override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     float m_sampleRate { 0.0f };

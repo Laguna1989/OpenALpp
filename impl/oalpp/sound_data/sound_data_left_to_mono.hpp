@@ -4,6 +4,7 @@
 #include "sound_data_interface.hpp"
 
 namespace oalpp {
+
 class SoundDataLeftToMono : public SoundDataInterface {
 public:
     explicit SoundDataLeftToMono(SoundDataInterface& source);

@@ -37,7 +37,9 @@ SoundDataWithEffect::SoundDataWithEffect(
 }
 
 int SoundDataWithEffect::getNumberOfChannels() const { return m_numberOfChannels; }
+
 int SoundDataWithEffect::getSampleRate() const { return m_sampleRate; }
-const std::vector<float>& SoundDataWithEffect::getSamples() const { return m_samples; }
+
+std::vector<float> const& SoundDataWithEffect::getSamples() const { return m_samples; }
 
 } // namespace oalpp

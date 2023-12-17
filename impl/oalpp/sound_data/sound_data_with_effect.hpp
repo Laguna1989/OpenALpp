@@ -12,7 +12,7 @@ public:
     SoundDataWithEffect(SoundDataInterface const& decoratee, effects::MonoEffectInterface& effect);
 
     int getSampleRate() const override;
-    const std::vector<float>& getSamples() const override;
+    std::vector<float> const& getSamples() const override;
     int getNumberOfChannels() const override;
 
 private:
