@@ -115,6 +115,22 @@ TEST_CASE("SoundDataBuilder", "[SoundDataBuilder]")
             REQUIRE(samples_loaded == samples_expected);
         }
 
+        SECTION("With Gain Effect")
+        {
+            oalpp::effects::utility::Gain gain { 0.5f };
+            oalpp::SoundData const data
+                = builder.fromFile("assets/test_mono.mp3").withEffect(gain).create();
+
+            REQUIRE(data.getNumberOfChannels() == 1);
+            REQUIRE(data.getSampleRate() == 44100);
+
+            for (auto& s : samples_expected) {
+                s *= 0.5f;
+            }
+            auto const& samples_loaded = data.getSamples();
+            REQUIRE(samples_loaded == samples_expected);
+        }
+
         SECTION("Mono To Stereo")
         {
             oalpp::SoundData const data
