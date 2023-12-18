@@ -45,9 +45,9 @@ jobs:
 
       - name: Generate Report
         id: generate_test_report
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}/build/test/unit_tests
         shell: cmd
-        run: OpenCppCoverage.exe --export_type cobertura:OpenALppCoverage.xml --sources ${{github.workspace}}\impl --excluded_sources ${{github.workspace}}\build\test\ --excluded_sources ${{github.workspace}}\build\ext\* --excluded_sources ${{github.workspace}}\build ${{github.workspace}}\build\test\unit_tests\Debug\OpenALpp_UnitTests.exe
+        run: OpenCppCoverage.exe --export_type cobertura:${{github.workspace}}/build/OpenALppCoverage.xml --sources ${{github.workspace}}\impl --excluded_sources ${{github.workspace}}\build\test\ --excluded_sources ${{github.workspace}}\build\ext\* --excluded_sources ${{github.workspace}}\build ${{github.workspace}}\build\test\unit_tests\OpenALpp_UnitTests.exe
 
       - name: Upload Report to Codecov
         uses: codecov/codecov-action@v2
