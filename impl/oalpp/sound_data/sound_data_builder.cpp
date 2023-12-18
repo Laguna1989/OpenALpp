@@ -17,6 +17,8 @@ oalpp::SoundData oalpp::SoundDataBuilder::create()
     return oalpp::SoundData { m_data, m_sampleRate, m_numberOfChannels };
 }
 
+// TODO does not need to be part of builder, extract into free function
+#if false
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::toString(std::string& str)
 {
     str = "# Sound Data\n";
@@ -30,6 +32,8 @@ oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::toString(std::string& str)
 
     return *this;
 }
+
+#endif
 
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::withEffect(
     oalpp::effects::MonoEffectInterface& effect)

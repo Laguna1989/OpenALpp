@@ -8,11 +8,21 @@ namespace oalpp {
 
 class SoundDataInterface {
 public:
-    virtual ~SoundDataInterface() = default;
-
+    /// Get number of channels. This will return 1 for mono and 2 for stereo SoundData
+    /// \return number of channels
     virtual int getNumberOfChannels() const = 0;
+
+    /// Get sample rate
+    /// \return sample rate in Hz
     virtual int getSampleRate() const = 0;
+
+    /// access samples
+    /// \return reference to const data
     virtual std::vector<float> const& getSamples() const = 0;
+
+
+    // virtual destructor, avoid leaking data
+    virtual ~SoundDataInterface() = default;
 
     // avoid slicing via polymorphic copy or move
     SoundDataInterface(SoundDataInterface const& /*other*/) = delete;
@@ -21,7 +31,7 @@ public:
     SoundDataInterface& operator=(SoundDataInterface&&) = delete;
 
 protected:
-    // allow default construction for derived classes
+    // allow default construction only for derived classes
     SoundDataInterface() = default;
 };
 

@@ -2,6 +2,7 @@
 #define OPENALPP_SOUNDCONTEXTINTERFACE_HPP
 
 namespace oalpp {
+
 class SoundContextInterface {
 public:
     virtual ~SoundContextInterface() = default;
@@ -16,6 +17,7 @@ protected:
     // allow default construction for derived classes
     SoundContextInterface() = default;
 };
+
 } // namespace oalpp
 
 #endif // OPENALPP_SOUNDCONTEXTINTERFACE_HPP
