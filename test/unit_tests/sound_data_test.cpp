@@ -16,7 +16,8 @@ TEST_CASE("SoundData Move constructor", "[SoundData]")
 TEST_CASE("SoundData Move assignment operator", "[SoundData]")
 {
     oalpp::SoundData data1 { std::vector<float> { 1.0f, 2.0f }, 44100, 2 };
-    oalpp::SoundData data2 = std::move(data1);
+    oalpp::SoundData data2 { std::vector<float> {}, 100, 1 };
+    data2 = std::move(data1);
 
     REQUIRE(data2.getSamples().size() == 2);
     REQUIRE(data2.getSamples().at(0) == 1.0f);
