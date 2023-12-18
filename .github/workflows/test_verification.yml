@@ -127,25 +127,13 @@ jobs:
         run: cmake --build .
 
       - name: Copy assets
-        run: cp -r assets ${{github.workspace}}/build/test/unit_tests/Debug
+        run: cp -r assets ${{github.workspace}}/build/test/unit_tests/assets
 
       - run: net start audiosrv
 
-      - name: ls1
-        working-directory: ${{github.workspace}}/build
-        run: ls test/
-
-      - name: ls2
-        working-directory: ${{github.workspace}}/build
-        run: ls test/unit_tests/
-
-      - name: ls3
-        working-directory: ${{github.workspace}}/build
-        run: ls test/unit_tests/Debug
-
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: test/unit_tests/Debug/OpenALpp_UnitTests.exe --order rand
+        run: test/unit_tests/OpenALpp_UnitTests.exe --order rand
 
   Web:
     runs-on: ubuntu-latest
