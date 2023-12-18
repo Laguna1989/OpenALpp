@@ -2,13 +2,21 @@
 #define OPENALPP_SOUND_DATA_HPP
 
 #include "sound_data_interface.hpp"
-#include <string>
 
 namespace oalpp {
 
 class SoundData : public SoundDataInterface {
 public:
-    explicit SoundData(std::string const& fileName);
+    SoundData(std::vector<float> const& data, int sampleRate, int numberOfChannels);
+    SoundData() = delete;
+    ~SoundData() override = default;
+
+    SoundData(SoundData const& data) = delete;
+    SoundData(SoundData&& data) noexcept;
+
+    SoundData& operator=(SoundData const&) = delete;
+    SoundData& operator=(SoundData&&) noexcept;
+
 
     int getNumberOfChannels() const override;
     int getSampleRate() const override;

@@ -7,9 +7,12 @@
 TEST_CASE("convolution")
 {
     std::string const fileName { "assets/test1.wav" };
-    oalpp::SoundData buffer { fileName };
-    oalpp::effects::utility::Convolution convolution { buffer.getSamples() };
-    oalpp::SoundDataWithEffect soundWithEffect { buffer, convolution };
+    oalpp::effects::utility::Convolution convolution {
+        oalpp::SoundDataBuilder().fromFile(fileName).create().getSamples()
+    };
+
+    auto const soundWithEffect
+        = oalpp::SoundDataBuilder().fromFile("assets/test1.wav").withEffect(convolution).create();
 
     // note: Due to platform dependent float behavior, the result needs to be converted to int for
     // the approval tests to work.

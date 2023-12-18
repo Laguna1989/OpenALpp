@@ -6,9 +6,10 @@
 TEST_CASE("phase_flip")
 {
     std::string const fileName { "assets/test1.wav" };
-    oalpp::SoundData buffer { fileName };
     oalpp::effects::utility::PhaseFlip phaseFlip {};
-    oalpp::SoundDataWithEffect soundWithEffect { buffer, phaseFlip };
+
+    oalpp::SoundDataBuilder builder;
+    auto const soundWithEffect = builder.fromFile(fileName).withEffect(phaseFlip).create();
 
     ApprovalTests::Approvals::verifyAll(soundWithEffect.getSamples());
 }
