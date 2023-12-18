@@ -41,7 +41,7 @@ jobs:
           echo "C:\Program Files\OpenCppCoverage" >> $env:GITHUB_PATH
 
       - name: Copy assets
-        run: cp -r assets ${{github.workspace}}/build/test/unit_tests/Debug
+        run: cp -r assets ${{github.workspace}}/build/test/unit_tests/assets
 
       - name: Generate Report
         id: generate_test_report
