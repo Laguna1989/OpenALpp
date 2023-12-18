@@ -1,6 +1,6 @@
-#include "catch2/catch.hpp"
-#include "oalpp/effects/utility/effect_chain.hpp"
-#include "oalpp/effects/utility/gain.hpp"
+#include <catch2/catch.hpp>
+#include <oalpp/effects/utility/effect_chain.hpp>
+#include <oalpp/effects/utility/gain.hpp>
 #include <oalpp/sound_data/sound_data.hpp>
 #include <oalpp/sound_data/sound_data_builder.hpp>
 #include <libnyquist/Decoders.h>

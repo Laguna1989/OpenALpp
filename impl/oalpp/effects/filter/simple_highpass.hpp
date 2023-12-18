@@ -1,7 +1,7 @@
 #ifndef OPENALPP_EFFECTS_FILTER_SIMPLE_HIGHPASS_HPP
 #define OPENALPP_EFFECTS_FILTER_SIMPLE_HIGHPASS_HPP
 
-#include "oalpp/effects/mono_effect_interface.hpp"
+#include <oalpp/effects/mono_effect_interface.hpp>
 
 namespace oalpp {
 namespace effects {

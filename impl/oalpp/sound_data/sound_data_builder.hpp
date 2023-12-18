@@ -1,7 +1,7 @@
 #ifndef SOUND_DATA_BUILDER_HPP
 #define SOUND_DATA_BUILDER_HPP
 
-#include "oalpp/effects/utility/gain.hpp"
+#include <oalpp/effects/mono_effect_interface.hpp>
 #include <oalpp/sound_data/sound_data.hpp>
 #include <string>
 #include <vector>

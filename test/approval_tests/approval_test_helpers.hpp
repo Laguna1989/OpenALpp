@@ -1,5 +1,6 @@
 #ifndef OPENALPP_APPROVAL_TEST_HELPERS_HPP
 #define OPENALPP_APPROVAL_TEST_HELPERS_HPP
+
 #include <vector>
 
 struct ApprovalTestHelpers {

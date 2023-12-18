@@ -1,7 +1,7 @@
 #include "ApprovalTests/ApprovalTests.hpp"
-#include "catch2/catch.hpp"
-#include "oalpp/effects/utility/gain.hpp"
-#include "oalpp/sound_data.hpp"
+#include <catch2/catch.hpp>
+#include <oalpp/effects/utility/gain.hpp>
+#include <oalpp/sound_data.hpp>
 
 TEST_CASE("gain")
 {

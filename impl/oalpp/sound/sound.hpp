@@ -1,9 +1,9 @@
 #ifndef OPENALPP_SOUND_HPP
 #define OPENALPP_SOUND_HPP
 
-#include "oalpp/common/al.hpp"
-#include "oalpp/sound_data/sound_data_interface.hpp"
-#include "position.hpp"
+#include <oalpp/common/al.hpp>
+#include <oalpp/sound/position.hpp>
+#include <oalpp/sound_data/sound_data_interface.hpp>
 #include <array>
 #include <list>
 

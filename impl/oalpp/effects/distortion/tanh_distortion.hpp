@@ -1,7 +1,7 @@
 #ifndef OPENALPP_EFFECTS_DISTORTION_TANH_DISTORTION_HPP
 #define OPENALPP_EFFECTS_DISTORTION_TANH_DISTORTION_HPP
 
-#include "oalpp/effects/mono_effect_interface.hpp"
+#include <oalpp/effects/mono_effect_interface.hpp>
 
 namespace oalpp {
 namespace effects {

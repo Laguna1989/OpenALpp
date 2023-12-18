@@ -1,8 +1,8 @@
 #ifndef OPENALPP_SOUND_CONTEXT_HPP
 #define OPENALPP_SOUND_CONTEXT_HPP
 
-#include "oalpp/common/alc.hpp"
-#include "sound_context_interface.hpp"
+#include <oalpp/common/alc.hpp>
+#include <oalpp/sound_context/sound_context_interface.hpp>
 #include <functional>
 #include <memory>
 #include <type_traits>

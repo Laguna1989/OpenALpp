@@ -5,7 +5,7 @@
 // 6.14.2019 David Lowenfels stated "You're welcome to use the Moog~ code,
 // license it free as in beer or whatever :)"
 
-#include "oalpp/effects/mono_effect_interface.hpp"
+#include <oalpp/effects/mono_effect_interface.hpp>
 #include <array>
 
 namespace oalpp {

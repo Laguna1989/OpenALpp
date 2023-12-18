@@ -1,7 +1,7 @@
 #ifndef OPENALPP_SOUND_DATA_HPP
 #define OPENALPP_SOUND_DATA_HPP
 
-#include "sound_data_interface.hpp"
+#include <oalpp/sound_data/sound_data_interface.hpp>
 
 namespace oalpp {
 

@@ -1,8 +1,7 @@
-#include "oalpp/effects/filter/moog_filter_stilson.hpp"
-#include "oalpp/sound/sound.hpp"
-#include "oalpp/sound_context.hpp"
-#include "oalpp/sound_data/sound_data_builder.hpp"
-
+#include <oalpp/effects/filter/moog_filter_stilson.hpp>
+#include <oalpp/sound/sound.hpp>
+#include <oalpp/sound_context.hpp>
+#include <oalpp/sound_data/sound_data_builder.hpp>
 #include <fstream>
 #include <iostream>
 #ifdef __EMSCRIPTEN__

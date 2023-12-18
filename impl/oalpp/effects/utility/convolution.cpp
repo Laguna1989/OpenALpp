@@ -1,7 +1,7 @@
 #include "convolution.hpp"
-#include "dj_fft.h"
 #include <algorithm>
 #include <cstddef>
+#include <dj_fft.h>
 
 namespace oalpp {
 namespace effects {

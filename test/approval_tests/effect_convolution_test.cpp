@@ -1,8 +1,8 @@
 #include "ApprovalTests/ApprovalTests.hpp"
 #include "approval_test_helpers.hpp"
-#include "catch2/catch.hpp"
-#include "oalpp/effects/utility/convolution.hpp"
-#include "oalpp/sound_data.hpp"
+#include <catch2/catch.hpp>
+#include <oalpp/effects/utility/convolution.hpp>
+#include <oalpp/sound_data.hpp>
 
 TEST_CASE("convolution")
 {

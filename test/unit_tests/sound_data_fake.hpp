@@ -1,7 +1,7 @@
 #ifndef OPENALPP_SOUND_DATA_FAKE_HPP
 #define OPENALPP_SOUND_DATA_FAKE_HPP
 
-#include "oalpp/sound_data/sound_data_interface.hpp"
+#include <oalpp/sound_data/sound_data_interface.hpp>
 
 class SoundDataMonoFake : public oalpp::SoundDataInterface {
 public:

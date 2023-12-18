@@ -1,7 +1,7 @@
 #ifndef OPENALPP_CONVOLUTION_HPP
 #define OPENALPP_CONVOLUTION_HPP
 
-#include "oalpp/effects/mono_effect_interface.hpp"
+#include <oalpp/effects/mono_effect_interface.hpp>
 #include <complex>
 #include <vector>
 
