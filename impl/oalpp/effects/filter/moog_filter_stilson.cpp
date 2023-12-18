@@ -58,7 +58,7 @@ oalpp::effects::filter::MoogFilterStilson::MoogFilterStilson(
 }
 
 std::vector<float> oalpp::effects::filter::MoogFilterStilson::process(
-    const std::vector<float>& input)
+    std::vector<float> const& input)
 {
     std::vector<float> output;
     output.resize(input.size());

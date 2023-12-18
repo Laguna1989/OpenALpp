@@ -5,7 +5,7 @@
 // 6.14.2019 David Lowenfels stated "You're welcome to use the Moog~ code,
 // license it free as in beer or whatever :)"
 
-#include "oalpp/effects/mono_effect_interface.hpp"
+#include <oalpp/effects/mono_effect_interface.hpp>
 #include <array>
 
 namespace oalpp {
@@ -16,7 +16,7 @@ class MoogFilterStilson : public MonoEffectInterface {
 public:
     MoogFilterStilson(float sampleRate, float cutoff, float resonance);
 
-    std::vector<float> process(const std::vector<float>& input) override;
+    std::vector<float> process(std::vector<float> const& input) override;
 
 private:
     float m_sampleRate { 0.0f };

@@ -107,14 +107,19 @@ jobs:
   #        working-directory: ${{github.workspace}}/build/test/approval_tests
 
   Windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
         with:
           cmake-version: '3.19.x'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Enable Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1.12.1
 
       - name: CMake
         run: cmake -B ${{github.workspace}}/build . -DOALPP_STATIC_LIBRARY=ON
@@ -123,17 +128,17 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: cmake --build .
 
-      - name: Install Scream
-        shell: powershell
-        run: |
-          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.8/Scream3.8.zip -OutFile Scream3.8.zip
-          Expand-Archive -Path Scream3.8.zip -DestinationPath Scream
-          Import-Certificate -FilePath Scream\Install\driver\x64\Scream.cat -CertStoreLocation Cert:\LocalMachine\TrustedPublisher 
-          Scream\Install\helpers\devcon-x64.exe install Scream\Install\driver\x64\Scream.inf *Scream
+      - name: Copy assets
+        run: cp -r assets ${{github.workspace}}/build/test/unit_tests/assets
+
+      - run: net start audiosrv
+
+      - name: Setup virtual soundcard
+        uses: LABSN/sound-ci-helpers@v1.0.1
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: test/unit_tests/Debug/OpenALpp_UnitTests.exe --order rand
+        working-directory: ${{github.workspace}}/build/test/unit_tests
+        run: ./OpenALpp_UnitTests.exe --order rand
 
   Web:
     runs-on: ubuntu-latest

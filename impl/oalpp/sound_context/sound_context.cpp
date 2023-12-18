@@ -1,9 +1,10 @@
 #include "sound_context.hpp"
-#include "oalpp/common/audio_exceptions.hpp"
+#include <oalpp/common/audio_exceptions.hpp>
 
 namespace oalpp {
 
 namespace {
+
 auto defaultDeviceFactory()
 {
     return std::unique_ptr<ALCdevice, SoundContext::DeviceDestroyer>(

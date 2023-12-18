@@ -1,7 +1,7 @@
 #ifndef OPENALPP_EFFECTS_DISTORTION_DECIMATOR_HPP
 #define OPENALPP_EFFECTS_DISTORTION_DECIMATOR_HPP
 
-#include "oalpp/effects/mono_effect_interface.hpp"
+#include <oalpp/effects/mono_effect_interface.hpp>
 
 namespace oalpp {
 namespace effects {

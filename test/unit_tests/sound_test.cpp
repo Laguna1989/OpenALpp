@@ -1,7 +1,7 @@
-#include "catch2/catch.hpp"
-#include "oalpp/sound/sound.hpp"
-#include "oalpp/sound_context/sound_context.hpp"
 #include "sound_data_fake.hpp"
+#include <catch2/catch.hpp>
+#include <oalpp/sound/sound.hpp>
+#include <oalpp/sound_context/sound_context.hpp>
 
 using namespace oalpp;
 

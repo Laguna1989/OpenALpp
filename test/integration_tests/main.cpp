@@ -1,7 +1,7 @@
-#include "oalpp/effects/filter/moog_filter_stilson.hpp"
-#include "oalpp/sound/sound.hpp"
-#include "oalpp/sound_context.hpp"
-#include "oalpp/sound_data.hpp"
+#include <oalpp/effects/filter/moog_filter_stilson.hpp>
+#include <oalpp/sound/sound.hpp>
+#include <oalpp/sound_context.hpp>
+#include <oalpp/sound_data/sound_data_builder.hpp>
 #include <fstream>
 #include <iostream>
 #ifdef __EMSCRIPTEN__
@@ -34,9 +34,8 @@ int main()
     effects::filter::MoogFilterStilson moog { 44100, 1800, 0.5f };
 
     SoundContext ctx;
-    SoundData buffer { fileName };
-
-    SoundDataWithEffect soundDataWithEffect { buffer, moog };
+    SoundDataBuilder builder;
+    SoundData soundDataWithEffect = builder.fromFile(fileName).withEffect(moog).create();
 
     snd = std::make_shared<Sound>(soundDataWithEffect);
     snd->setVolume(0.5f);

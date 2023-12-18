@@ -1,18 +1,28 @@
 #include "sound_data.hpp"
-#include "libnyquist/Decoders.h"
 #include <utility>
 
 namespace oalpp {
 
-SoundData::SoundData(std::string const& fileName)
+SoundData::SoundData(std::vector<float> const& data, int sampleRate, int numberOfChannels)
+    : m_samples { data }
+    , m_sampleRate { sampleRate }
+    , m_numberOfChannels { numberOfChannels }
 {
-    auto fileData = std::make_unique<nqr::AudioData>();
-    nqr::NyquistIO loader;
-    loader.Load(fileData.get(), fileName);
+}
 
-    m_numberOfChannels = fileData->channelCount;
-    m_sampleRate = fileData->sampleRate;
-    m_samples = std::move(fileData->samples);
+SoundData::SoundData(SoundData&& data) noexcept
+    : m_samples { std::move(data.m_samples) }
+    , m_sampleRate { std::exchange(data.m_sampleRate, 0) }
+    , m_numberOfChannels { std::exchange(data.m_numberOfChannels, 0) }
+{
+}
+
+SoundData& SoundData::operator=(SoundData&& other) noexcept
+{
+    m_samples = std::move(other.m_samples);
+    m_sampleRate = std::exchange(other.m_sampleRate, 0);
+    m_numberOfChannels = std::exchange(other.m_numberOfChannels, 0);
+    return *this;
 }
 
 int SoundData::getNumberOfChannels() const { return m_numberOfChannels; }

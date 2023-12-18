@@ -13,7 +13,7 @@ public:
     // avoid slicing via polymorphic copy or move
     MonoEffectInterface(MonoEffectInterface const& /*other*/) = delete;
     MonoEffectInterface(MonoEffectInterface&& /*other*/) = delete;
-    MonoEffectInterface& operator=(const MonoEffectInterface&) = delete;
+    MonoEffectInterface& operator=(MonoEffectInterface const&) = delete;
     MonoEffectInterface& operator=(MonoEffectInterface&&) = delete;
 
 protected:
