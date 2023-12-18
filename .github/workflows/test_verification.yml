@@ -131,6 +131,9 @@ jobs:
 
       - run: net start audiosrv
 
+      - name: Setup virtual soundcard
+        uses: LABSN/sound-ci-helpers@v1.0.1
+
       - name: Test
         working-directory: ${{github.workspace}}/build
         run: test/unit_tests/OpenALpp_UnitTests.exe --order rand
