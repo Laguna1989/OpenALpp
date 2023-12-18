@@ -107,7 +107,7 @@ jobs:
   #        working-directory: ${{github.workspace}}/build/test/approval_tests
 
   Windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
@@ -123,16 +123,10 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: cmake --build .
 
-      - name: Install Scream
-        shell: powershell
-        run: |
-          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.8/Scream3.8.zip -OutFile Scream3.8.zip
-          Expand-Archive -Path Scream3.8.zip -DestinationPath Scream
-          Import-Certificate -FilePath Scream\Install\driver\x64\Scream.cat -CertStoreLocation Cert:\LocalMachine\TrustedPublisher 
-          Scream\Install\helpers\devcon-x64.exe install Scream\Install\driver\x64\Scream.inf *Scream
-
       - name: Copy assets
         run: cp -r assets ${{github.workspace}}/build/test/unit_tests/Debug
+
+      - run: net start audiosrv
 
       - name: Test
         working-directory: ${{github.workspace}}/build
