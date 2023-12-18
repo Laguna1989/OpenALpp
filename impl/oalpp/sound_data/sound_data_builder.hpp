@@ -12,7 +12,7 @@ class SoundDataBuilder {
 public:
     /// create SoundData from the builder
     /// \return SoundData object
-    [[nodiscard]] SoundData create();
+    [[nodiscard]] SoundData create() const;
 
     /// Load SoundData content from file. This will overwrite any previously stored SoundData
     /// \param file path to the file

@@ -1,6 +1,11 @@
 #include "sound_data_builder.hpp"
 #include <libnyquist/Decoders.h>
 
+oalpp::SoundData oalpp::SoundDataBuilder::create() const
+{
+    return oalpp::SoundData { m_data, m_sampleRate, m_numberOfChannels };
+}
+
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::fromFile(std::string const& file)
 {
     nqr::NyquistIO loader;
@@ -11,29 +16,6 @@ oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::fromFile(std::string const& fi
     m_numberOfChannels = audioData->channelCount;
     return *this;
 }
-
-oalpp::SoundData oalpp::SoundDataBuilder::create()
-{
-    return oalpp::SoundData { m_data, m_sampleRate, m_numberOfChannels };
-}
-
-// TODO does not need to be part of builder, extract into free function
-#if false
-oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::toString(std::string& str)
-{
-    str = "# Sound Data\n";
-    str += "# sampleRate: " + std::to_string(m_sampleRate) + "\n";
-    str += "# numberOfChannels: " + std::to_string(m_numberOfChannels) + "\n";
-
-    for (auto index = 0U; index != m_data.size(); ++index) {
-        str += std::to_string(index) + " " + std::to_string(m_data[index]) + "\n";
-    }
-    str += "\n";
-
-    return *this;
-}
-
-#endif
 
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::withEffect(
     oalpp::effects::MonoEffectInterface& effect)

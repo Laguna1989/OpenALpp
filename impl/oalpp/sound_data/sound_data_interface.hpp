@@ -1,7 +1,6 @@
 #ifndef OPENALPP_SOUND_DATA_INTERFACE_HPP
 #define OPENALPP_SOUND_DATA_INTERFACE_HPP
 
-#include <cstddef>
 #include <vector>
 
 namespace oalpp {
@@ -16,10 +15,9 @@ public:
     /// \return sample rate in Hz
     virtual int getSampleRate() const = 0;
 
-    /// access samples
+    /// Read access to samples
     /// \return reference to const data
     virtual std::vector<float> const& getSamples() const = 0;
-
 
     // virtual destructor, avoid leaking data
     virtual ~SoundDataInterface() = default;
