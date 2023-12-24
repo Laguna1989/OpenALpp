@@ -25,10 +25,10 @@ SoundData& SoundData::operator=(SoundData&& other) noexcept
     return *this;
 }
 
-int SoundData::getNumberOfChannels() const { return m_numberOfChannels; }
+int SoundData::getNumberOfChannels() const noexcept { return m_numberOfChannels; }
 
-int SoundData::getSampleRate() const { return m_sampleRate; }
+int SoundData::getSampleRate() const noexcept { return m_sampleRate; }
 
-std::vector<float> const& SoundData::getSamples() const { return m_samples; }
+std::vector<float> const& SoundData::getSamples() const noexcept { return m_samples; }
 
 } // namespace oalpp

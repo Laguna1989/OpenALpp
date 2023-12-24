@@ -17,9 +17,9 @@ public:
     SoundData& operator=(SoundData const&) = delete;
     SoundData& operator=(SoundData&&) noexcept;
 
-    int getNumberOfChannels() const override;
-    int getSampleRate() const override;
-    std::vector<float> const& getSamples() const override;
+    int getNumberOfChannels() const noexcept override;
+    int getSampleRate() const noexcept override;
+    std::vector<float> const& getSamples() const noexcept override;
 
 private:
     std::vector<float> m_samples {};

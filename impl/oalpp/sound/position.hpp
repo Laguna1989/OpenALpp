@@ -7,9 +7,10 @@ struct Position {
     float x { 0.0f };
     float y { 0.0f };
     float z { 0.0f };
-};
 
-bool operator==(Position const& lhs, Position const& rhs);
+    bool operator==(Position const& lhs) const = default;
+    bool operator!=(Position const& lhs) const = default;
+};
 
 } // namespace oalpp
 

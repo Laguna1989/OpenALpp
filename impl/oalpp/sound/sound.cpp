@@ -17,7 +17,7 @@ Sound::Sound(SoundDataInterface const& soundData)
     initSourceAndBuffers();
 
     auto const errorIfAny = alGetError();
-    if (errorIfAny != AL_NO_ERROR) {
+    if (errorIfAny != AL_NO_ERROR) [[unlikely]] {
         throw oalpp::AudioException { "Could not create OpenAL soundData, error code: "
             + std::to_string(errorIfAny) };
     }
@@ -55,7 +55,7 @@ void Sound::play()
 {
     alSourcePlay(m_sourceId);
     auto const errorIfAny = alGetError();
-    if (errorIfAny != AL_NO_ERROR) {
+    if (errorIfAny != AL_NO_ERROR) [[unlikely]] {
         throw oalpp::AudioException { "Could not play sound, error code: "
             + std::to_string(errorIfAny) };
     }
@@ -70,17 +70,17 @@ void Sound::stop()
     initSourceAndBuffers();
 
     auto const errorIfAny = alGetError();
-    if (errorIfAny != AL_NO_ERROR) {
+    if (errorIfAny != AL_NO_ERROR) [[unlikely]] {
         throw oalpp::AudioException { "Could not stop sound, error code: "
             + std::to_string(errorIfAny) };
     }
 }
 
-void Sound::pause()
+void Sound::pause() const
 {
     alSourcePause(m_sourceId);
     auto const errorIfAny = alGetError();
-    if (errorIfAny != AL_NO_ERROR) {
+    if (errorIfAny != AL_NO_ERROR) [[unlikely]] {
         throw oalpp::AudioException { "Could not stop sound, error code: "
             + std::to_string(errorIfAny) };
     }
@@ -97,7 +97,7 @@ float Sound::getVolume() const { return m_volume; }
 
 void Sound::setVolume(float newVolume)
 {
-    if (newVolume < 0 || newVolume > 1.0f) {
+    if (newVolume < 0 || newVolume > 1.0f) [[unlikely]] {
         throw std::invalid_argument { "Could not set volume value: " + std::to_string(newVolume) };
     }
     m_volume = newVolume;
@@ -106,7 +106,7 @@ void Sound::setVolume(float newVolume)
 
 void Sound::setPan(float newPan)
 {
-    if (newPan < -1.0f || newPan > 1.0f) {
+    if (newPan < -1.0f || newPan > 1.0f) [[unlikely]] {
         throw std::invalid_argument {
             ("Could not set pan value: " + std::to_string(newPan)).c_str()
         };
@@ -119,7 +119,7 @@ Position Sound::getPosition() const { return m_position; }
 
 void Sound::setPosition(Position const& newPosition)
 {
-    if (m_format == AL_FORMAT_STEREO_FLOAT32) {
+    if (m_format == AL_FORMAT_STEREO_FLOAT32) [[unlikely]] {
         throw oalpp::AudioException { "Could not set position on non-mono file" };
     }
 
@@ -131,7 +131,7 @@ float Sound::getPitch() const { return m_pitch; }
 
 void Sound::setPitch(float const newPitch)
 {
-    if (newPitch <= 0.0f) {
+    if (newPitch <= 0.0f) [[unlikely]] {
         throw std::invalid_argument { "Could not set pitch value: " + std::to_string(newPitch) };
     }
     m_pitch = newPitch;
