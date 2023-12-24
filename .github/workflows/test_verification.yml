@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        clangver: [ 14.0.0 ]
+        clangver: [ 15 ]
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
@@ -141,8 +141,8 @@ jobs:
         run: ls
 
       - name: Test
-        working-directory: ${{github.workspace}}/build/test/unit_tests
-        run: ./OpenALpp_UnitTests.exe --order rand
+        working-directory: ${{github.workspace}}/build/test/unit_tests/
+        run: Debug/OpenALpp_UnitTests.exe --order rand
 
   Web:
     runs-on: ubuntu-latest
