@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        clangver: [ 14 ]
+        clangver: [ 14.0.0 ]
     steps:
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.11
@@ -135,6 +135,10 @@ jobs:
 
       - name: Setup virtual soundcard
         uses: LABSN/sound-ci-helpers@v1.0.1
+
+      - name: Test LS
+        working-directory: ${{github.workspace}}/build/test/unit_tests
+        run: ls
 
       - name: Test
         working-directory: ${{github.workspace}}/build/test/unit_tests
