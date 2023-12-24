@@ -13,7 +13,7 @@ public:
     {
     }
 
-    [[nodiscard]] char const* what() const noexcept override { return m_message.c_str(); }
+    [[nodiscard]] char const* what() const noexcept override;
 
 private:
     std::string m_message;
@@ -26,7 +26,7 @@ public:
     {
     }
 
-    [[nodiscard]] char const* what() const noexcept override { return m_message.c_str(); }
+    [[nodiscard]] char const* what() const noexcept override;
 
 private:
     std::string m_message;
