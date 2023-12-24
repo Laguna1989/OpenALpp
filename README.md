@@ -4,7 +4,7 @@ OpenALpp
 [![Tests](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml/badge.svg)](https://github.com/Laguna1989/OpenALpp/actions/workflows/test_verification.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-OpenALpp is a modern OOP C++14 audio library built on [OpenAL Soft](https://github.com/kcat/openal-soft)
+OpenALpp is a modern OOP C++20 audio library built on [OpenAL Soft](https://github.com/kcat/openal-soft)
 for Windows, macOS, Linux and web (emscripten). It supports loading of wav, mp3, FLAC and ogg files
 via [libnyquist](https://github.com/ddiakopoulos/libnyquist).
 

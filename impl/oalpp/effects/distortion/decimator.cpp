@@ -9,11 +9,11 @@ namespace distortion {
 Decimator::Decimator(int bits, float rate)
     : m_rate { rate }
 {
-    if (m_rate <= 0.0f || m_rate > 1.0f) {
+    if (m_rate <= 0.0f || m_rate > 1.0f) [[unlikely]] {
         throw std::invalid_argument { "Rate must be in the range of ]0.0, 1.0]" };
     }
 
-    if (bits < 1) {
+    if (bits < 1) [[unlikely]] {
         throw std::invalid_argument { "Bits must be greater than zero" };
     }
 

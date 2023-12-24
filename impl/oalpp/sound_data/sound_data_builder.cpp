@@ -51,7 +51,7 @@ oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::withEffect(
 
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::onlyLeftChannel()
 {
-    if (m_numberOfChannels != 2) {
+    if (m_numberOfChannels != 2) [[unlikely]] {
         throw std::invalid_argument { "Can not use left channel from mono sound data." };
     }
 
@@ -69,7 +69,7 @@ oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::onlyLeftChannel()
 
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::onlyRightChannel()
 {
-    if (m_numberOfChannels != 2) {
+    if (m_numberOfChannels != 2) [[unlikely]] {
         throw std::invalid_argument { "Can not use right channel from mono sound data." };
     }
 
@@ -87,7 +87,7 @@ oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::onlyRightChannel()
 
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::toStereo()
 {
-    if (m_numberOfChannels != 1) {
+    if (m_numberOfChannels != 1) [[unlikely]] {
         throw std::invalid_argument { "Can not make stereo sound data from non-mono file." };
     }
 

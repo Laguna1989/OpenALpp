@@ -27,7 +27,7 @@ bool defaultMakeContextCurrent(ALCcontext* context) { return alcMakeContextCurre
 SoundContext::SoundContext(SoundContext::DeviceFactoryT deviceFactory,
     SoundContext::ContextFactoryT contextFactory, MakeContextCurrentT makeContextCurrent)
 {
-    if (numberOfInitializations != 0) {
+    if (numberOfInitializations != 0) [[unlikely]] {
         throw oalpp::AudioSystemException { "Sound context has to be unique" };
     }
 
@@ -36,7 +36,7 @@ SoundContext::SoundContext(SoundContext::DeviceFactoryT deviceFactory,
     }
     m_device = deviceFactory();
 
-    if (!m_device) {
+    if (!m_device) [[unlikely]] {
         throw oalpp::AudioSystemException { "Could not open audio device" };
     }
 
@@ -45,7 +45,7 @@ SoundContext::SoundContext(SoundContext::DeviceFactoryT deviceFactory,
     }
     m_context = contextFactory(m_device.get());
 
-    if (!m_context) {
+    if (!m_context) [[unlikely]] {
         throw oalpp::AudioSystemException { "Could not create audio context" };
     }
 
@@ -53,7 +53,7 @@ SoundContext::SoundContext(SoundContext::DeviceFactoryT deviceFactory,
         makeContextCurrent = defaultMakeContextCurrent;
     }
     auto const contextMadeCurrent = makeContextCurrent(m_context.get());
-    if (!contextMadeCurrent) {
+    if (!contextMadeCurrent) [[unlikely]] {
         throw oalpp::AudioSystemException { "Could not make audio context current" };
     }
 

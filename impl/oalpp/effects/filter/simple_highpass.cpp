@@ -9,11 +9,11 @@ namespace filter {
 
 SimpleHighpass::SimpleHighpass(int sampleRate, float cutoffFrequency, float resonance)
 {
-    if (sampleRate <= 0) {
+    if (sampleRate <= 0) [[unlikely]] {
         throw std::invalid_argument { "Sample rate has to be positive" };
     }
 
-    if (cutoffFrequency <= 0 || cutoffFrequency > static_cast<float>(sampleRate)) {
+    if (cutoffFrequency <= 0 || cutoffFrequency > static_cast<float>(sampleRate)) [[unlikely]] {
         throw std::invalid_argument {
             "Cutoff frequency has to be positive and less than the sample rate"
         };

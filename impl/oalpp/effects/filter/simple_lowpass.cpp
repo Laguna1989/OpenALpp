@@ -9,11 +9,11 @@ namespace filter {
 
 SimpleLowpass::SimpleLowpass(int sampleRate, float cutoffFrequency, float resonance)
 {
-    if (sampleRate <= 0) {
+    if (sampleRate <= 0) [[unlikely]] {
         throw std::invalid_argument { "Sample rate has to be positive" };
     }
 
-    if (cutoffFrequency <= 0 || cutoffFrequency > static_cast<float>(sampleRate)) {
+    if (cutoffFrequency <= 0 || cutoffFrequency > static_cast<float>(sampleRate)) [[unlikely]] {
         throw std::invalid_argument {
             "Cutoff frequency has to be positive and less than the sample rate"
         };
@@ -40,7 +40,7 @@ std::vector<float> SimpleLowpass::process(std::vector<float> const& input)
 
     std::transform(input.cbegin(), input.cend(), result.begin(),
         [this, &history1, &history2, &history3, &history4](float v) {
-            auto out
+            const auto out
                 = m_a1 * v + m_a2 * history1 + m_a3 * history2 - m_b1 * history3 - m_b2 * history4;
 
             history4 = history3;

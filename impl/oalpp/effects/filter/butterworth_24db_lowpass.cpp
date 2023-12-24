@@ -9,11 +9,11 @@ namespace filter {
 
 Butterworth24dbLowpass::Butterworth24dbLowpass(int sampleRate, float cutoffFrequency, float quality)
 {
-    if (sampleRate <= 0) {
+    if (sampleRate <= 0) [[unlikely]] {
         throw std::invalid_argument { "Sample rate has to be positive" };
     }
 
-    if (cutoffFrequency <= 0 || cutoffFrequency > static_cast<float>(sampleRate)) {
+    if (cutoffFrequency <= 0 || cutoffFrequency > static_cast<float>(sampleRate)) [[unlikely]] {
         throw std::invalid_argument {
             "Cutoff frequency has to be positive and less than the sample rate"
         };
@@ -33,7 +33,7 @@ void Butterworth24dbLowpass::setSampleRate(float sampleRate)
 
 void Butterworth24dbLowpass::setParameters(float cutoffFrequency, float q)
 {
-    if (q < 0.0f) {
+    if (q < 0.0f) [[unlikely]] {
         q = 0.0f;
     } else if (q > 1.0f) {
         q = 1.0f;
@@ -45,7 +45,7 @@ void Butterworth24dbLowpass::setParameters(float cutoffFrequency, float q)
     q += 1.0f;
 
     float b1 = (0.765367f / q) / wp;
-    float b2 = 1.0f / (wp * wp);
+    float const b2 = 1.0f / (wp * wp);
     float const bd_tmp = m_t0 * b2 + 1.0f;
     float bd = 1.0f / (bd_tmp + m_t2 * b1);
 
