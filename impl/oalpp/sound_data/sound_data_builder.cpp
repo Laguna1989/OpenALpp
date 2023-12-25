@@ -17,6 +17,15 @@ oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::fromFile(std::string const& fi
     return *this;
 }
 
+oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::fromExistingSoundData(SoundData const& data)
+{
+    m_data = data.getSamples();
+    m_sampleRate = data.getSampleRate();
+    m_numberOfChannels = data.getNumberOfChannels();
+
+    return *this;
+}
+
 oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::withEffect(
     oalpp::effects::MonoEffectInterface& effect)
 {

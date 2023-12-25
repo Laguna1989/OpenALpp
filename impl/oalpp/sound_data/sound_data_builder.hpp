@@ -19,6 +19,11 @@ public:
     /// \return SoundDataBuilder object (fluent interface)
     [[nodiscard]] SoundDataBuilder& fromFile(std::string const& file);
 
+    /// Load SoundData content from an already existing SoundData instance
+    /// \param data SoundData to copy from
+    /// \return SoundDataBuilder object (fluent interface)
+    [[nodiscard]] SoundDataBuilder& fromExistingSoundData(SoundData const& data);
+
     /// Apply an effect to the SoundData
     /// \param effect effect to be applied
     /// \return SoundDataBuilder object (fluent interface)
