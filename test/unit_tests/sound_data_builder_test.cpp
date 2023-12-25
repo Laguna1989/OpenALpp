@@ -41,6 +41,22 @@ TEST_CASE("SoundDataBuilder", "[SoundDataBuilder]")
             REQUIRE(samples_loaded == samples_expected);
         }
 
+        SECTION("From Existing Sound Data")
+        {
+            oalpp::SoundData const initial_data = builder.fromFile("assets/test.mp3").create();
+
+            oalpp::SoundData const data = builder.fromExistingSoundData(initial_data).create();
+
+            REQUIRE(data.getNumberOfChannels() == 2);
+            REQUIRE(data.getSampleRate() == 44100);
+
+            auto const& samples_loaded = data.getSamples();
+            REQUIRE(samples_loaded == samples_expected);
+
+            auto const& samples_loaded_initial = initial_data.getSamples();
+            REQUIRE(samples_loaded_initial == samples_expected);
+        }
+
         SECTION("With Gain Effect")
         {
             oalpp::effects::utility::Gain gain { 0.5f };
@@ -113,6 +129,22 @@ TEST_CASE("SoundDataBuilder", "[SoundDataBuilder]")
 
             auto const& samples_loaded = data.getSamples();
             REQUIRE(samples_loaded == samples_expected);
+        }
+
+        SECTION("From Existing Sound Data")
+        {
+            oalpp::SoundData const initial_data = builder.fromFile("assets/test_mono.mp3").create();
+
+            oalpp::SoundData const data = builder.fromExistingSoundData(initial_data).create();
+
+            REQUIRE(data.getNumberOfChannels() == 1);
+            REQUIRE(data.getSampleRate() == 44100);
+
+            auto const& samples_loaded = data.getSamples();
+            REQUIRE(samples_loaded == samples_expected);
+
+            auto const& samples_loaded_initial = initial_data.getSamples();
+            REQUIRE(samples_loaded_initial == samples_expected);
         }
 
         SECTION("With Gain Effect")
