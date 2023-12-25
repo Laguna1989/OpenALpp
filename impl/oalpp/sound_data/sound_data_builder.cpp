@@ -17,7 +17,7 @@ oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::fromFile(std::string const& fi
     return *this;
 }
 
-oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::fromExistingSoundData(SoundData const& data)
+oalpp::SoundDataBuilder& oalpp::SoundDataBuilder::fromExistingSoundData(SoundDataInterface const& data)
 {
     m_data = data.getSamples();
     m_sampleRate = data.getSampleRate();
