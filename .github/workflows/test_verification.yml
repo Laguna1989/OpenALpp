@@ -133,7 +133,7 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build/test/unit_tests/Debug
-        run: OpenALpp_UnitTests.exe --order rand
+        run: ./OpenALpp_UnitTests.exe --order rand
 
   Web:
     runs-on: ubuntu-latest
