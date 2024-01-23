@@ -1,7 +1,9 @@
 #include "sound_data_fake.hpp"
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <oalpp/sound/sound.hpp>
 #include <oalpp/sound_context/sound_context.hpp>
+#include <cmath>
 
 using namespace oalpp;
 
@@ -68,7 +70,7 @@ TEST_CASE("Sound position and pan test", "[Sound]")
     SECTION("position after setPan")
     {
         auto const conversion = [](float pan) {
-            return Position { pan, 0, -static_cast<float>(sqrt(1.0f - pan * pan)) };
+            return Position { pan, 0, -static_cast<float>(std::sqrt(1.0f - pan * pan)) };
         };
         float const newPan = GENERATE(0.5f, 1.0f, 0.1f, 0.0f);
         auto const expectedPosition = conversion(newPan);

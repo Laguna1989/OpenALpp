@@ -1,4 +1,5 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 #include <oalpp/effects/distortion/decimator.hpp>
 #include <oalpp/effects/distortion/tanh_distortion.hpp>
 #include <oalpp/effects/filter/butterworth_24db_lowpass.hpp>
@@ -8,6 +9,7 @@
 #include <oalpp/effects/utility/effect_chain.hpp>
 #include <oalpp/effects/utility/gain.hpp>
 #include <oalpp/effects/utility/phase_flip.hpp>
+#include <algorithm>
 
 TEST_CASE("SoundEffect returns zero on zero input", "[SoundEffect]")
 {

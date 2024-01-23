@@ -1,4 +1,4 @@
-#define APPROVALS_CATCH
+#define APPROVALS_CATCH2_V3
 #include "ApprovalTests/ApprovalTests.hpp"
 
 // This puts "received" and "approved" files in approval_tests/ sub-directory,

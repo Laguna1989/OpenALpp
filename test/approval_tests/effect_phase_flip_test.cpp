@@ -1,5 +1,5 @@
 #include "ApprovalTests/ApprovalTests.hpp"
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <oalpp/effects/utility/phase_flip.hpp>
 #include <oalpp/sound_data.hpp>
 

@@ -52,9 +52,6 @@ jobs:
       #        run: ./OpenALpp_UnitTests --order rand
       #        working-directory: ${{github.workspace}}/build/bin/
 
-      - name: CopyAssets
-        run: cp -r ${{github.workspace}}/assets ${{github.workspace}}/build/test/approval_tests
-
       - name: ApprovalTest
         run: ./OpenALpp_ApprovalTests --order rand
         working-directory: ${{github.workspace}}/build/test/approval_tests
@@ -99,9 +96,6 @@ jobs:
     #        working-directory: ${{github.workspace}}/build/bin/
 
   # Do not run approval tests on clang as there seem to be some float inconsistencies happening
-  #      - name: CopyAssets
-  #        run: cp -r ${{github.workspace}}/assets ${{github.workspace}}/build/test/approval_tests
-  #
   #      - name: ApprovalTest
   #        run: ./OpenALpp_ApprovalTests --order rand
   #        working-directory: ${{github.workspace}}/build/test/approval_tests
@@ -128,21 +122,18 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: cmake --build .
 
-      - name: Copy assets
-        run: cp -r assets ${{github.workspace}}/build/test/unit_tests/assets
-
       - run: net start audiosrv
 
       - name: Setup virtual soundcard
         uses: LABSN/sound-ci-helpers@v1.0.1
 
       - name: Test LS
-        working-directory: ${{github.workspace}}/build/test/unit_tests
+        working-directory: ${{github.workspace}}/build/test/unit_tests/Debug
         run: ls
 
       - name: Test
-        working-directory: ${{github.workspace}}/build/test/unit_tests/
-        run: Debug/OpenALpp_UnitTests.exe --order rand
+        working-directory: ${{github.workspace}}/build/test/unit_tests/Debug
+        run: ./OpenALpp_UnitTests.exe --order rand
 
   Web:
     runs-on: ubuntu-latest
@@ -177,8 +168,6 @@ jobs:
           emcmake cmake -B ${{github.workspace}}/build \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
            .
-      - name: Copy assets
-        run: cp -r assets ${{github.workspace}}/build/test/integration_tests/
       - name: Build
         working-directory: ${{github.workspace}}/build
         run: emmake make OpenALpp_UnitTests OpenALpp_Integration

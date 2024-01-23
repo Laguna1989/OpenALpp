@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <oalpp/common/audio_exceptions.hpp>
 
 TEST_CASE("AudioException returns correct message on what", "[Audio Exception]")

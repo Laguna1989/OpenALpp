@@ -38,7 +38,7 @@ if (OALPP_ENABLE_UNIT_TESTS)
     CPMAddPackage(
             NAME catch2
             GITHUB_REPOSITORY catchorg/Catch2
-            GIT_TAG v2.13.8
+            GIT_TAG v3.5.0
     )
 endif ()
 
@@ -48,6 +48,6 @@ if (OALPP_ENABLE_APPROVAL_TESTS)
     CPMAddPackage(
             NAME approvaltests
             GITHUB_REPOSITORY approvals/ApprovalTests.cpp
-            GIT_TAG v.10.12.2
+            GIT_TAG master
     )
 endif ()
