@@ -16,6 +16,7 @@ file(WRITE "${script_copy_directory}" "
             execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${src}\" \"\${dst}\")
         endif()
     endforeach()
+    message(STATUS \"copy done: \${DIR_SRC} -> \${DIR_DST} \")
 ")
 
 function(use_assets TGT)
