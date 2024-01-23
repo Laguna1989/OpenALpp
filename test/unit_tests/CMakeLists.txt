@@ -18,3 +18,5 @@ if (EMSCRIPTEN)
     target_link_options(OpenALpp_UnitTests PRIVATE "SHELL:-s TOTAL_MEMORY=256MB")
     target_link_options(OpenALpp_UnitTests PRIVATE "SHELL:-s ALLOW_MEMORY_GROWTH=1")
 endif ()
+
+use_assets(OpenALpp_UnitTests)

@@ -25,3 +25,5 @@ if (EMSCRIPTEN)
 endif ()
 
 add_test(NAME OpenALpp_ApprovalTests COMMAND OpenALpp_ApprovalTests)
+
+use_assets(OpenALpp_ApprovalTests)
