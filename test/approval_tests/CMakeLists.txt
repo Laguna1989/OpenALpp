@@ -4,7 +4,7 @@ add_executable(OpenALpp_ApprovalTests ${TESTFILES})
 target_link_libraries(OpenALpp_ApprovalTests PRIVATE
         OpenALpp_Lib
         ApprovalTests::ApprovalTests
-        Catch2::Catch2)
+        Catch2::Catch2WithMain)
 
 FetchContent_GetProperties(catch2)
 FetchContent_GetProperties(approvaltests)

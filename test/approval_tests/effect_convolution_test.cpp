@@ -1,6 +1,6 @@
 #include "ApprovalTests/ApprovalTests.hpp"
 #include "approval_test_helpers.hpp"
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <oalpp/effects/utility/convolution.hpp>
 #include <oalpp/sound_data.hpp>
 
