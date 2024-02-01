@@ -54,7 +54,7 @@ std::vector<float> doFFT(std::vector<std::complex<float>> const& samples)
 } // namespace
 
 Convolution::Convolution(std::vector<float> const& kernel)
-    : m_kernel { doFFT(kernel) }
+    : m_kernelTransformed { doFFT(kernel) }
 {
 }
 
@@ -63,14 +63,14 @@ std::vector<float> Convolution::process(std::vector<float> const& input)
     // perform fft on input
     auto const inputTransformed = doFFT(input);
     auto const biggerSize
-        = static_cast<std::size_t>(std::max(inputTransformed.size(), m_kernel.size()));
+        = static_cast<std::size_t>(std::max(inputTransformed.size(), m_kernelTransformed.size()));
 
     // convolution in frequency space is just a pairwise multiplication
     std::vector<std::complex<float>> multipliedTransformed;
     multipliedTransformed.resize(biggerSize);
 
     for (auto i = 0U; i != biggerSize; ++i) {
-        auto const kernelValue = i < m_kernel.size() ? m_kernel[i] : 0.0f;
+        auto const kernelValue = i < m_kernelTransformed.size() ? m_kernelTransformed[i] : 0.0f;
         auto const inputValue = i < inputTransformed.size() ? inputTransformed[i] : 0.0f;
         multipliedTransformed[i] = kernelValue * inputValue;
     }

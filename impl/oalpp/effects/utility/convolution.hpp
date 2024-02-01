@@ -16,7 +16,7 @@ public:
     std::vector<float> process(std::vector<float> const& input) override;
 
 private:
-    std::vector<std::complex<float>> m_kernel {};
+    std::vector<std::complex<float>> m_kernelTransformed {};
 };
 
 } // namespace utility
