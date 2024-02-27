@@ -1,3 +1,4 @@
+# begin-snippet:cpm_download
 message(STATUS "Add CPM.cmake")
 # download CPM.cmake
 file(
@@ -7,6 +8,7 @@ file(
         EXPECTED_HASH SHA256=11c3fa5f1ba14f15d31c2fb63dbc8628ee133d81c8d764caad9a8db9e0bacb07
 )
 include(${CMAKE_BINARY_DIR}/cmake/CPM.cmake)
+# end-snippet
 
 message(STATUS "Fetching external libraries started")
 
@@ -44,10 +46,12 @@ endif ()
 
 
 if (OALPP_ENABLE_APPROVAL_TESTS)
+    # begin-snippet:cpm_add_approvaltests
     message(STATUS "Fetching approvaltests")
     CPMAddPackage(
             NAME approvaltests
             GITHUB_REPOSITORY approvals/ApprovalTests.cpp
             GIT_TAG master
     )
+    # end-snippet
 endif ()
