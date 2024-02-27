@@ -1,4 +1,4 @@
-# begin-snippet:cpm_download
+# begin-snippet: cpm_download
 message(STATUS "Add CPM.cmake")
 # download CPM.cmake
 file(
@@ -46,7 +46,7 @@ endif ()
 
 
 if (OALPP_ENABLE_APPROVAL_TESTS)
-    # begin-snippet:cpm_add_approvaltests
+    # begin-snippet: cpm_add_approvaltests
     message(STATUS "Fetching approvaltests")
     CPMAddPackage(
             NAME approvaltests
