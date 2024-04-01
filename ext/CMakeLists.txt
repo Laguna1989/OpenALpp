@@ -18,7 +18,7 @@ if (NOT EMSCRIPTEN)
     CPMAddPackage(
             NAME openal-soft
             GITHUB_REPOSITORY kcat/openal-soft
-            GIT_TAG 1.21.1
+            GIT_TAG 1.23.1
             OPTIONS
             "ALSOFT_UTILS OFF"
             "ALSOFT_EXAMPLES OFF"
@@ -30,7 +30,7 @@ message(STATUS "Fetching libnyquist")
 CPMAddPackage(
         NAME libnyquist
         GITHUB_REPOSITORY ddiakopoulos/libnyquist
-        GIT_TAG master
+        GIT_TAG 767efd97cdd7a281d193296586e708490eb6e54f
         OPTIONS
         "LIBNYQUIST_BUILD_EXAMPLE OFF"
 )
