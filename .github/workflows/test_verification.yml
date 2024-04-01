@@ -14,7 +14,7 @@ jobs:
         gccver: [ 10, 11, 12, 13 ]
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v2.01
         with:
           cmake-version: '3.26.x'
 
@@ -63,12 +63,12 @@ jobs:
         clangver: [ 15 ]
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v2.01
         with:
           cmake-version: '3.26.x'
 
       - name: Set up clang
-        uses: egor-tensin/setup-clang@v1
+        uses: egor-tensin/setup-clang@v1.4
         with:
           version: ${{ matrix.clangver }}
           platform: x64
@@ -104,7 +104,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v2.01
         with:
           cmake-version: '3.26.x'
 
@@ -113,7 +113,7 @@ jobs:
           lfs: true
 
       - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.12.1
+        uses: ilammy/msvc-dev-cmd@v1.13.0
 
       - name: CMake
         run: cmake -B ${{github.workspace}}/build . -DOALPP_STATIC_LIBRARY=ON
@@ -141,12 +141,12 @@ jobs:
       EMCC_CCACHE: 1
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v2.01
         with:
           cmake-version: '3.26.x'
 
       - name: Set up gcc
-        uses: egor-tensin/setup-gcc@v1
+        uses: egor-tensin/setup-gcc@v1.3
         with:
           version: 9
           platform: x64
@@ -176,7 +176,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v2.01
         with:
           cmake-version: '3.26.x'
 
