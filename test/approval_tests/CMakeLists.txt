@@ -6,13 +6,6 @@ target_link_libraries(OpenALpp_ApprovalTests PRIVATE
         ApprovalTests::ApprovalTests
         Catch2::Catch2WithMain)
 
-FetchContent_GetProperties(catch2)
-FetchContent_GetProperties(approvaltests)
-
-target_include_directories(OpenALpp_ApprovalTests PUBLIC
-        ${catch2_SOURCE_DIR}/include
-        ${approvaltests_SOURCE_DIR})
-
 if (NOT OALPP_STATIC_LIBRARY)
     message(WARNING "Building OpenALpp unit tests with dynamic library: dll/so will not be copied by default.")
 endif ()

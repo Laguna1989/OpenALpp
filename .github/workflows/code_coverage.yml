@@ -10,14 +10,14 @@ jobs:
     name: Code Coverage Report
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v2.0.1
         with:
           cmake-version: '3.19.x'
 
       - name: Enable Developer Command Prompt
-        uses: ilammy/msvc-dev-cmd@v1.12.1
+        uses: ilammy/msvc-dev-cmd@v1.13.0
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.1
         with:
           lfs: true
 
