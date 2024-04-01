@@ -153,7 +153,7 @@ jobs:
 
       - uses: mymindstorm/setup-emsdk@v14
         with:
-          version: 3.1.51
+          version: 3.1.56
 
       - uses: actions/checkout@v4
 
