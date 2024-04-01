@@ -151,9 +151,9 @@ jobs:
           version: 9
           platform: x64
 
-      - uses: mymindstorm/setup-emsdk@v11
+      - uses: mymindstorm/setup-emsdk@v14
         with:
-          version: 3.1.51
+          version: 3.1.56
 
       - uses: actions/checkout@v4
 
