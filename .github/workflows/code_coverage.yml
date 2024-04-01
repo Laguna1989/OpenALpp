@@ -47,7 +47,7 @@ jobs:
         run: OpenCppCoverage.exe --export_type cobertura:${{github.workspace}}/build/OpenALppCoverage.xml --sources ${{github.workspace}}\impl --excluded_sources ${{github.workspace}}\build\test\ --excluded_sources ${{github.workspace}}\build\ext\* --excluded_sources ${{github.workspace}}\build ${{github.workspace}}\build\test\unit_tests\OpenALpp_UnitTests.exe
 
       - name: Upload Report to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           working-directory: ${{github.workspace}}/build
           files: ./OpenALppCoverage.xml
