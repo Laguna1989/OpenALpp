@@ -14,7 +14,7 @@ jobs:
         gccver: [ 10, 11, 12, 13 ]
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v2.0.1
+        uses: jwlawson/actions-setup-cmake@v2.0.2
         with:
           cmake-version: '3.26.x'
 
@@ -63,7 +63,7 @@ jobs:
         clangver: [ 15 ]
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v2.0.1
+        uses: jwlawson/actions-setup-cmake@v2.0.2
         with:
           cmake-version: '3.26.x'
 
@@ -104,7 +104,7 @@ jobs:
     runs-on: windows-2022
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v2.0.1
+        uses: jwlawson/actions-setup-cmake@v2.0.2
         with:
           cmake-version: '3.26.x'
 
@@ -141,7 +141,7 @@ jobs:
       EMCC_CCACHE: 1
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v2.0.1
+        uses: jwlawson/actions-setup-cmake@v2.0.2
         with:
           cmake-version: '3.26.x'
 
@@ -176,7 +176,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v2.0.1
+        uses: jwlawson/actions-setup-cmake@v2.0.2
         with:
           cmake-version: '3.26.x'
 
