@@ -125,7 +125,7 @@ jobs:
       - run: net start audiosrv
 
       - name: Setup virtual soundcard
-        uses: LABSN/sound-ci-helpers@v1.0.1
+        uses: LABSN/sound-ci-helpers@v1.0.2
 
       - name: Test LS
         working-directory: ${{github.workspace}}/build/test/unit_tests/Debug
