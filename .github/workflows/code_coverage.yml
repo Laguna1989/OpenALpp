@@ -31,7 +31,7 @@ jobs:
       - run: net start audiosrv
 
       - name: Setup virtual soundcard
-        uses: LABSN/sound-ci-helpers@v1.0.1
+        uses: LABSN/sound-ci-helpers@v1.0.3
 
 
       - name: Setup OpenCppCoverage and add to PATH
